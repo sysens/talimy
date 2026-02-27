@@ -3,7 +3,6 @@
 import {
   Alert,
   AlertDescription,
-  AlertTitle,
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -13,6 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
+  AlertTitle,
   Button,
   Dialog,
   DialogContent,
@@ -52,7 +52,7 @@ export function PrimitivesShowcase412() {
                 <DialogHeader>
                   <DialogTitle>Dars jadvalini yangilash</DialogTitle>
                   <DialogDescription>
-                    O‘zgartirishlar saqlangandan keyin teacher panelda yangilanadi.
+                    O'zgartirishlar saqlangandan keyin teacher panelda yangilanadi.
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
@@ -64,13 +64,18 @@ export function PrimitivesShowcase412() {
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button variant="destructive">Delete Student</Button>
+                <Button
+                  variant="outline"
+                  className="border-destructive/25 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                >
+                  Delete Student
+                </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle>Ishonchingiz komilmi?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Bu amaldan keyin student yozuvi soft-delete holatiga o‘tadi.
+                    Bu amaldan keyin student yozuvi soft-delete holatiga o'tadi.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
@@ -84,7 +89,7 @@ export function PrimitivesShowcase412() {
           <Alert>
             <AlertTitle>Integration status</AlertTitle>
             <AlertDescription>
-              Queue worker bilan bog‘liq yangi deployment 2 daqiqada kuchga kiradi.
+              Queue worker bilan bog'liq yangi deployment 2 daqiqada kuchga kiradi.
             </AlertDescription>
           </Alert>
         </section>
@@ -113,7 +118,7 @@ export function PrimitivesShowcase412() {
                 <Button variant="outline">Open Popover</Button>
               </PopoverTrigger>
               <PopoverContent className="w-72">
-                Calendar event uchun quick-note yoki reminder text shu yerda ko‘rsatiladi.
+                Calendar event uchun quick-note yoki reminder text shu yerda ko'rsatiladi.
               </PopoverContent>
             </Popover>
 

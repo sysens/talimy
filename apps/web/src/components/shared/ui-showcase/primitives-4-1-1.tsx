@@ -10,7 +10,10 @@ import {
   RadioGroupItem,
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
+  SelectSeparator,
   SelectTrigger,
   SelectValue,
   Switch,
@@ -56,9 +59,18 @@ export function PrimitivesShowcase411() {
               <SelectValue placeholder="Department tanlang" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="math">Mathematics</SelectItem>
-              <SelectItem value="science">Science</SelectItem>
-              <SelectItem value="language">Language</SelectItem>
+              <SelectGroup>
+                <SelectLabel>Science</SelectLabel>
+                <SelectItem value="math">Mathematics</SelectItem>
+                <SelectItem value="science">Science</SelectItem>
+                <SelectItem value="language">Language</SelectItem>
+              </SelectGroup>
+              <SelectSeparator />
+              <SelectGroup>
+                <SelectLabel>Language</SelectLabel>
+                <SelectItem value="uzbek">Uzbek</SelectItem>
+                <SelectItem value="english">English</SelectItem>
+              </SelectGroup>
             </SelectContent>
           </Select>
         </div>
@@ -74,7 +86,7 @@ export function PrimitivesShowcase411() {
 
         <div className="space-y-2">
           <Label>Gender policy</Label>
-          <RadioGroup defaultValue="mixed" className="flex gap-4">
+          <RadioGroup defaultValue="mixed" className="gap-2">
             <div className="flex items-center gap-2">
               <RadioGroupItem id="mixed" value="mixed" />
               <Label htmlFor="mixed">Mixed</Label>
