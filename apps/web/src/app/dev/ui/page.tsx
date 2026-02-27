@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@talimy/ui"
 
 import { PrimitivesShowcase411 } from "@/components/shared/ui-showcase/primitives-4-1-1"
+import { PrimitivesShowcase412 } from "@/components/shared/ui-showcase/primitives-4-1-2"
 
 export default function UiShowcasePage() {
   return (
@@ -18,6 +19,15 @@ export default function UiShowcasePage() {
         </CardHeader>
         <CardContent>
           <PrimitivesShowcase411 />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 4.1.2 — Overlays & Menus</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <PrimitivesShowcase412 />
         </CardContent>
       </Card>
     </main>
