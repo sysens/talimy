@@ -8,7 +8,6 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
@@ -35,6 +34,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@talimy/ui"
+import { Trash2 } from "lucide-react"
 
 export function PrimitivesShowcase412() {
   return (
@@ -64,24 +64,30 @@ export function PrimitivesShowcase412() {
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="border-destructive/25 text-destructive hover:bg-destructive/10 hover:text-destructive"
-                >
-                  Delete Student
+                <Button className="bg-destructive/12 text-destructive shadow-none hover:bg-destructive/20">
+                  Delete Chat
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Ishonchingiz komilmi?</AlertDialogTitle>
+              <AlertDialogContent className="max-w-sm overflow-hidden p-0">
+                <AlertDialogHeader className="items-center px-6 pt-6 text-center">
+                  <div className="mb-1 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-destructive/12 text-destructive">
+                    <Trash2 className="h-7 w-7" />
+                  </div>
+                  <AlertDialogTitle>Delete chat?</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Bu amaldan keyin student yozuvi soft-delete holatiga o'tadi.
+                    This will permanently delete this chat conversation. View{" "}
+                    <a className="underline" href="#">
+                      Settings
+                    </a>{" "}
+                    delete any memories saved during this chat.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Bekor qilish</AlertDialogCancel>
-                  <AlertDialogAction>Davom etish</AlertDialogAction>
-                </AlertDialogFooter>
+                <div className="mt-6 grid grid-cols-2 gap-2 border-t bg-muted/20 p-4">
+                  <AlertDialogCancel className="mt-0 w-full">Cancel</AlertDialogCancel>
+                  <AlertDialogAction className="w-full bg-destructive/12 text-destructive shadow-none hover:bg-destructive/20">
+                    Delete
+                  </AlertDialogAction>
+                </div>
               </AlertDialogContent>
             </AlertDialog>
           </div>
