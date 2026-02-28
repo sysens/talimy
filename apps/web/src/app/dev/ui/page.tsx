@@ -2,6 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@talimy/ui"
 
 import { PrimitivesShowcase411 } from "@/components/shared/ui-showcase/primitives-4-1-1"
 import { PrimitivesShowcase412 } from "@/components/shared/ui-showcase/primitives-4-1-2"
+import { PrimitivesShowcase413 } from "@/components/shared/ui-showcase/primitives-4-1-3"
+import { PrimitivesShowcase414 } from "@/components/shared/ui-showcase/primitives-4-1-4"
+import { PrimitivesShowcase415 } from "@/components/shared/ui-showcase/primitives-4-1-5"
+import { PrimitivesShowcase416 } from "@/components/shared/ui-showcase/primitives-4-1-6"
 
 export default function UiShowcasePage() {
   return (
@@ -28,6 +32,42 @@ export default function UiShowcasePage() {
         </CardHeader>
         <CardContent>
           <PrimitivesShowcase412 />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 4.1.3 — Display Primitives</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <PrimitivesShowcase413 />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 4.1.4 — Layout + Data Primitives</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <PrimitivesShowcase414 />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 4.1.5 — Form + Feedback Primitives</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <PrimitivesShowcase415 />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 4.1.6 — Navigation + Analytics Primitives</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <PrimitivesShowcase416 />
         </CardContent>
       </Card>
     </main>

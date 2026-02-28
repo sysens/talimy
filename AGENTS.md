@@ -745,6 +745,7 @@ bun run test:e2e               # Playwright E2E tests
 - Do NOT reformat or rewrite unrelated code when making targeted changes.
 - Do NOT ship temporary / pragmatic / quick-fix workarounds as final solutions. Use clean, correct, best-practice implementations by default.
 - Do NOT justify a patch primarily because it is the \"smallest\", \"fastest\", or \"least risky\" if a clearer best-practice/root-cause fix is available.
+- Do NOT edit or regenerate files under `packages/ui/src/components/ui/*` (including running `shadcn add` for them). If a shadcn primitive needs a change, provide exact file/line/reason guidance to the user and wait for user-applied updates.
 
 ---
 
