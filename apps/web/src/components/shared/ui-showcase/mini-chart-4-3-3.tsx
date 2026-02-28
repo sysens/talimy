@@ -18,9 +18,9 @@ type StudentPerformancePeriod = "lastSemester" | "thisSemester"
 const MAX_GRADE_VALUE = 5
 
 const STUDENT_PERFORMANCE_SERIES: MultipleBarChartSeries[] = [
-  { color: "var(--talimy-color-sky)", key: "grade7", label: "Grade 7" },
-  { color: "var(--talimy-color-pink)", key: "grade8", label: "Grade 8" },
-  { color: "var(--talimy-color-navy)", key: "grade9", label: "Grade 9" },
+  { barSize: 14, color: "var(--talimy-color-sky)", key: "grade7", label: "Grade 7" },
+  { barSize: 14, color: "var(--talimy-color-pink)", key: "grade8", label: "Grade 8" },
+  { barSize: 14, color: "var(--talimy-color-navy)", key: "grade9", label: "Grade 9" },
 ]
 
 const STUDENT_PERFORMANCE_LEGEND: MiniChartLegendItem[] = [
@@ -133,18 +133,6 @@ function buildPerformanceRows(data: StudentPerformanceSource[]) {
   }))
 }
 
-function calculateSeriesAverage(
-  rows: Array<{ grade7: number; grade8: number; grade9: number; month: string }>,
-  key: "grade7" | "grade8" | "grade9"
-) {
-  if (!rows.length) {
-    return 0
-  }
-
-  const total = rows.reduce((sum, row) => sum + row[key], 0)
-  return Number((total / rows.length).toFixed(1))
-}
-
 export function MiniChartShowcase433() {
   const [period, setPeriod] = React.useState<StudentPerformancePeriod>("lastSemester")
 
@@ -153,27 +141,6 @@ export function MiniChartShowcase433() {
     return buildPerformanceRows(source)
   }, [period])
 
-  const summaryRows = React.useMemo(
-    () => [
-      {
-        color: "var(--talimy-color-sky)",
-        label: "Grade 7",
-        value: `${Math.round(calculateSeriesAverage(rows, "grade7"))}%`,
-      },
-      {
-        color: "var(--talimy-color-pink)",
-        label: "Grade 8",
-        value: `${Math.round(calculateSeriesAverage(rows, "grade8"))}%`,
-      },
-      {
-        color: "var(--talimy-color-navy)",
-        label: "Grade 9",
-        value: `${Math.round(calculateSeriesAverage(rows, "grade9"))}%`,
-      },
-    ],
-    [rows]
-  )
-
   return (
     <div className="space-y-3">
       <h3 className="text-sm font-semibold text-muted-foreground">/admin/dashboard</h3>
@@ -181,23 +148,6 @@ export function MiniChartShowcase433() {
       <div className="max-w-xl">
         <MiniChart
           chartClassName="min-h-[236px]"
-          chartOverlay={
-            <div className="w-28 rounded-lg border border-border/70 bg-card/95 p-2 shadow-sm backdrop-blur">
-              <div className="space-y-1.5">
-                {summaryRows.map((item) => (
-                  <div key={item.label} className="flex items-center justify-between gap-2 text-[10px]">
-                    <span className="flex min-w-0 items-center gap-1 text-muted-foreground">
-                      <span className="size-1.5 shrink-0 rounded-full" style={{ backgroundColor: item.color }} />
-                      <span className="truncate">{item.label}</span>
-                    </span>
-                    <span className="font-semibold tabular-nums text-[var(--talimy-color-navy)] dark:text-sky-200">
-                      {item.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          }
           filter={{
             ariaLabel: "Student performance period",
             onValueChange: (value) => setPeriod(value as StudentPerformancePeriod),
@@ -214,7 +164,9 @@ export function MiniChartShowcase433() {
             data={rows}
             hideFooter
             hideHeader
+            hideTooltipLabel
             series={STUDENT_PERFORMANCE_SERIES}
+            tooltipClassName="text-sm [&_.text-muted-foreground]:font-medium [&_.text-foreground]:text-sm [&_.text-foreground]:font-semibold"
             valueFormatter={(value) => `${value.toFixed(1)}%`}
             xKey="month"
           />

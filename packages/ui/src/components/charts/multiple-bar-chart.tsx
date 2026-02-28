@@ -16,6 +16,7 @@ import {
 export type MultipleBarChartDataPoint = Record<string, number | string | null | undefined>
 
 export type MultipleBarChartSeries = {
+  barSize?: number
   color: string
   key: string
   label: string
@@ -24,6 +25,8 @@ export type MultipleBarChartSeries = {
 }
 
 export type MultipleBarChartProps<TData extends MultipleBarChartDataPoint = MultipleBarChartDataPoint> = {
+  barCategoryGap?: number | string
+  barGap?: number | string
   className?: string
   data: TData[]
   description?: React.ReactNode
@@ -31,14 +34,18 @@ export type MultipleBarChartProps<TData extends MultipleBarChartDataPoint = Mult
   footerTrend?: React.ReactNode
   hideFooter?: boolean
   hideHeader?: boolean
+  hideTooltipLabel?: boolean
   series: MultipleBarChartSeries[]
   title?: React.ReactNode
+  tooltipClassName?: string
   valueFormatter?: (value: number, seriesKey: string) => string
   xAxisTickFormatter?: (value: string) => string
   xKey: keyof TData & string
 }
 
 export function MultipleBarChart<TData extends MultipleBarChartDataPoint = MultipleBarChartDataPoint>({
+  barCategoryGap = "12%",
+  barGap = 3,
   className,
   data,
   description,
@@ -46,8 +53,10 @@ export function MultipleBarChart<TData extends MultipleBarChartDataPoint = Multi
   footerTrend,
   hideFooter = false,
   hideHeader = false,
+  hideTooltipLabel = false,
   series,
   title,
+  tooltipClassName,
   valueFormatter,
   xAxisTickFormatter,
   xKey,
@@ -101,8 +110,8 @@ export function MultipleBarChart<TData extends MultipleBarChartDataPoint = Multi
 
       <CardContent className="p-0">
         <ChartContainer className="min-h-56 w-full !aspect-auto" config={chartConfig}>
-          <BarChart accessibilityLayer data={data}>
-            <CartesianGrid vertical={false} />
+          <BarChart accessibilityLayer barCategoryGap={barCategoryGap} barGap={barGap} data={data}>
+            <CartesianGrid strokeDasharray="0" vertical={false} />
             <XAxis
               axisLine={false}
               dataKey={xKey}
@@ -112,10 +121,21 @@ export function MultipleBarChart<TData extends MultipleBarChartDataPoint = Multi
             />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent formatter={tooltipFormatter} indicator="dashed" />}
+              content={
+                <ChartTooltipContent
+                  className={cn(
+                    "min-w-28 rounded-xl border border-border/70 bg-card/95 px-3 py-2 text-xs shadow-md",
+                    tooltipClassName
+                  )}
+                  formatter={tooltipFormatter}
+                  hideLabel={hideTooltipLabel}
+                  indicator="dashed"
+                />
+              }
             />
             {series.map((entry) => (
               <Bar
+                barSize={entry.barSize}
                 key={entry.key}
                 dataKey={entry.key}
                 fill={`var(--color-${entry.key})`}
