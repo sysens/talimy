@@ -1,9 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import { TrendingUp } from "lucide-react"
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 import { cn } from "../../lib/utils"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import {
   ChartContainer,
   ChartTooltip,
@@ -14,53 +16,41 @@ import {
 export type MultipleBarChartDataPoint = Record<string, number | string | null | undefined>
 
 export type MultipleBarChartSeries = {
+  color: string
   key: string
   label: string
-  color: string
-  radius?: number | [number, number, number, number]
   maxBarSize?: number
+  radius?: number | [number, number, number, number]
 }
 
 export type MultipleBarChartProps<TData extends MultipleBarChartDataPoint = MultipleBarChartDataPoint> = {
-  data: TData[]
-  xKey: keyof TData & string
-  series: MultipleBarChartSeries[]
   className?: string
-  chartClassName?: string
-  xAxisTickFormatter?: (value: string) => string
-  yAxisTickFormatter?: (value: number) => string
-  yDomain?: [number | "auto" | "dataMin", number | "auto" | "dataMax"]
-  yTicks?: number[]
-  yAxisWidth?: number
-  showGrid?: boolean
-  showXAxis?: boolean
-  showYAxis?: boolean
-  gridStrokeDasharray?: string
-  barCategoryGap?: number | string
-  barGap?: number | string
-  tooltipIndicator?: "line" | "dot" | "dashed"
+  data: TData[]
+  description?: React.ReactNode
+  footerNote?: React.ReactNode
+  footerTrend?: React.ReactNode
+  hideFooter?: boolean
+  hideHeader?: boolean
+  series: MultipleBarChartSeries[]
+  title?: React.ReactNode
   valueFormatter?: (value: number, seriesKey: string) => string
+  xAxisTickFormatter?: (value: string) => string
+  xKey: keyof TData & string
 }
 
 export function MultipleBarChart<TData extends MultipleBarChartDataPoint = MultipleBarChartDataPoint>({
-  barCategoryGap = 24,
-  barGap = 8,
-  chartClassName,
   className,
   data,
-  gridStrokeDasharray = "4 4",
+  description,
+  footerNote,
+  footerTrend,
+  hideFooter = false,
+  hideHeader = false,
   series,
-  showGrid = true,
-  showXAxis = true,
-  showYAxis = true,
-  tooltipIndicator = "dashed",
+  title,
   valueFormatter,
   xAxisTickFormatter,
   xKey,
-  yAxisTickFormatter,
-  yAxisWidth = 36,
-  yDomain = [0, "auto"],
-  yTicks,
 }: MultipleBarChartProps<TData>) {
   const chartConfig = React.useMemo<ChartConfig>(
     () =>
@@ -90,54 +80,65 @@ export function MultipleBarChart<TData extends MultipleBarChartDataPoint = Multi
       return (
         <div className="flex w-full items-center justify-between gap-3">
           <span className="text-muted-foreground">{label}</span>
-          <span className="text-foreground font-medium tabular-nums">
-            {formattedValue}
-          </span>
+          <span className="text-foreground font-medium tabular-nums">{formattedValue}</span>
         </div>
       )
     }
   }, [chartConfig, valueFormatter])
 
   return (
-    <div className={cn("h-full w-full", className)}>
-      <ChartContainer className={cn("h-full w-full !aspect-auto", chartClassName)} config={chartConfig}>
-        <BarChart accessibilityLayer barCategoryGap={barCategoryGap} barGap={barGap} data={data}>
-          {showGrid ? <CartesianGrid strokeDasharray={gridStrokeDasharray} vertical={false} /> : null}
-          {showXAxis ? (
+    <Card className={cn("rounded-3xl border-0 bg-transparent p-0 shadow-none", className)}>
+      {!hideHeader ? (
+        <CardHeader className="px-0 pb-3">
+          {title ? (
+            <CardTitle className="text-base leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200">
+              {title}
+            </CardTitle>
+          ) : null}
+          {description ? <CardDescription>{description}</CardDescription> : null}
+        </CardHeader>
+      ) : null}
+
+      <CardContent className="p-0">
+        <ChartContainer className="min-h-56 w-full !aspect-auto" config={chartConfig}>
+          <BarChart accessibilityLayer data={data}>
+            <CartesianGrid vertical={false} />
             <XAxis
               axisLine={false}
               dataKey={xKey}
               tickFormatter={xAxisTickFormatter}
               tickLine={false}
-              tickMargin={8}
+              tickMargin={10}
             />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent formatter={tooltipFormatter} indicator="dashed" />}
+            />
+            {series.map((entry) => (
+              <Bar
+                key={entry.key}
+                dataKey={entry.key}
+                fill={`var(--color-${entry.key})`}
+                maxBarSize={entry.maxBarSize ?? 22}
+                radius={entry.radius ?? 4}
+              />
+            ))}
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+
+      {!hideFooter ? (
+        <CardFooter className="flex-col items-start gap-2 px-0 pt-3 text-sm">
+          {footerTrend ? (
+            <div className="flex items-center gap-2 leading-none font-medium">
+              {footerTrend} <TrendingUp className="h-4 w-4" />
+            </div>
           ) : null}
-          {showYAxis ? (
-            <YAxis
-              axisLine={false}
-              domain={yDomain}
-              tickFormatter={yAxisTickFormatter}
-              tickLine={false}
-              tickMargin={8}
-              ticks={yTicks}
-              width={yAxisWidth}
-            />
-          ) : null}
-          <ChartTooltip
-            cursor={false}
-            content={<ChartTooltipContent formatter={tooltipFormatter} indicator={tooltipIndicator} />}
-          />
-          {series.map((entry) => (
-            <Bar
-              key={entry.key}
-              dataKey={entry.key}
-              fill={`var(--color-${entry.key})`}
-              maxBarSize={entry.maxBarSize ?? 22}
-              radius={entry.radius ?? [4, 4, 0, 0]}
-            />
-          ))}
-        </BarChart>
-      </ChartContainer>
-    </div>
+          {footerNote ? <div className="text-muted-foreground leading-none">{footerNote}</div> : null}
+        </CardFooter>
+      ) : null}
+    </Card>
   )
 }
+
+export const ChartBarMultiple = MultipleBarChart

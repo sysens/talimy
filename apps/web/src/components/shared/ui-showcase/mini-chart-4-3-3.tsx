@@ -212,12 +212,11 @@ export function MiniChartShowcase433() {
         >
           <MultipleBarChart
             data={rows}
+            hideFooter
+            hideHeader
             series={STUDENT_PERFORMANCE_SERIES}
             valueFormatter={(value) => `${value.toFixed(1)}%`}
             xKey="month"
-            yAxisTickFormatter={(value) => `${value}%`}
-            yDomain={[0, 100]}
-            yTicks={[0, 25, 50, 75, 100]}
           />
         </MiniChart>
       </div>
