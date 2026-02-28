@@ -6,18 +6,18 @@
   "tailwind": {
     "config": "tailwind.config.ts",
     "css": "globals.css",
-    "baseColor": "zinc",
+    "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
   "iconLibrary": "lucide",
   "rtl": false,
   "aliases": {
-    "components": "@/components",
-    "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
+    "components": "@talimy-ui/components",
+    "utils": "@talimy-ui/lib/utils",
+    "ui": "@talimy-ui/components/ui",
+    "lib": "@talimy-ui/lib",
+    "hooks": "@talimy-ui/hooks"
   },
   "registries": {
     "@reui": "https://reui.io/r/{style}/{name}.json"

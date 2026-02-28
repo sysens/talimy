@@ -5,7 +5,8 @@
     "verbatimModuleSyntax": true,
     "paths": {
       "@/*": ["./src/*"],
-      "@talimy/ui/*": ["../../packages/ui/src/*"]
+      "@talimy/ui/*": ["../../packages/ui/src/*"],
+      "@talimy-ui/*": ["../../packages/ui/src/*"]
     },
     "plugins": [
       {

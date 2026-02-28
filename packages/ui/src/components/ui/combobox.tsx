@@ -3,9 +3,14 @@
 import * as React from "react"
 import { Combobox as ComboboxPrimitive } from "@base-ui/react"
 
-import { cn } from "../../lib/utils"
-import { Button } from "./button"
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "./input-group"
+import { cn } from "@talimy-ui/lib/utils"
+import { Button } from "@talimy-ui/components/ui/button"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@talimy-ui/components/ui/input-group"
 import { ChevronDownIcon, XIcon, CheckIcon } from "lucide-react"
 
 const Combobox = ComboboxPrimitive.Root
@@ -61,6 +66,7 @@ function ComboboxInput({
           <InputGroupButton
             size="icon-xs"
             variant="ghost"
+            render={<ComboboxTrigger />}
             data-slot="input-group-button"
             className="group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent"
             disabled={disabled}
@@ -225,7 +231,7 @@ function ComboboxChip({
           className="-ml-1 opacity-50 hover:opacity-100"
           data-slot="combobox-chip-remove"
           render={
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="icon-xs">
               <XIcon className="pointer-events-none" />
             </Button>
           }

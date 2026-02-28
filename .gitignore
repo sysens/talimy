@@ -38,3 +38,6 @@ npm-debug.log*
 
 # Deployment logs
 /dokploy logs/
+
+# Local screenshots / references
+/component images/
