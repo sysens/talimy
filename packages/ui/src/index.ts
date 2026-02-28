@@ -2,6 +2,7 @@ export { cn } from "./lib/utils"
 export * from "./lib/constants"
 export * from "./hooks/use-mobile"
 export * as ReUI from "./components/reui"
+export * from "./components/stat-card"
 
 export * from "./components/data-table/data-table"
 export * from "./components/data-table/data-table-column-header"

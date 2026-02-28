@@ -40,4 +40,4 @@ npm-debug.log*
 /dokploy logs/
 
 # Local screenshots / references
-/component images/
+# /component images/

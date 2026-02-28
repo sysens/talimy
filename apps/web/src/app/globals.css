@@ -57,6 +57,10 @@
     --color-warning-foreground: var(--warning-foreground);
     --color-invert: var(--invert);
     --color-invert-foreground: var(--invert-foreground);
+    --color-talimy-navy: var(--talimy-color-navy);
+    --color-talimy-pink: var(--talimy-color-pink);
+    --color-talimy-sky: var(--talimy-color-sky);
+    --color-talimy-gray: var(--talimy-color-gray);
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
@@ -80,6 +84,10 @@
 }
 
 :root {
+    --talimy-color-navy: #15446e;
+    --talimy-color-pink: #feccfd;
+    --talimy-color-sky: #cdeaf0;
+    --talimy-color-gray: #7d8582;
     --radius: 0.625rem;
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
@@ -127,6 +135,10 @@
 }
 
 .dark {
+    --talimy-color-navy: #15446e;
+    --talimy-color-pink: #feccfd;
+    --talimy-color-sky: #cdeaf0;
+    --talimy-color-gray: #7d8582;
     --background: oklch(0.145 0 0);
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.205 0 0);
