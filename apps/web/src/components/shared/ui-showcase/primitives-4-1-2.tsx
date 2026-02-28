@@ -8,6 +8,7 @@ import {
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
@@ -34,7 +35,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@talimy/ui"
-import { Trash2 } from "lucide-react"
+import { Trash2Icon } from "lucide-react"
 
 export function PrimitivesShowcase412() {
   return (
@@ -48,7 +49,7 @@ export function PrimitivesShowcase412() {
               <DialogTrigger asChild>
                 <Button variant="outline">Open Dialog</Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="max-w-lg rounded-lg border p-6 shadow-lg">
                 <DialogHeader>
                   <DialogTitle>Dars jadvalini yangilash</DialogTitle>
                   <DialogDescription>
@@ -64,14 +65,12 @@ export function PrimitivesShowcase412() {
 
             <AlertDialog>
               <AlertDialogTrigger asChild>
-                <Button className="bg-destructive/12 text-destructive shadow-none hover:bg-destructive/20">
-                  Delete Chat
-                </Button>
+                <Button variant="destructive">Delete Chat</Button>
               </AlertDialogTrigger>
-              <AlertDialogContent className="max-w-sm overflow-hidden p-0">
-                <AlertDialogHeader className="items-center px-6 pt-6 text-center">
-                  <div className="mb-1 inline-flex h-14 w-14 items-center justify-center rounded-xl bg-destructive/12 text-destructive">
-                    <Trash2 className="h-7 w-7" />
+              <AlertDialogContent className="max-w-sm">
+                <AlertDialogHeader className="items-center text-center">
+                  <div className="mb-1 inline-flex size-12 items-center justify-center rounded-xl bg-destructive/10 text-destructive dark:bg-destructive/20">
+                    <Trash2Icon className="size-6" />
                   </div>
                   <AlertDialogTitle>Delete chat?</AlertDialogTitle>
                   <AlertDialogDescription>
@@ -82,12 +81,12 @@ export function PrimitivesShowcase412() {
                     delete any memories saved during this chat.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
-                <div className="mt-6 grid grid-cols-2 gap-2 border-t bg-muted/20 p-4">
-                  <AlertDialogCancel className="mt-0 w-full">Cancel</AlertDialogCancel>
-                  <AlertDialogAction className="w-full bg-destructive/12 text-destructive shadow-none hover:bg-destructive/20">
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
                     Delete
                   </AlertDialogAction>
-                </div>
+                </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
           </div>

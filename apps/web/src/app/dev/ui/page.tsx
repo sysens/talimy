@@ -6,6 +6,7 @@ import { PrimitivesShowcase413 } from "@/components/shared/ui-showcase/primitive
 import { PrimitivesShowcase414 } from "@/components/shared/ui-showcase/primitives-4-1-4"
 import { PrimitivesShowcase415 } from "@/components/shared/ui-showcase/primitives-4-1-5"
 import { PrimitivesShowcase416 } from "@/components/shared/ui-showcase/primitives-4-1-6"
+import { DataTableShowcase42 } from "@/components/shared/ui-showcase/data-table-4-2"
 
 export default function UiShowcasePage() {
   return (
@@ -68,6 +69,15 @@ export default function UiShowcasePage() {
         </CardHeader>
         <CardContent>
           <PrimitivesShowcase416 />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 4.2 — Data Table Components</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <DataTableShowcase42 />
         </CardContent>
       </Card>
     </main>
