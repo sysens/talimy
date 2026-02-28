@@ -7,6 +7,7 @@ import { PrimitivesShowcase413 } from "@/components/shared/ui-showcase/primitive
 import { PrimitivesShowcase414 } from "@/components/shared/ui-showcase/primitives-4-1-4"
 import { PrimitivesShowcase415 } from "@/components/shared/ui-showcase/primitives-4-1-5"
 import { PrimitivesShowcase416 } from "@/components/shared/ui-showcase/primitives-4-1-6"
+import { MiniChartShowcase433 } from "@/components/shared/ui-showcase/mini-chart-4-3-3"
 import { StatCardShowcase431 } from "@/components/shared/ui-showcase/stat-card-4-3-1"
 import { ThemePreviewToggle } from "@/components/shared/ui-showcase/theme-preview-toggle"
 
@@ -92,6 +93,15 @@ export default function UiShowcasePage() {
         </CardHeader>
         <CardContent>
           <StatCardShowcase431 />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 4.3.3 - Mini Chart</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <MiniChartShowcase433 />
         </CardContent>
       </Card>
     </main>
