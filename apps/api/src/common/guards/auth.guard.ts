@@ -16,7 +16,7 @@ export class AuthGuard implements CanActivate {
 
   constructor(private readonly authService: AuthService) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest<{
       headers: Record<string, string | string[] | undefined>
       user?: CurrentUser
@@ -26,7 +26,7 @@ export class AuthGuard implements CanActivate {
     const authorization = this.readHeader(req.headers, "authorization")
     if (authorization?.startsWith("Bearer ")) {
       const token = authorization.slice("Bearer ".length).trim()
-      const payload = this.authService.verifyAccessToken(token)
+      const payload = await this.authService.verifyAccessToken(token)
       req.user = {
         id: payload.sub,
         tenantId: payload.tenantId,

@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-import { getApiProxyOrigin, RESERVED_SUBDOMAINS } from "@/config/site"
+import { getApiProxyOrigin } from "@/config/site"
+import { resolveHostScopeFromHeaders } from "@/lib/server/request-host"
 
 type ProxyToBackendOptions = {
   targetPath: string
   appendSearch?: string
   extraHeaders?: Headers
+  allowedHostScopes?: Array<"api" | "platform" | "public" | "school">
+  forbiddenMessage?: string
 }
 
 const HOP_BY_HOP_HEADERS = new Set([
@@ -22,13 +25,26 @@ const HOP_BY_HOP_HEADERS = new Set([
   "content-length",
 ])
 
-const RESERVED_SUBDOMAIN_SET = new Set<string>(RESERVED_SUBDOMAINS)
-
 export async function proxyToBackendApi(
   request: NextRequest,
   options: ProxyToBackendOptions
 ): Promise<NextResponse> {
   try {
+    const hostScope = resolveHostScopeFromHeaders(request.headers)
+    if (options.allowedHostScopes && !options.allowedHostScopes.includes(hostScope.kind)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: {
+            code: "FORBIDDEN",
+            message:
+              options.forbiddenMessage ?? "This auth action is not available on the current workspace.",
+          },
+        },
+        { status: 403 }
+      )
+    }
+
     const upstreamUrl = new URL(`${getApiProxyOrigin()}${options.targetPath}`)
     if (options.appendSearch) {
       upstreamUrl.search = options.appendSearch
@@ -119,31 +135,6 @@ function applyTenantContextHeaders(request: NextRequest, headers: Headers): void
 }
 
 function resolveTenantSlug(request: NextRequest): string | null {
-  const cookieSlug = request.cookies.get("tenant_slug")?.value?.trim().toLowerCase()
-  if (cookieSlug && !RESERVED_SUBDOMAIN_SET.has(cookieSlug)) {
-    return cookieSlug
-  }
-
-  const rawHost = request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? ""
-  const hostname = rawHost.toLowerCase().split(",")[0]?.trim().split(":")[0] ?? ""
-  if (!hostname) {
-    return null
-  }
-
-  if (hostname.endsWith(".localhost")) {
-    const slug = hostname.slice(0, -".localhost".length)
-    if (slug && !RESERVED_SUBDOMAIN_SET.has(slug)) {
-      return slug
-    }
-    return null
-  }
-
-  if (hostname.endsWith(".talimy.space")) {
-    const slug = hostname.slice(0, -".talimy.space".length)
-    if (slug && !RESERVED_SUBDOMAIN_SET.has(slug)) {
-      return slug
-    }
-  }
-
-  return null
+  const hostScope = resolveHostScopeFromHeaders(request.headers)
+  return hostScope.kind === "school" ? hostScope.tenantSlug : null
 }

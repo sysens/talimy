@@ -22,6 +22,10 @@ export class AuthTokenService {
     return this.toIdentity(this.verifyToken(token, "access"))
   }
 
+  verifyAccessTokenPayload(token: string): TokenPayload {
+    return this.verifyToken(token, "access")
+  }
+
   verifyRefreshToken(token: string): AuthIdentity {
     return this.toIdentity(this.verifyToken(token, "refresh"))
   }
@@ -35,6 +39,7 @@ export class AuthTokenService {
       sub: payload.sub,
       email: payload.email,
       tenantId: payload.tenantId,
+      tenantSlug: payload.tenantSlug ?? undefined,
       roles: payload.roles,
       genderScope: payload.genderScope,
     }

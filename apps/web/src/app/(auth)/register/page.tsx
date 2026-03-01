@@ -1,3 +1,7 @@
+import { redirect } from "next/navigation"
+
+import { AUTH_ROUTE_PATHS } from "@/lib/auth-options"
+
 export default function Page() {
-  return null
+  redirect(AUTH_ROUTE_PATHS.login)
 }

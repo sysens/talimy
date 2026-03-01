@@ -44,8 +44,8 @@ export class NotificationsGateway implements OnGatewayConnection, OnGatewayDisco
   @WebSocketServer()
   server?: Server
 
-  handleConnection(client: Socket): void {
-    const identity = this.resolveConnectionIdentity(client)
+  async handleConnection(client: Socket): Promise<void> {
+    const identity = await this.resolveConnectionIdentity(client)
     if (!identity) {
       this.logger.warn(`Socket ${client.id} rejected: missing or invalid access token`)
       client.disconnect(true)
@@ -66,7 +66,8 @@ export class NotificationsGateway implements OnGatewayConnection, OnGatewayDisco
     @ConnectedSocket() client: Socket,
     @MessageBody() _body: { tenantId?: string; userId?: string }
   ): Promise<{ success: true; rooms: string[] }> {
-    const identity = this.getClientIdentity(client) ?? this.resolveConnectionIdentity(client)
+    const identity =
+      this.getClientIdentity(client) ?? (await this.resolveConnectionIdentity(client))
     if (!identity) {
       client.disconnect(true)
       return { success: true, rooms: [] }
@@ -91,14 +92,14 @@ export class NotificationsGateway implements OnGatewayConnection, OnGatewayDisco
       .emit("notifications:unread-count", { tenantId, userId, count })
   }
 
-  private resolveConnectionIdentity(client: Socket): SocketIdentity | null {
+  private async resolveConnectionIdentity(client: Socket): Promise<SocketIdentity | null> {
     const token = this.readAccessToken(client)
     if (!token) {
       return null
     }
 
     try {
-      const payload = this.authService.verifyAccessToken(token)
+      const payload = await this.authService.verifyAccessToken(token)
       return {
         tenantId: payload.tenantId,
         userId: payload.sub,

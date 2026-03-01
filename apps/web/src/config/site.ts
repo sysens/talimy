@@ -42,6 +42,46 @@ export function getApiProxyOrigin(): string {
   ).replace(/\/$/, "")
 }
 
+export function resolveRequestOrigin(
+  host: string | null | undefined,
+  protocol: string | null | undefined
+): string {
+  const normalizedHost = host?.trim().replace(/\/$/, "")
+  const normalizedProtocol = protocol === "http" || protocol === "https" ? protocol : getWebOriginProtocol()
+
+  if (!normalizedHost) {
+    return getWebOrigin()
+  }
+
+  return `${normalizedProtocol}://${normalizedHost}`
+}
+
+export function buildPlatformWebOrigin(currentOrigin?: string | null): string {
+  const url = new URL(currentOrigin ?? getWebOrigin())
+  const hostname = url.hostname.toLowerCase()
+
+  if (hostname === "localhost" || hostname === "127.0.0.1" || hostname.endsWith(".localhost")) {
+    url.hostname = "platform.localhost"
+    return url.origin
+  }
+
+  url.hostname = `platform.${SITE_DOMAIN}`
+  return url.origin
+}
+
+export function buildTenantWebOrigin(tenantSlug: string, currentOrigin?: string | null): string {
+  const url = new URL(currentOrigin ?? getWebOrigin())
+  const hostname = url.hostname.toLowerCase()
+
+  if (hostname === "localhost" || hostname === "127.0.0.1" || hostname.endsWith(".localhost")) {
+    url.hostname = `${tenantSlug}.localhost`
+    return url.origin
+  }
+
+  url.hostname = `${tenantSlug}.${SITE_DOMAIN}`
+  return url.origin
+}
+
 export function isSupportedLocale(value: string): value is AppLocale {
   return (SUPPORTED_LOCALES as readonly string[]).includes(value)
 }
@@ -79,4 +119,9 @@ export function resolveLocaleFromAcceptLanguage(
   }
 
   return null
+}
+
+function getWebOriginProtocol(): "http" | "https" {
+  const origin = getWebOrigin()
+  return origin.startsWith("http://") ? "http" : "https"
 }

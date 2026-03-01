@@ -1,115 +1,69 @@
-import { randomUUID } from "node:crypto"
+import { Injectable } from "@nestjs/common"
+import type { AcceptInviteInput, ForgotPasswordInput, ResetPasswordInput } from "@talimy/shared"
 
-import bcrypt from "bcrypt"
-
-import { Injectable, UnauthorizedException } from "@nestjs/common"
-
+import { AuthMagicLinkService } from "./auth-magic-link.service"
+import { AuthSessionService } from "./auth-session.service"
 import { LoginDto } from "./dto/login.dto"
 import { LogoutDto } from "./dto/logout.dto"
 import { RefreshTokenDto } from "./dto/refresh-token.dto"
 import { RegisterDto } from "./dto/register.dto"
-import { AuthStoreRepository } from "./auth.store.repository"
-import { AuthTokenService } from "./auth.token.service"
-import type { AuthIdentity, AuthSession, StoredUser } from "./auth.types"
+import type { AuthIdentity, AuthRequestContext, AuthSession } from "./auth.types"
+
+export type { AuthRequestContext } from "./auth.types"
 
 @Injectable()
 export class AuthService {
-  private static readonly BCRYPT_ROUNDS = 12
-
   constructor(
-    private readonly store: AuthStoreRepository,
-    private readonly tokenService: AuthTokenService
+    private readonly sessionService: AuthSessionService,
+    private readonly magicLinkService: AuthMagicLinkService
   ) {}
 
-  async login(payload: LoginDto): Promise<AuthSession> {
-    const identity = await this.validateUserCredentials(payload.email, payload.password)
-    if (!identity) throw new UnauthorizedException("Invalid credentials")
-    return this.tokenService.createSession(identity)
+  login(payload: LoginDto, context: AuthRequestContext = {}): Promise<AuthSession> {
+    return this.sessionService.login(payload, context)
   }
 
-  async register(payload: RegisterDto): Promise<AuthSession> {
-    const normalizedEmail = payload.email.toLowerCase()
-    if (await this.store.hasUserByEmail(normalizedEmail)) {
-      throw new UnauthorizedException("Email already exists")
-    }
-
-    const role = payload.role ?? "school_admin"
-    if (role === "platform_admin") {
-      const expectedBootstrapKey = process.env.AUTH_PLATFORM_ADMIN_BOOTSTRAP_KEY
-      if (!expectedBootstrapKey || payload.bootstrapKey !== expectedBootstrapKey) {
-        throw new UnauthorizedException("Platform admin registration is disabled")
-      }
-    }
-
-    const user: StoredUser = {
-      id: randomUUID(),
-      fullName: payload.fullName,
-      email: normalizedEmail,
-      tenantId: payload.tenantId,
-      passwordHash: bcrypt.hashSync(payload.password, AuthService.BCRYPT_ROUNDS),
-      roles: [role],
-      genderScope: "all",
-    }
-    await this.store.saveUser(user)
-
-    return this.tokenService.createSession({
-      sub: user.id,
-      email: user.email,
-      tenantId: user.tenantId,
-      roles: user.roles,
-      genderScope: user.genderScope,
-    })
+  register(payload: RegisterDto, context: AuthRequestContext = {}): Promise<AuthSession> {
+    return this.sessionService.register(payload, context)
   }
 
-  async refresh(payload: RefreshTokenDto): Promise<AuthSession> {
-    const tokenPayload = this.tokenService.verifyRefreshTokenPayload(payload.refreshToken)
-    if (await this.store.isRefreshJtiRevoked(tokenPayload.jti)) {
-      throw new UnauthorizedException("Refresh token has been revoked")
-    }
-
-    const user = await this.store.getUserByEmail(tokenPayload.email)
-    if (!user) {
-      throw new UnauthorizedException("User not found for refresh token")
-    }
-
-    await this.store.revokeRefreshJti(tokenPayload.jti)
-    return this.tokenService.createSession({
-      sub: user.id,
-      email: user.email,
-      tenantId: user.tenantId,
-      roles: user.roles,
-      genderScope: user.genderScope,
-    })
+  refresh(payload: RefreshTokenDto): Promise<AuthSession> {
+    return this.sessionService.refresh(payload)
   }
 
-  async logout(payload?: LogoutDto): Promise<{ loggedOut: true }> {
-    if (payload?.refreshToken) {
-      const tokenPayload = this.tokenService.verifyRefreshTokenPayload(payload.refreshToken)
-      await this.store.revokeRefreshJti(tokenPayload.jti)
-    }
-    return { loggedOut: true }
+  logout(payload?: LogoutDto): Promise<{ loggedOut: true }> {
+    return this.sessionService.logout(payload)
   }
 
-  verifyAccessToken(token: string): AuthIdentity {
-    return this.tokenService.verifyAccessToken(token)
+  requestPasswordReset(
+    payload: ForgotPasswordInput,
+    context: AuthRequestContext
+  ): Promise<{ sent: true }> {
+    return this.magicLinkService.requestPasswordReset(payload, context)
   }
 
-  verifyRefreshToken(token: string): AuthIdentity {
-    return this.tokenService.verifyRefreshToken(token)
+  resetPassword(
+    payload: ResetPasswordInput,
+    context: AuthRequestContext
+  ): Promise<{ updated: true }> {
+    return this.magicLinkService.resetPassword(payload, context)
   }
 
-  async validateUserCredentials(email: string, password: string): Promise<AuthIdentity | null> {
-    const user = await this.store.getUserByEmail(email)
-    if (!user) return null
-    const validPassword = bcrypt.compareSync(password, user.passwordHash)
-    if (!validPassword) return null
+  acceptInvite(
+    payload: AcceptInviteInput,
+    context: AuthRequestContext
+  ): Promise<{ updated: true }> {
+    return this.magicLinkService.acceptInvite(payload, context)
+  }
 
-    return {
-      sub: user.id,
-      email: user.email,
-      tenantId: user.tenantId,
-      roles: user.roles,
-      genderScope: user.genderScope,
-    }
+  verifyAccessToken(token: string): Promise<AuthIdentity> {
+    return this.sessionService.verifyAccessToken(token)
+  }
+
+  validateUserCredentials(
+    email: string,
+    password: string,
+    context: AuthRequestContext = {}
+  ): Promise<AuthIdentity | null> {
+    return this.sessionService.validateUserCredentials(email, password, context)
   }
 }

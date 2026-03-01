@@ -89,8 +89,8 @@ export function mountTrpcHttpAdapter(app: INestApplication): void {
     "/api/trpc",
     createExpressMiddleware({
       router: apiTrpcRouter,
-      createContext: ({ req }) => ({
-        user: resolveRequestUser(req.headers?.authorization, authService),
+      createContext: async ({ req }) => ({
+        user: await resolveRequestUser(req.headers?.authorization, authService),
       }),
       onError({ path, error }) {
         logger.warn(`tRPC error on ${path ?? "(unknown)"}: ${error.message}`)
@@ -99,10 +99,10 @@ export function mountTrpcHttpAdapter(app: INestApplication): void {
   )
 }
 
-function resolveRequestUser(
+async function resolveRequestUser(
   authorizationHeader: string | string[] | undefined,
   authService: AuthService
-): AuthIdentity | null {
+): Promise<AuthIdentity | null> {
   const raw = Array.isArray(authorizationHeader) ? authorizationHeader[0] : authorizationHeader
   if (!raw) {
     return null
@@ -114,7 +114,7 @@ function resolveRequestUser(
   }
 
   try {
-    return authService.verifyAccessToken(token)
+    return await authService.verifyAccessToken(token)
   } catch {
     return null
   }

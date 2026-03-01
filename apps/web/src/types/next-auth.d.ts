@@ -5,6 +5,7 @@ declare module "next-auth" {
     user: DefaultSession["user"] & {
       id?: string
       tenantId?: string
+      tenantSlug?: string | null
       roles?: string[]
       genderScope?: "male" | "female" | "all" | null
     }
@@ -18,6 +19,7 @@ declare module "next-auth" {
     id: string
     email: string
     tenantId: string
+    tenantSlug?: string | null
     roles: string[]
     genderScope: "male" | "female" | "all"
     accessToken: string
@@ -29,6 +31,7 @@ declare module "next-auth" {
 declare module "next-auth/jwt" {
   interface JWT {
     tenantId?: string
+    tenantSlug?: string | null
     roles?: string[]
     genderScope?: "male" | "female" | "all"
     accessToken?: string

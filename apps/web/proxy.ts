@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { getToken } from "next-auth/jwt"
 
 import {
   APP_LOCALE_COOKIE,
@@ -7,13 +8,18 @@ import {
   PANEL_PREFIXES,
   resolveLocaleFromAcceptLanguage,
 } from "./src/config/site"
-import { hasAuthContext, resolveHostScopeFromHeaders } from "./src/lib/server/request-host"
+import { resolveHostScopeFromHeaders } from "./src/lib/server/request-host"
 
 type HostScope =
   | { kind: "api" }
   | { kind: "platform" }
   | { kind: "public" }
   | { kind: "school"; tenantSlug: string }
+
+type ProxyToken = {
+  authError?: unknown
+  roles?: unknown
+}
 
 const ROLE_PATH_PREFIXES = [
   ...PANEL_PREFIXES.admin,
@@ -22,31 +28,23 @@ const ROLE_PATH_PREFIXES = [
   ...PANEL_PREFIXES.parent,
 ] as const
 const PLATFORM_PATH_PREFIXES = [...PANEL_PREFIXES.platform] as const
-const AUTH_PUBLIC_PATHS = new Set(["/login", "/register", "/forgot-password", "/reset-password"])
+const AUTH_PUBLIC_PATHS = new Set(["/login", "/forgot-password", "/reset-password", "/verify-email"])
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const scope = resolveHostScope(request)
   const pathname = request.nextUrl.pathname
   const locale = resolveRequestLocale(request)
   const isApiOrAssetPath = shouldBypassLocaleHandling(pathname)
+
+  if (pathname === "/register") {
+    return finalizeResponse(request, scope, locale, redirect(request, "/login"))
+  }
 
   if (
     scope.kind === "public" &&
     (isAnyPlatformPath(pathname) || isSchoolPanelPath(pathname))
   ) {
     return finalizeResponse(request, scope, locale, redirect(request, "/login"))
-  }
-
-  if (
-    !isApiOrAssetPath &&
-    requiresLightweightAuthGate(scope, pathname) &&
-    !hasPlaceholderAuthContext(request)
-  ) {
-    const loginUrl = request.nextUrl.clone()
-    loginUrl.pathname = "/login"
-    const nextPath = `${request.nextUrl.pathname}${request.nextUrl.search}`
-    loginUrl.searchParams.set("next", nextPath)
-    return finalizeResponse(request, scope, locale, NextResponse.redirect(loginUrl))
   }
 
   if (scope.kind === "platform") {
@@ -58,6 +56,26 @@ export function proxy(request: NextRequest) {
     if (isSchoolPanelPath(pathname)) {
       return finalizeResponse(request, scope, locale, rewrite(request, "/dashboard"))
     }
+  }
+
+  const requiresAuth = !isApiOrAssetPath && requiresAuthGate(scope, pathname)
+  const sessionToken = requiresAuth ? await resolveSessionToken(request) : null
+
+  if (requiresAuth && !sessionToken) {
+    const loginUrl = request.nextUrl.clone()
+    loginUrl.pathname = "/login"
+    const nextPath = `${request.nextUrl.pathname}${request.nextUrl.search}`
+    loginUrl.searchParams.set("next", nextPath)
+    return finalizeResponse(request, scope, locale, NextResponse.redirect(loginUrl))
+  }
+
+  if (requiresAuth && sessionToken && !hasRequiredRole(scope, pathname, sessionToken)) {
+    return finalizeResponse(
+      request,
+      scope,
+      locale,
+      new NextResponse("Forbidden", { status: 403 })
+    )
   }
 
   const forwardedHeaders = new Headers(request.headers)
@@ -109,7 +127,7 @@ function isAnyPlatformPath(pathname: string): boolean {
   return isPlatformPanelPath(pathname) || isLegacyPlatformPath(pathname)
 }
 
-function requiresLightweightAuthGate(scope: HostScope, pathname: string): boolean {
+function requiresAuthGate(scope: HostScope, pathname: string): boolean {
   if (AUTH_PUBLIC_PATHS.has(pathname)) {
     return false
   }
@@ -125,8 +143,36 @@ function requiresLightweightAuthGate(scope: HostScope, pathname: string): boolea
   return false
 }
 
-function hasPlaceholderAuthContext(request: NextRequest): boolean {
-  return hasAuthContext(request.headers, request.cookies)
+function hasRequiredRole(scope: HostScope, pathname: string, token: ProxyToken): boolean {
+  const roles = Array.isArray(token.roles)
+    ? token.roles.filter((role): role is string => typeof role === "string")
+    : []
+
+  if (scope.kind === "platform" && isAnyPlatformPath(pathname)) {
+    return roles.includes("platform_admin")
+  }
+
+  if (scope.kind !== "school") {
+    return true
+  }
+
+  if (pathname.startsWith("/admin")) {
+    return roles.includes("school_admin")
+  }
+
+  if (pathname.startsWith("/teacher")) {
+    return roles.includes("teacher")
+  }
+
+  if (pathname.startsWith("/student")) {
+    return roles.includes("student")
+  }
+
+  if (pathname.startsWith("/parent")) {
+    return roles.includes("parent")
+  }
+
+  return true
 }
 
 function resolvePanelScope(pathname: string): string {
@@ -202,14 +248,6 @@ function finalizeResponse(
   response.headers.set("x-host-scope", scope.kind)
   response.headers.set("x-panel-scope", resolvePanelScope(request.nextUrl.pathname))
 
-  if (scope.kind === "school") {
-    response.cookies.set("tenant_slug", scope.tenantSlug, {
-      path: "/",
-      sameSite: "lax",
-      httpOnly: false,
-    })
-  }
-
   return response
 }
 
@@ -223,6 +261,29 @@ function rewrite(request: NextRequest, pathname: string): NextResponse {
   const url = request.nextUrl.clone()
   url.pathname = pathname
   return NextResponse.rewrite(url)
+}
+
+async function resolveSessionToken(request: NextRequest): Promise<ProxyToken | null> {
+  const secret = process.env.NEXTAUTH_SECRET?.trim() || process.env.AUTH_SECRET?.trim()
+  if (!secret) {
+    return null
+  }
+
+  try {
+    const token = (await getToken({
+      req: request,
+      secret,
+      secureCookie: request.nextUrl.protocol === "https:",
+    })) as ProxyToken | null
+
+    if (token?.authError) {
+      return null
+    }
+
+    return token
+  } catch {
+    return null
+  }
 }
 
 export const config = {

@@ -1,9 +1,11 @@
+import { headers } from "next/headers"
 import { loginSchema } from "@talimy/shared"
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
 
 import { getApiProxyOrigin } from "@/config/site"
 import { AUTH_ROUTE_PATHS } from "@/lib/auth-options"
+import { resolveHostScopeFromHeaders } from "@/lib/server/request-host"
 
 type GenderScope = "male" | "female" | "all"
 
@@ -11,6 +13,7 @@ type AuthIdentity = {
   sub: string
   email: string
   tenantId: string
+  tenantSlug?: string | null
   roles: string[]
   genderScope: GenderScope
 }
@@ -33,6 +36,7 @@ type AuthUser = {
   id: string
   email: string
   tenantId: string
+  tenantSlug?: string | null
   roles: string[]
   genderScope: GenderScope
   accessToken: string
@@ -63,13 +67,20 @@ export const nextAuthConfig: NextAuthConfig = {
           return null
         }
 
-        const loginSession = await requestAuthSession("/api/auth/login", parsed.data)
+        const incomingHeaders = await headers()
+        const hostScope = resolveHostScopeFromHeaders(incomingHeaders)
+        if (hostScope.kind !== "platform" && hostScope.kind !== "school") {
+          return null
+        }
+
+        const requestHeaders = await buildForwardHeaders()
+        const loginSession = await requestAuthSession("/api/auth/login", parsed.data, requestHeaders)
         if (!loginSession) {
           return null
         }
 
         const identity = decodeAccessIdentity(loginSession.accessToken)
-        if (!identity) {
+        if (!identity || !canIdentityAccessHost(identity, hostScope)) {
           return null
         }
 
@@ -77,6 +88,7 @@ export const nextAuthConfig: NextAuthConfig = {
           id: identity.sub,
           email: identity.email,
           tenantId: identity.tenantId,
+          tenantSlug: identity.tenantSlug ?? null,
           roles: identity.roles,
           genderScope: identity.genderScope,
           accessToken: loginSession.accessToken,
@@ -93,6 +105,7 @@ export const nextAuthConfig: NextAuthConfig = {
         token.sub = authUser.id
         token.email = authUser.email
         token.tenantId = authUser.tenantId
+        token.tenantSlug = authUser.tenantSlug ?? null
         token.roles = authUser.roles
         token.genderScope = authUser.genderScope
         token.accessToken = authUser.accessToken
@@ -114,19 +127,18 @@ export const nextAuthConfig: NextAuthConfig = {
         refreshToken: token.refreshToken,
       })
       if (!refreshedSession) {
-        token.authError = "refresh_failed"
-        return token
+        return markTokenAuthError(token, "refresh_failed")
       }
 
       const refreshedIdentity = decodeAccessIdentity(refreshedSession.accessToken)
       if (!refreshedIdentity) {
-        token.authError = "refresh_payload_invalid"
-        return token
+        return markTokenAuthError(token, "refresh_payload_invalid")
       }
 
       token.sub = refreshedIdentity.sub
       token.email = refreshedIdentity.email
       token.tenantId = refreshedIdentity.tenantId
+      token.tenantSlug = refreshedIdentity.tenantSlug ?? null
       token.roles = refreshedIdentity.roles
       token.genderScope = refreshedIdentity.genderScope
       token.accessToken = refreshedSession.accessToken
@@ -143,12 +155,13 @@ export const nextAuthConfig: NextAuthConfig = {
         id: typeof token.sub === "string" ? token.sub : "",
         email: typeof token.email === "string" ? token.email : existingUser.email,
         tenantId: typeof token.tenantId === "string" ? token.tenantId : "",
+        tenantSlug: typeof token.tenantSlug === "string" ? token.tenantSlug : null,
         roles: normalizeStringArray(token.roles),
         genderScope: resolvedGenderScope,
       }
 
       session.accessToken = typeof token.accessToken === "string" ? token.accessToken : null
-      session.refreshToken = typeof token.refreshToken === "string" ? token.refreshToken : null
+      session.refreshToken = null
       session.expiresAt = typeof token.expiresAt === "number" ? token.expiresAt : null
       session.authError = typeof token.authError === "string" ? token.authError : null
 
@@ -170,12 +183,23 @@ export const nextAuthConfig: NextAuthConfig = {
   },
 }
 
-async function requestAuthSession(pathname: string, payload: Record<string, unknown>) {
+async function requestAuthSession(
+  pathname: string,
+  payload: Record<string, unknown>,
+  extraHeaders?: Headers
+): Promise<AuthSession | null> {
+  const requestHeaders = new Headers({
+    "content-type": "application/json",
+  })
+  if (extraHeaders) {
+    for (const [key, value] of extraHeaders.entries()) {
+      requestHeaders.set(key, value)
+    }
+  }
+
   const response = await fetch(`${getApiProxyOrigin()}${pathname}`, {
     method: "POST",
-    headers: {
-      "content-type": "application/json",
-    },
+    headers: requestHeaders,
     body: JSON.stringify(payload),
     cache: "no-store",
   })
@@ -192,6 +216,34 @@ async function requestAuthSession(pathname: string, payload: Record<string, unkn
   }
 
   return extractSession(parsed)
+}
+
+async function buildForwardHeaders(): Promise<Headers> {
+  const incomingHeaders = await headers()
+  const forwardedHeaders = new Headers()
+  const forwardedHost =
+    incomingHeaders.get("x-forwarded-host") ?? incomingHeaders.get("host")
+  const forwardedProto = incomingHeaders.get("x-forwarded-proto")
+  const forwardedFor = incomingHeaders.get("x-forwarded-for")
+
+  if (forwardedHost) {
+    forwardedHeaders.set("x-forwarded-host", forwardedHost)
+  }
+
+  if (forwardedProto) {
+    forwardedHeaders.set("x-forwarded-proto", forwardedProto)
+  }
+
+  if (forwardedFor) {
+    forwardedHeaders.set("x-forwarded-for", forwardedFor)
+  }
+
+  const hostScope = resolveHostScopeFromHeaders(incomingHeaders)
+  if (hostScope.kind === "school") {
+    forwardedHeaders.set("x-tenant-slug", hostScope.tenantSlug)
+  }
+
+  return forwardedHeaders
 }
 
 function extractSession(payload: BackendEnvelope): AuthSession | null {
@@ -238,6 +290,7 @@ function decodeAccessIdentity(accessToken: string): AuthIdentity | null {
       sub: unknown
       email: unknown
       tenantId: unknown
+      tenantSlug: unknown
       roles: unknown
       genderScope: unknown
     }>
@@ -260,12 +313,28 @@ function decodeAccessIdentity(accessToken: string): AuthIdentity | null {
       sub: payload.sub,
       email: payload.email,
       tenantId: payload.tenantId,
+      tenantSlug: typeof payload.tenantSlug === "string" ? payload.tenantSlug : null,
       roles,
       genderScope,
     }
   } catch {
     return null
   }
+}
+
+function canIdentityAccessHost(
+  identity: AuthIdentity,
+  hostScope: ReturnType<typeof resolveHostScopeFromHeaders>
+): boolean {
+  if (hostScope.kind === "platform") {
+    return identity.roles.includes("platform_admin")
+  }
+
+  if (hostScope.kind === "school") {
+    return !identity.roles.includes("platform_admin")
+  }
+
+  return false
 }
 
 function toExpiresAt(expiresInSeconds: number): number {
@@ -281,5 +350,21 @@ function normalizeGenderScope(value: unknown): GenderScope | null {
   if (value === "male" || value === "female" || value === "all") {
     return value
   }
+
   return null
+}
+
+function markTokenAuthError(
+  token: Record<string, unknown>,
+  authError: string
+): Record<string, unknown> {
+  delete token.accessToken
+  delete token.expiresAt
+  delete token.genderScope
+  delete token.refreshToken
+  delete token.roles
+  delete token.tenantId
+  delete token.tenantSlug
+  token.authError = authError
+  return token
 }

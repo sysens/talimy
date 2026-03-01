@@ -23,7 +23,26 @@ export const adminNavItems: NavigationItem[] = [
     icon: "calendar-check",
   },
   { id: "admin-exams", labelKey: "nav.admin.exams", href: "/admin/exams", icon: "file-pen-line" },
-  { id: "admin-finance", labelKey: "nav.admin.finance", href: "/admin/finance", icon: "wallet" },
+  {
+    id: "admin-finance",
+    labelKey: "nav.admin.finance",
+    href: "/admin/finance",
+    icon: "wallet",
+    children: [
+      {
+        id: "admin-finance-payments",
+        label: "Fees Collection",
+        href: "/admin/finance/payments",
+        icon: "wallet",
+      },
+      {
+        id: "admin-finance-expenses",
+        label: "Expenses",
+        href: "/admin/finance",
+        icon: "wallet",
+      },
+    ],
+  },
   { id: "admin-notices", labelKey: "nav.admin.notices", href: "/admin/notices", icon: "megaphone" },
   {
     id: "admin-calendar",

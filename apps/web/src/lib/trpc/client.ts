@@ -2,8 +2,10 @@ import { createTRPCClient, httpBatchLink } from "@trpc/client"
 import type { AppRouter } from "@talimy/trpc"
 import { trpcTransformer } from "@talimy/trpc/src/transformer"
 
-import { APP_LOCALE_COOKIE, getWebOrigin } from "@/config/site"
+import { APP_LOCALE_COOKIE, RESERVED_SUBDOMAINS, getWebOrigin } from "@/config/site"
 import { getStoredAuthTokens } from "@/lib/auth"
+
+const RESERVED_SUBDOMAIN_SET = new Set<string>(RESERVED_SUBDOMAINS)
 
 export function getTrpcHttpUrl(): string {
   if (typeof window !== "undefined") {
@@ -20,7 +22,7 @@ export function createBrowserTrpcClient() {
         transformer: trpcTransformer,
         headers() {
           const tokens = getStoredAuthTokens()
-          const tenantSlug = readCookie("tenant_slug")
+          const tenantSlug = resolveTenantSlugFromLocation()
           const locale = readCookie(APP_LOCALE_COOKIE)
           const headers: Record<string, string> = {}
 
@@ -46,6 +48,29 @@ export function createBrowserTrpcClient() {
       }),
     ],
   })
+}
+
+function resolveTenantSlugFromLocation(): string | undefined {
+  if (typeof window === "undefined") {
+    return undefined
+  }
+
+  const hostname = window.location.hostname.trim().toLowerCase()
+  if (!hostname) {
+    return undefined
+  }
+
+  if (hostname.endsWith(".localhost")) {
+    const slug = hostname.slice(0, -".localhost".length)
+    return slug && !RESERVED_SUBDOMAIN_SET.has(slug) ? slug : undefined
+  }
+
+  if (hostname.endsWith(".talimy.space")) {
+    const slug = hostname.slice(0, -".talimy.space".length)
+    return slug && !RESERVED_SUBDOMAIN_SET.has(slug) ? slug : undefined
+  }
+
+  return undefined
 }
 
 function readCookie(name: string): string | undefined {

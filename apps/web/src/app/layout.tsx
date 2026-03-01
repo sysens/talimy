@@ -7,11 +7,8 @@ import type { ReactNode } from "react"
 import { getWebOrigin, SITE_NAME } from "@/config/site"
 import { AuthProvider } from "@/providers/auth-provider"
 import { IntlProvider } from "@/providers/intl-provider"
-import { QueryProvider } from "@/providers/query-provider"
-import { SocketProvider } from "@/providers/socket-provider"
-import { ToastProvider } from "@/providers/toast-provider"
 import { ThemeProvider } from "@/providers/theme-provider"
-import { TrpcProvider } from "@/lib/trpc/provider"
+import { auth } from "@/lib/nextauth"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,22 +27,15 @@ type RootLayoutProps = {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const [locale, messages] = await Promise.all([getLocale(), getMessages()])
+  const [locale, messages, session] = await Promise.all([getLocale(), getMessages(), auth()])
 
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={inter.variable} suppressHydrationWarning>
         <ThemeProvider>
-          <AuthProvider>
+          <AuthProvider session={session}>
             <IntlProvider locale={locale} messages={messages}>
-              <QueryProvider>
-                <TrpcProvider>
-                  <SocketProvider>
-                    {children}
-                    <ToastProvider />
-                  </SocketProvider>
-                </TrpcProvider>
-              </QueryProvider>
+              {children}
             </IntlProvider>
           </AuthProvider>
         </ThemeProvider>

@@ -5,9 +5,11 @@ export type NavigationBadge = {
 
 export type NavigationItem = {
   id: string
-  labelKey: string
+  label?: string
+  labelKey?: string
   href: string
   icon: string
+  children?: NavigationItem[]
   matchPrefixes?: string[]
   disabled?: boolean
   badge?: NavigationBadge

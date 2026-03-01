@@ -1,50 +1,32 @@
-import { db, users } from "@talimy/database"
+import bcrypt from "bcrypt"
+import { db, tenants, users } from "@talimy/database"
 import { and, eq, isNull } from "drizzle-orm"
 import { Injectable } from "@nestjs/common"
 
 import { getAuthConfig } from "@/config/auth.config"
 import { CacheService } from "@/modules/cache/cache.service"
 
-import type { StoredUser } from "./auth.types"
+import type { StoredRole, StoredUser } from "./auth.types"
 
 @Injectable()
 export class AuthStoreRepository {
   private readonly refreshTokenTtlSec = getAuthConfig().refreshTokenTtlSec
+  private static readonly BCRYPT_ROUNDS = 12
 
   constructor(private readonly cacheService: CacheService) {}
 
-  async getUserByEmail(email: string): Promise<StoredUser | null> {
-    const normalizedEmail = this.normalizeEmail(email)
-    const [row] = await db
-      .select({
-        id: users.id,
-        firstName: users.firstName,
-        lastName: users.lastName,
-        email: users.email,
-        tenantId: users.tenantId,
-        passwordHash: users.passwordHash,
-        role: users.role,
-      })
-      .from(users)
-      .where(and(eq(users.email, normalizedEmail), isNull(users.deletedAt)))
-      .limit(1)
-
-    if (!row) return null
-
-    return {
-      id: row.id,
-      fullName: `${row.firstName} ${row.lastName}`.trim(),
-      email: row.email,
-      tenantId: row.tenantId,
-      passwordHash: row.passwordHash,
-      roles: [row.role],
-      // Gender scope is not persisted on users table yet; keep current default behavior.
-      genderScope: "all",
-    }
+  async getUserByEmail(email: string, tenantId?: string): Promise<StoredUser | null> {
+    return this.findUserByEmail(this.normalizeEmail(email), {
+      tenantId,
+    })
   }
 
-  async hasUserByEmail(email: string): Promise<boolean> {
-    const user = await this.getUserByEmail(email)
+  async getUserByEmailForRole(email: string, role: StoredRole): Promise<StoredUser | null> {
+    return this.findUserByEmail(this.normalizeEmail(email), { role })
+  }
+
+  async hasUserByEmail(email: string, tenantId?: string): Promise<boolean> {
+    const user = await this.getUserByEmail(email, tenantId)
     return user !== null
   }
 
@@ -59,14 +41,57 @@ export class AuthStoreRepository {
       passwordHash: user.passwordHash,
       firstName: firstName || user.fullName,
       lastName,
-      role: (user.roles[0] ?? "school_admin") as
-        | "platform_admin"
-        | "school_admin"
-        | "teacher"
-        | "student"
-        | "parent",
+      role: (user.roles[0] ?? "school_admin") as StoredRole,
       isActive: true,
     })
+  }
+
+  async getTenantIdBySlug(slug: string): Promise<string | null> {
+    const [tenant] = await db
+      .select({ id: tenants.id })
+      .from(tenants)
+      .where(and(eq(tenants.slug, slug), eq(tenants.status, "active"), isNull(tenants.deletedAt)))
+      .limit(1)
+
+    return tenant?.id ?? null
+  }
+
+  async updatePasswordByUser(userId: string, tenantId: string, password: string): Promise<boolean> {
+    const passwordHash = await bcrypt.hash(password, AuthStoreRepository.BCRYPT_ROUNDS)
+
+    const result = await db
+      .update(users)
+      .set({
+        passwordHash,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(users.id, userId), eq(users.tenantId, tenantId), isNull(users.deletedAt)))
+
+    return result.rowCount > 0
+  }
+
+  async markUserLoggedIn(userId: string, tenantId: string): Promise<void> {
+    await db
+      .update(users)
+      .set({
+        lastLogin: new Date(),
+        updatedAt: new Date(),
+      })
+      .where(and(eq(users.id, userId), eq(users.tenantId, tenantId), isNull(users.deletedAt)))
+  }
+
+  async setSessionsRevokedAfter(userId: string, revokedAfterEpochSeconds: number): Promise<void> {
+    await this.cacheService.setJson(this.revokedAfterKey(userId), { revokedAfterEpochSeconds })
+  }
+
+  async getSessionsRevokedAfter(userId: string): Promise<number | null> {
+    const record = await this.cacheService.getJson<{ revokedAfterEpochSeconds?: number }>(
+      this.revokedAfterKey(userId)
+    )
+
+    return typeof record?.revokedAfterEpochSeconds === "number"
+      ? record.revokedAfterEpochSeconds
+      : null
   }
 
   async revokeRefreshJti(jti: string): Promise<void> {
@@ -82,11 +107,63 @@ export class AuthStoreRepository {
     return cached?.revoked === true
   }
 
+  private async findUserByEmail(
+    normalizedEmail: string,
+    filters: {
+      role?: StoredRole
+      tenantId?: string
+    }
+  ): Promise<StoredUser | null> {
+    const [row] = await db
+      .select({
+        id: users.id,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        email: users.email,
+        tenantId: users.tenantId,
+        tenantSlug: tenants.slug,
+        passwordHash: users.passwordHash,
+        role: users.role,
+      })
+      .from(users)
+      .innerJoin(tenants, eq(users.tenantId, tenants.id))
+      .where(
+        and(
+          eq(users.email, normalizedEmail),
+          filters.tenantId ? eq(users.tenantId, filters.tenantId) : undefined,
+          filters.role ? eq(users.role, filters.role) : undefined,
+          eq(users.isActive, true),
+          isNull(users.deletedAt),
+          isNull(tenants.deletedAt)
+        )
+      )
+      .limit(1)
+
+    if (!row) {
+      return null
+    }
+
+    return {
+      id: row.id,
+      fullName: `${row.firstName} ${row.lastName}`.trim(),
+      email: row.email,
+      tenantId: row.tenantId,
+      tenantSlug: row.tenantSlug,
+      passwordHash: row.passwordHash,
+      roles: [row.role],
+      genderScope: "all",
+    }
+  }
+
   private normalizeEmail(email: string): string {
     return email.toLowerCase()
   }
 
   private revocationKey(jti: string): string {
     return `auth:refresh-revoked:${jti}`
+  }
+
+  private revokedAfterKey(userId: string): string {
+    return `auth:user-revoked-after:${userId}`
   }
 }

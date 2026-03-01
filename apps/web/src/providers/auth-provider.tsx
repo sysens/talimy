@@ -55,6 +55,11 @@ function AuthStoreHydrator({ children }: AuthStoreHydratorProps) {
       return
     }
 
+    if (sessionState.session?.authError) {
+      clearSession()
+      return
+    }
+
     const userRecord = sessionRecord(sessionState.session)
     const userId = readString(userRecord?.id) ?? readString(userRecord?.sub)
     if (!userId) {
@@ -66,6 +71,11 @@ function AuthStoreHydrator({ children }: AuthStoreHydratorProps) {
     const roles = readStringArray(userRecord?.roles)
     const permissions = readStringArray(userRecord?.permissions)
     const genderScopeValue = readString(userRecord?.genderScope)
+    const accessToken =
+      typeof sessionState.session?.accessToken === "string" &&
+      sessionState.session.accessToken.trim().length > 0
+        ? sessionState.session.accessToken
+        : null
 
     const user: AuthUser = {
       id: userId,
@@ -81,7 +91,7 @@ function AuthStoreHydrator({ children }: AuthStoreHydratorProps) {
 
     setSession({
       user,
-      accessToken: null,
+      accessToken,
       refreshToken: null,
       tenant: tenantId
         ? {
