@@ -1,2122 +1,1205 @@
-﻿# TALIMY - Execution Plan v3 (0 -> 100%, Full Detail)
+# TALIMY - Execution Plan v5 (Detailed + Page-First, 0 -> 100%)
 
-Last updated: 2026-02-21
-Source baseline: `reja.txt` (all subtasks preserved)
-Status: In execution (track by phase/task status markers below)
+Last updated: 2026-03-01
+Source baseline: `docReja/old_Reja.md` + `docReja/Reja.md` + `docReja/Documentation.html`
+Strategy: strong detailed execution plan with page-first delivery for context-dependent UI.
+Status: In execution
 
-## 1. 100% completion definition
+## 1. 100% Completion Definition
 
-1. All phases (FAZA 0..17) pass entry and exit gates.
-2. Every subtask in this file is completed with acceptance met.
+1. All phases in this file pass entry and exit gates.
+2. Every task/subtask has concrete completion evidence.
 3. CI passes: lint, typecheck, unit, integration, e2e.
 4. Production deploy passes smoke checks with rollback path validated.
+5. Deferred contextual UI items are closed only inside their real page/container implementation, not as isolated placeholders.
 
 ## 2. Global DoD (applies to every subtask)
 
-1. Implemented code/config/docs for subtask scope.
+1. Implemented code/config/docs for the subtask scope.
 2. No broken imports/routes/types in touched areas.
 3. Lint and typecheck pass for affected workspace(s).
-4. Tests added/updated as needed and passing.
+4. Tests added or updated when applicable and passing.
 5. Security and access rules applied where relevant.
-6. Commit message is clear and traceable to subtask ID.
+6. Commit message is traceable to subtask or task scope.
 
-## 2.1 Progress Tracking Rules (single source of truth)
+## 2.1 Progress Tracking Rules
 
-1. A subtask is `Not Started` by default unless an explicit status/evidence is added.
-2. `In Progress` and `Completed` states must be set only after real local verification.
-3. Acceptance table text describes target outcomes, not pre-claimed completion.
-4. If task-level status exists, it overrides implicit defaults for that task only.
-5. For reporting, `4.2 Task Status Tracker` is the canonical task status view.
+1. A subtask is `Not Started` by default unless explicit evidence says otherwise.
+2. `In Progress` and `Completed` may only be set after local verification.
+3. Acceptance text describes the target outcome, not a pre-claimed result.
+4. For active work, the phase tracker and the detailed task section must stay in sync.
+5. If a contextual component is deferred into a page task, that page task becomes the canonical completion location.
 
 ## 2.2 Acceptance Evidence Rules
 
-1. For code changes: include at least one concrete evidence path (file and/or command result).
-2. For infra/deploy changes: include concrete artifact proof (workflow file, domain/DNS entry, deployment output, or runbook update).
-3. Generic checks are mandatory but conditional: lint/typecheck always for code; tests only when applicable.
+1. Code tasks need at least one concrete evidence path (file and/or command result).
+2. Infra tasks need concrete artifact proof (workflow file, config, domain, deploy log, or runbook update).
+3. Runtime tasks need smoke/test evidence when applicable.
+4. Page-first UI tasks must prove both desktop and responsive container behavior when the design is responsive.
 
 ## 2.3 Ownership and Approval Rules
 
-1. `Phase Owner (default)` means coordinator for the phase.
-2. `Task Owner` is directly accountable for delivery and acceptance proof.
-3. Completion approval is done by Task Owner; cross-team tasks require involved owners to confirm evidence.
+1. `Phase Owner (default)` is the coordinator for the phase.
+2. `Task Owner` is accountable for delivery and evidence.
+3. Cross-cutting tasks need all involved owners to confirm evidence before being treated as complete.
 
-## 2.4 Tracker Sync Checklist (mandatory on every status change)
+## 2.4 Tracker Sync Checklist
 
-1. Update `4.1 Phase Status Tracker`.
-2. Update `4.2 Task Status Tracker`.
-3. Update the corresponding Task section `- **Status**` marker (if present).
-4. Add or refresh Evidence paths for the changed status.
+1. Update the phase status tracker.
+2. Update the detailed task section status/evidence where relevant.
+3. If execution strategy changes (for example component-first -> page-first), record it explicitly in the phase notes.
+4. Do not mark contextual UI tasks as `Skipped` when they are actually deferred into page implementation.
 
 ## 2.5 External Provider Gate Policy (temporary)
 
-1. `email-runtime` and `sms-runtime` smoke checks are external-provider dependent and may stay non-blocking until provider verification is completed.
-2. Daily/regular smoke should use `bun run --cwd apps/api smoke:integration:core` (forces `--strict-email=false --strict-sms=false`).
-3. Full provider validation should use `bun run --cwd apps/api smoke:integration:full` after Resend domain verification and Twilio sender verification are completed.
-4. This policy is temporary and must be removed after external verification is done.
+1. `email-runtime` and `sms-runtime` smoke checks remain non-blocking until provider verification is completed.
+2. Regular smoke uses the core integration path with strict email/sms disabled.
+3. Full provider validation happens only after Resend domain verification and Twilio sender verification are completed.
+4. This temporary policy must be removed after external provider readiness is achieved.
 
-## 3. Architecture constraints (fixed)
+## 3. Architecture Constraints (Fixed)
 
 1. Single web app (`apps/web`) + proxy subdomain routing.
-2. Canonical routes: `/admin/finance/payments`, `/admin/finance/invoices`, `/admin/notices`, `/teacher/notices`, `/student/notices`.
-3. Database package name is `packages/database`.
+2. Canonical route families: `/admin/*`, `/teacher/*`, `/student/*`, `/parent/*`, `/platform/*`.
+3. Database package is `packages/database`.
+4. Shared UI lives in `packages/ui`; shadcn primitives under `packages/ui/src/components/ui/*` are user-controlled and must not be regenerated/edited by agent.
+5. UI execution rule:
+   - Page-agnostic primitives/components stay in FAZA 4.
+   - Contextual components are finalized inside page tasks where real container/layout/responsive constraints exist.
+6. Multi-tenant, role, and gender-scope isolation rules remain mandatory in all phases.
 
-## 4. Detailed plan by phase/task/subtask
+## 4. Detailed Tracking
 
 ## 4.1 Phase Status Tracker (single view)
 
-| Phase   | Status         | Updated At | Evidence                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| ------- | -------------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| FAZA 0  | 🟢 Completed   | 2026-02-20 | `docReja/Reja.md` (FAZA 0 Exit Gate status)                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| FAZA 1  | 🟢 Completed   | 2026-02-20 | `packages/database/src/schema/*`, `packages/database/src/relations.ts`, `packages/database/src/migrate.ts`, `packages/database/src/seed/*`, `packages/database/drizzle/0000_initial.sql`                                                                                                                                                                                                                                                                                                |
-| FAZA 2  | 🟡 In Progress | 2026-02-26 | `apps/api/src/app.module.ts`, `apps/api/src/modules/*`, `packages/shared/src/validators/*`, `packages/trpc/src/*`, `apps/api/scripts/smoke-error-contract.js`, `apps/api/scripts/smoke-integration-baseline.js`, `bun run typecheck --filter=api`, `bun run typecheck --filter=@talimy/trpc`, `bun run --cwd apps/api smoke:error-contract`, `bun run --cwd apps/api smoke:integration-baseline`                                                                                        |
-| FAZA 3  | 🟡 In Progress | 2026-02-26 | `apps/web/proxy.ts`, `apps/web/src/app/layout.tsx`, `apps/web/src/providers/*`, `apps/web/src/stores/*`, `apps/web/src/lib/trpc/*`, `apps/web/src/lib/api.ts`, `apps/web/src/lib/socket.ts`, `apps/web/src/app/api/trpc/[trpc]/route.ts`, `apps/web/src/app/api/upload/route.ts`, `apps/web/src/hooks/*`, `apps/web/src/config/navigation/*`, `apps/web/src/i18n/*`, `apps/web/src/messages/*.json`, `bun run typecheck --filter=web` ✅ (runtime smoke checks for 3.5.6/3.5.7 pending) |
-| FAZA 4  | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| FAZA 5  | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| FAZA 6  | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| FAZA 7  | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| FAZA 8  | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| FAZA 9  | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| FAZA 10 | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| FAZA 11 | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| FAZA 12 | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| FAZA 13 | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| FAZA 14 | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| FAZA 15 | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| FAZA 16 | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| FAZA 17 | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| Phase   | Status         | Updated At | Evidence |
+| ------- | -------------- | ---------- | -------- |
+| FAZA 0  | Completed      | 2026-02-20 | `package.json`, `turbo.json`, `tsconfig.base.json`, shared config packages |
+| FAZA 1  | Completed      | 2026-02-20 | `packages/database/src/schema/*`, `packages/database/src/relations.ts`, `packages/database/src/seed/*`, drizzle migration files |
+| FAZA 2  | In Progress    | 2026-02-26 | `apps/api/src/app.module.ts`, `apps/api/src/modules/*`, shared validators, smoke scripts |
+| FAZA 3  | In Progress    | 2026-02-26 | `apps/web/proxy.ts`, `apps/web/src/app/layout.tsx`, providers, stores, hooks, i18n, API route wiring |
+| FAZA 4  | In Progress    | 2026-03-01 | `packages/ui/*`, `apps/web/src/components/shared/ui-showcase/*`, chart/stat/data-table work through 4.3.3 |
+| FAZA 5  | Not Started    | -          | Auth pages pending |
+| FAZA 6  | Not Started    | -          | School Admin layout + dashboard pending |
+| FAZA 7  | Not Started    | -          | School Admin teachers pages pending |
+| FAZA 8  | Not Started    | -          | School Admin students pages pending |
+| FAZA 9  | Not Started    | -          | School Admin attendance/finance/notices/exams/calendar/profile/settings pending |
+| FAZA 10 | Not Started    | -          | Student pages pending |
+| FAZA 11 | Not Started    | -          | Teacher pages pending |
+| FAZA 12 | Not Started    | -          | Parent pages pending |
+| FAZA 13 | Not Started    | -          | Platform admin pages pending |
+| FAZA 14 | Not Started    | -          | Marketing pages pending |
+| FAZA 15 | Not Started    | -          | Real-time infra pending |
+| FAZA 16 | Not Started    | -          | AI integration pending |
+| FAZA 17 | Not Started    | -          | Testing pending |
+| FAZA 18 | Not Started    | -          | SEO + performance pending |
+| FAZA 19 | Not Started    | -          | CI/CD + production deployment pending |
 
-## 4.2 Task Status Tracker (detailed view)
+## 4.2 Task Status Tracker (execution control)
 
-| Task   | Name                                                                            | Status         | Updated At | Evidence                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| ------ | ------------------------------------------------------------------------------- | -------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0.1    | Monorepo Initialization                                                         | 🟢 Completed   | 2026-02-20 | `package.json`, `turbo.json`, `tsconfig.base.json`, `.prettierrc`, `commitlint.config.js`, `lint-staged.config.js`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| 0.2    | Shared Config Packages                                                          | 🟢 Completed   | 2026-02-20 | `packages/config-typescript/*`, `packages/config-eslint/*`, `packages/config-tailwind/tailwind.config.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| 0.3    | Shared Types Package (`packages/shared`)                                        | 🟢 Completed   | 2026-02-20 | `packages/shared/tsconfig.json`, `packages/shared/src/index.ts`, `packages/shared/src/types/index.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| 1.1    | Database Package Setup                                                          | 🟢 Completed   | 2026-02-20 | `packages/database/drizzle.config.ts`, `packages/database/src/client.ts`, `packages/database/src/index.ts`, `packages/database/src/migrate.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| 1.2    | Core Schema                                                                     | 🟢 Completed   | 2026-02-20 | `packages/database/src/schema/tenants.ts`, `packages/database/src/schema/users.ts`, `packages/database/src/schema/roles.ts`, `packages/database/src/schema/permissions.ts`, `packages/database/src/schema/sessions.ts`, `packages/database/src/schema/audit-logs.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| 1.3    | Education Schema                                                                | 🟢 Completed   | 2026-02-20 | `packages/database/src/schema/academic-years.ts`, `packages/database/src/schema/terms.ts`, `packages/database/src/schema/classes.ts`, `packages/database/src/schema/sections.ts`, `packages/database/src/schema/subjects.ts`, `packages/database/src/schema/schedules.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| 1.4    | People Schema                                                                   | 🟢 Completed   | 2026-02-20 | `packages/database/src/schema/teachers.ts`, `packages/database/src/schema/students.ts`, `packages/database/src/schema/parents.ts`, `packages/database/src/schema/parent-student.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| 1.5    | Attendance Schema                                                               | 🟢 Completed   | 2026-02-20 | `packages/database/src/schema/attendance.ts`, `packages/database/src/schema/attendance-settings.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| 1.6    | Grades & Exams Schema                                                           | 🟢 Completed   | 2026-02-20 | `packages/database/src/schema/grade-scales.ts`, `packages/database/src/schema/grades.ts`, `packages/database/src/schema/exams.ts`, `packages/database/src/schema/exam-results.ts`, `packages/database/src/schema/assignments.ts`, `packages/database/src/schema/assignment-submissions.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| 1.7    | Finance Schema                                                                  | 🟢 Completed   | 2026-02-20 | `packages/database/src/schema/fee-structures.ts`, `packages/database/src/schema/payments.ts`, `packages/database/src/schema/payment-plans.ts`, `packages/database/src/schema/invoices.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| 1.8    | Communication Schema                                                            | 🟢 Completed   | 2026-02-20 | `packages/database/src/schema/notices.ts`, `packages/database/src/schema/events.ts`, `packages/database/src/schema/notifications.ts`, `packages/database/src/schema/messages.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| 1.9    | AI Schema                                                                       | 🟢 Completed   | 2026-02-20 | `packages/database/src/schema/ai-conversations.ts`, `packages/database/src/schema/ai-insights.ts`, `packages/database/src/schema/ai-reports.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| 1.10   | Relations & Migrations                                                          | 🟢 Completed   | 2026-02-20 | `packages/database/src/relations.ts`, `packages/database/src/migrate.ts`, `packages/database/src/seed/*`, `packages/database/drizzle/0000_noisy_valeria_richards.sql`, `packages/database/drizzle/meta/_journal.json`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| 2.1    | NestJS Project Setup                                                            | 🟡 In Progress | 2026-02-21 | `apps/api/src/app.module.ts`, `apps/api/src/modules/auth/*`, `apps/api/src/modules/users/*`, `apps/api/src/modules/tenants/*`, `apps/api/src/modules/teachers/*`, `apps/api/src/modules/students/*`, `apps/api/src/modules/parents/*`, `apps/api/src/modules/classes/*`, `apps/api/src/modules/attendance/*`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| 2.2    | Common Utilities                                                                | 🟡 In Progress | 2026-02-21 | `apps/api/src/common/decorators/*`, `apps/api/src/common/guards/*`, `apps/api/src/common/pipes/*`, `apps/api/src/common/filters/*`, `apps/api/src/common/interceptors/*`, `apps/api/src/common/middleware/*`, `apps/api/src/common/dto/*`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| 2.2.8  | Tenant Slug Resolver Hardening (subdomain slug -> tenant UUID)                  | 🟢 Completed   | 2026-02-26 | `apps/api/src/common/middleware/tenant.middleware.ts`, `apps/api/src/common/middleware/tenant.middleware.spec.ts`, `apps/api/src/modules/tenants/tenants.service.ts`, `apps/api/src/modules/tenants/tenants.repository.ts`, `bun test apps/api/src/common/middleware/tenant.middleware.spec.ts` (PASS), `bun run typecheck --filter=api` (PASS)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| 2.3    | Auth Module                                                                     | 🟡 In Progress | 2026-02-21 | `apps/api/src/modules/auth/auth.controller.ts`, `apps/api/src/modules/auth/auth.service.ts`, `apps/api/src/modules/auth/auth.token.service.ts`, `apps/api/src/modules/auth/auth.store.repository.ts`, `apps/api/src/modules/auth/auth.types.ts`, `apps/api/src/modules/auth/strategies/*`, `apps/api/src/common/guards/auth.guard.ts`, `apps/api/src/config/auth.config.ts`, `packages/shared/src/validators/auth.schema.ts`, `tooling/docs/phase-2-auth-slice-checklist.md`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| 2.4    | Tenants Module (Platform Admin)                                                 | 🟡 In Progress | 2026-02-21 | `apps/api/src/modules/tenants/tenants.controller.ts`, `apps/api/src/modules/tenants/tenants.service.ts`, `apps/api/src/modules/tenants/tenants.repository.ts`, `apps/api/src/modules/tenants/tenants.mapper.ts`, `apps/api/src/modules/tenants/tenants.types.ts`, `apps/api/src/modules/tenants/dto/create-tenant.dto.ts`, `apps/api/src/modules/tenants/dto/update-tenant.dto.ts`, `apps/api/src/modules/tenants/dto/list-tenants-query.dto.ts`, `apps/api/src/modules/tenants/dto/update-tenant-billing.dto.ts`, `packages/database/src/schema/tenants.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| 2.5    | Users Module                                                                    | 🟡 In Progress | 2026-02-21 | `apps/api/src/modules/users/users.controller.ts`, `apps/api/src/modules/users/users.service.ts`, `apps/api/src/modules/users/users.repository.ts`, `apps/api/src/modules/users/users.mapper.ts`, `apps/api/src/modules/users/users.types.ts`, `apps/api/src/modules/users/dto/create-user.dto.ts`, `apps/api/src/modules/users/dto/update-user.dto.ts`, `apps/api/src/modules/users/dto/list-users-query.dto.ts`, `apps/api/src/modules/users/dto/update-user-role.dto.ts`, `apps/api/src/modules/users/dto/change-user-password.dto.ts`, `apps/api/src/modules/users/dto/update-user-avatar.dto.ts`, `packages/shared/src/validators/user.schema.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| 2.6    | Teachers Module                                                                 | 🟡 In Progress | 2026-02-22 | `apps/api/src/modules/teachers/teachers.controller.ts`, `apps/api/src/modules/teachers/teachers.service.ts`, `apps/api/src/modules/teachers/teachers.repository.ts`, `apps/api/src/modules/teachers/teachers.mapper.ts`, `apps/api/src/modules/teachers/teachers.types.ts`, `apps/api/src/modules/teachers/dto/create-teacher.dto.ts`, `apps/api/src/modules/teachers/dto/update-teacher.dto.ts`, `apps/api/src/modules/teachers/dto/list-teachers-query.dto.ts`, `packages/shared/src/validators/teacher.schema.ts`, `apps/api/src/modules/authz/permify/permify-pdp.service.ts`, `apps/api/src/modules/authz/permify/permify.module.ts`, `allow-test.sh` (`CHECK_RESULT_ALLOWED`)                                                                                                                                                                                                                                                                                                                                                                                                                |
-| 2.7    | Students Module                                                                 | 🟡 In Progress | 2026-02-22 | `apps/api/src/modules/students/students.controller.ts`, `apps/api/src/modules/students/students.service.ts`, `apps/api/src/modules/students/students.repository.ts`, `apps/api/src/modules/students/students.summary.repository.ts`, `apps/api/src/modules/students/students.mapper.ts`, `apps/api/src/modules/students/students.types.ts`, `apps/api/src/modules/students/dto/create-student.dto.ts`, `apps/api/src/modules/students/dto/update-student.dto.ts`, `apps/api/src/modules/students/dto/list-students-query.dto.ts`, `packages/shared/src/validators/student.schema.ts`, `relationships-write.sh` (`snap_token`), `deny-test.sh` (`CHECK_RESULT_DENIED`)                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| 2.8    | Parents Module                                                                  | 🟡 In Progress | 2026-02-21 | `apps/api/src/modules/parents/parents.controller.ts`, `apps/api/src/modules/parents/parents.service.ts`, `apps/api/src/modules/parents/parents.repository.ts`, `apps/api/src/modules/parents/parents.mapper.ts`, `apps/api/src/modules/parents/parents.types.ts`, `apps/api/src/modules/parents/dto/create-parent.dto.ts`, `apps/api/src/modules/parents/dto/update-parent.dto.ts`, `apps/api/src/modules/parents/dto/list-parents-query.dto.ts`, `packages/shared/src/validators/parent.schema.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| 2.9    | Classes Module                                                                  | 🟡 In Progress | 2026-02-21 | `apps/api/src/modules/classes/classes.controller.ts`, `apps/api/src/modules/classes/classes.service.ts`, `apps/api/src/modules/classes/classes.repository.ts`, `apps/api/src/modules/classes/classes.mapper.ts`, `apps/api/src/modules/classes/classes.types.ts`, `apps/api/src/modules/classes/dto/create-class.dto.ts`, `apps/api/src/modules/classes/dto/update-class.dto.ts`, `apps/api/src/modules/classes/dto/list-classes-query.dto.ts`, `packages/shared/src/validators/class.schema.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| 2.10   | Attendance Module                                                               | 🟡 In Progress | 2026-02-21 | `apps/api/src/modules/attendance/attendance.controller.ts`, `apps/api/src/modules/attendance/attendance.service.ts`, `apps/api/src/modules/attendance/attendance.repository.ts`, `apps/api/src/modules/attendance/attendance.types.ts`, `apps/api/src/modules/attendance/attendance-queue.service.ts`, `apps/api/src/modules/attendance/dto/mark-attendance.dto.ts`, `apps/api/src/modules/attendance/dto/attendance-query.dto.ts`, `packages/shared/src/validators/attendance.schema.ts`, `apps/api/package.json`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| 2.11   | Grades Module                                                                   | 🟡 In Progress | 2026-02-22 | `apps/api/src/modules/grades/grades.controller.ts`, `apps/api/src/modules/grades/grades.service.ts`, `apps/api/src/modules/grades/grades.repository.ts`, `apps/api/src/modules/grades/grades.types.ts`, `apps/api/src/modules/grades/grades.module.ts`, `apps/api/src/modules/grades/dto/create-grade.dto.ts`, `apps/api/src/modules/grades/dto/grade-query.dto.ts`, `packages/shared/src/validators/grade.schema.ts`, `packages/shared/src/validators/index.ts`, `apps/api/src/app.module.ts`, smoke test (`GET /api/grades`, `GET /api/grades/report`, `GET/POST/PATCH/DELETE /api/grades/scales`)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| 2.12   | Exams Module                                                                    | 🟡 In Progress | 2026-02-22 | `apps/api/src/modules/exams/exams.controller.ts`, `apps/api/src/modules/exams/exams.service.ts`, `apps/api/src/modules/exams/exams.repository.ts`, `apps/api/src/modules/exams/exams.types.ts`, `apps/api/src/modules/exams/exams.module.ts`, `apps/api/src/modules/exams/dto/create-exam.dto.ts`, `apps/api/src/modules/exams/dto/exam-result.dto.ts`, `apps/api/src/modules/exams/dto/exam-query.dto.ts`, `packages/shared/src/validators/exam.schema.ts`, `packages/shared/src/validators/index.ts`, `apps/api/src/app.module.ts`, smoke: `GET /api/exams` ✅, `GET /api/exams/:id/results` ✅, `GET /api/exams/:id/stats` ✅, `POST/PATCH/DELETE /api/exams` ✅, `POST /api/exams/:id/results` (bulk) ✅, invalid query/payload validation (`400`) ✅, tests: `apps/api/src/modules/exams/exams.schema.spec.ts`, `apps/api/src/modules/exams/exams.controller.spec.ts`, `apps/api/src/modules/exams/exams.service.spec.ts`, `bun test apps/api/src/modules/exams/exams.schema.spec.ts apps/api/src/modules/exams/exams.controller.spec.ts apps/api/src/modules/exams/exams.service.spec.ts` ✅ |
-| 2.13   | Assignments Module                                                              | 🟢 Completed   | 2026-02-23 | `apps/api/src/modules/assignments/assignments.controller.ts`, `apps/api/src/modules/assignments/assignments.service.ts`, `apps/api/src/modules/assignments/assignments.repository.ts`, `apps/api/src/modules/assignments/assignment-submission-files.service.ts`, `apps/api/src/modules/assignments/dto/*`, `packages/shared/src/validators/assignment.schema.ts`, `apps/api/src/modules/assignments/assignments.schema.spec.ts`, `apps/api/src/modules/assignments/assignments.controller.spec.ts`, `apps/api/src/modules/assignments/assignments.service.spec.ts`, `bun test apps/api/src/modules/assignments/assignments.schema.spec.ts apps/api/src/modules/assignments/assignments.controller.spec.ts apps/api/src/modules/assignments/assignments.service.spec.ts` ✅, smoke (deploy): `GET /api/assignments` ✅, `GET /api/assignments/stats` ✅, invalid query validation (`400`) ✅, positive CRUD/submit/grade chain ⏸ (tenantda teacher/subject/class/student seed data topilmadi)                                                                                                      |
-| 2.14   | Schedule Module                                                                 | 🟢 Completed   | 2026-02-23 | `apps/api/src/modules/schedule/schedule.controller.ts`, `apps/api/src/modules/schedule/schedule.service.ts`, `apps/api/src/modules/schedule/dto/create-schedule.dto.ts`, `apps/api/src/modules/schedule/dto/schedule-query.dto.ts`, `packages/shared/src/validators/schedule.schema.ts`, `apps/api/src/modules/schedule/schedule.schema.spec.ts`, `apps/api/src/modules/schedule/schedule.service.spec.ts`, `bun run --cwd apps/api typecheck`, `bun run --cwd apps/api lint`, `bun test apps/api/src/modules/schedule/schedule.schema.spec.ts apps/api/src/modules/schedule/schedule.service.spec.ts`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| 2.15   | Finance Module                                                                  | 🟢 Completed   | 2026-02-23 | `apps/api/src/modules/finance/finance.controller.ts`, `apps/api/src/modules/finance/finance.service.ts`, `apps/api/src/modules/finance/finance.repository.ts`, `apps/api/src/modules/finance/dto/create-payment.dto.ts`, `apps/api/src/modules/finance/dto/create-invoice.dto.ts`, `apps/api/src/modules/finance/dto/fee-structure.dto.ts`, `apps/api/src/modules/finance/dto/payment-plan.dto.ts`, `packages/shared/src/validators/finance.schema.ts`, `packages/shared/src/validators/index.ts`, `apps/api/src/modules/finance/finance.schema.spec.ts`, `apps/api/src/modules/finance/finance.service.spec.ts`, `bun run --cwd apps/api typecheck`, `bun run --cwd apps/api lint`, `bun test apps/api/src/modules/finance/finance.schema.spec.ts apps/api/src/modules/finance/finance.service.spec.ts`                                                                                                                                                                                                                                                                                           |
-| 2.16   | Notices Module                                                                  | 🟡 In Progress | 2026-02-25 | `apps/api/src/modules/notices/notices.controller.ts`, `apps/api/src/modules/notices/notices.service.ts`, `apps/api/src/modules/notices/notices.repository.ts`, `apps/api/src/modules/notices/notices.module.ts`, `apps/api/src/modules/notices/dto/create-notice.dto.ts`, `apps/api/src/modules/notices/dto/notice-query.dto.ts`, `packages/shared/src/validators/notice.schema.ts`, `apps/api/src/modules/notices/notices.schema.spec.ts`, `apps/api/src/modules/notices/notices.controller.spec.ts`, `apps/api/src/modules/notices/notices.service.spec.ts`, `bun test apps/api/src/modules/notices/notices.schema.spec.ts apps/api/src/modules/notices/notices.controller.spec.ts apps/api/src/modules/notices/notices.service.spec.ts` ✅, `bun run typecheck --filter=api` ✅, local refactor commit `69f664d` (Zod-first DTO + specs), deploy smoke: `GET /api/notices` ✅, invalid targetRole validation (`400`) ✅, `POST /api/notices` ✅, `GET /api/notices/:id` ❌ (`400`, old deploy parse/validation bug; local fix pending push/deploy)                                              |
-| 2.17   | Notifications Module + Real-time                                                | 🟢 Completed   | 2026-02-25 | `apps/api/src/modules/notifications/notifications.controller.ts`, `apps/api/src/modules/notifications/notifications.service.ts`, `apps/api/src/modules/notifications/notifications.gateway.ts`, `apps/api/src/modules/notifications/notifications.repository.ts`, `apps/api/src/modules/notifications/dto/send-notification.dto.ts`, `packages/shared/src/validators/notification.schema.ts`, `apps/api/src/modules/notifications/notifications.schema.spec.ts`, `apps/api/src/modules/notifications/notifications.controller.spec.ts`, `apps/api/src/modules/notifications/notifications.service.spec.ts`, `bun test apps/api/src/modules/notifications/notifications.schema.spec.ts apps/api/src/modules/notifications/notifications.controller.spec.ts apps/api/src/modules/notifications/notifications.service.spec.ts` ✅, `bun run typecheck --filter=api` ✅, smoke: `notifications-runtime` in `bun run --cwd apps/api smoke:integration-baseline` ✅                                                                                                                                      |
-| 2.18   | Calendar Module                                                                 | 🟢 Completed   | 2026-02-25 | `apps/api/src/modules/calendar/calendar.controller.ts`, `apps/api/src/modules/calendar/calendar.service.ts`, `apps/api/src/modules/calendar/calendar.repository.ts`, `apps/api/src/modules/calendar/calendar.module.ts`, `apps/api/src/modules/calendar/dto/create-event.dto.ts`, `apps/api/src/modules/calendar/dto/event-query.dto.ts`, `apps/api/src/modules/calendar/calendar.types.ts`, `packages/shared/src/validators/event.schema.ts`, `packages/shared/src/validators/index.ts`, `apps/api/src/modules/calendar/calendar.schema.spec.ts`, `apps/api/src/modules/calendar/calendar.controller.spec.ts`, `apps/api/src/modules/calendar/calendar.service.spec.ts`, `apps/api/src/app.module.ts`, `apps/api/scripts/smoke-integration-baseline.js` (adds `calendar-runtime`), `bun test apps/api/src/modules/calendar/calendar.schema.spec.ts apps/api/src/modules/calendar/calendar.controller.spec.ts apps/api/src/modules/calendar/calendar.service.spec.ts` ✅, `bun run typecheck --filter=api` ✅, smoke: `calendar-runtime` in `bun run --cwd apps/api smoke:integration-baseline` ✅ |
-| 2.19   | Upload Module (Cloudflare R2)                                                   | 🟢 Completed   | 2026-02-25 | `apps/api/src/modules/upload/upload.controller.ts`, `apps/api/src/modules/upload/upload.service.ts`, `apps/api/src/modules/upload/upload.module.ts`, `apps/api/src/modules/upload/dto/upload.dto.ts`, `apps/api/src/modules/upload/upload.types.ts`, `packages/shared/src/validators/upload.schema.ts`, `packages/shared/src/validators/index.ts`, `apps/api/src/modules/upload/upload.schema.spec.ts`, `apps/api/src/modules/upload/upload.controller.spec.ts`, `apps/api/src/modules/upload/upload.service.spec.ts`, `apps/api/src/app.module.ts`, `apps/api/scripts/smoke-integration-baseline.js` (adds `upload-runtime`), `apps/api/package.json`, `bun.lock`, `bun test apps/api/src/modules/upload/upload.schema.spec.ts apps/api/src/modules/upload/upload.controller.spec.ts apps/api/src/modules/upload/upload.service.spec.ts` ✅, `bun run typecheck --filter=api` ✅, smoke: `upload-runtime` in `bun run --cwd apps/api smoke:integration-baseline` ✅                                                                                                                               |
-| 2.20   | AI Module (Claude API)                                                          | 🟢 Completed   | 2026-02-26 | `packages/shared/src/validators/ai.schema.ts`, `packages/shared/src/validators/index.ts`, `apps/api/src/modules/ai/ai.controller.ts`, `apps/api/src/modules/ai/ai.service.ts`, `apps/api/src/modules/ai/ai.openrouter.client.ts`, `apps/api/src/modules/ai/ai.repository.ts`, `apps/api/src/modules/ai/ai.helpers.ts`, `apps/api/src/modules/ai/ai.types.ts`, `apps/api/src/modules/ai/ai.module.ts`, `apps/api/src/modules/ai/dto/chat.dto.ts`, `apps/api/src/modules/ai/dto/report.dto.ts`, `apps/api/src/modules/ai/ai.schema.spec.ts`, `apps/api/src/modules/ai/ai.controller.spec.ts`, `apps/api/src/modules/ai/ai.service.spec.ts`, `apps/api/src/app.module.ts`, `apps/api/scripts/smoke-integration-baseline.js` (`ai-runtime`), `bun test apps/api/src/modules/ai/ai.schema.spec.ts apps/api/src/modules/ai/ai.controller.spec.ts apps/api/src/modules/ai/ai.service.spec.ts` ✅, `bun run typecheck --filter=api` ✅, `bun run lint --filter=api` ✅, smoke: `ai-runtime` in `bun run --cwd apps/api smoke:integration-baseline` ✅ (OpenRouter)                                         |
-| 2.21   | Email Module (Resend)                                                           | 🟡 In Progress | 2026-02-26 | `packages/shared/src/validators/email.schema.ts`, `packages/shared/src/validators/index.ts`, `apps/api/src/modules/email/email.module.ts`, `apps/api/src/modules/email/email.service.ts`, `apps/api/src/modules/email/email-queue.service.ts`, `apps/api/src/modules/email/email.templates.ts`, `apps/api/src/modules/email/email.types.ts`, `apps/api/src/modules/email/templates/*.hbs`, `apps/api/src/modules/email/templates/*.txt.hbs`, `apps/api/src/modules/queue/jobs/email.job.ts`, `apps/api/src/modules/queue/processors/email.processor.ts`, `apps/api/src/modules/email/email.templates.spec.ts`, `apps/api/src/modules/email/email.service.spec.ts`, `apps/api/src/modules/email/email.processor.spec.ts`, `apps/api/scripts/smoke-integration-baseline.js` (`email-runtime`), `apps/api/src/modules/notifications/notifications.service.ts`, `apps/api/src/modules/notifications/notifications.module.ts`                                                                                                                                                                           |
-| 2.22   | SMS Module (Twilio)                                                             | 🟡 In Progress | 2026-02-26 | `apps/api/src/modules/sms/*`, `apps/api/src/modules/queue/jobs/sms.job.ts`, `apps/api/src/modules/queue/processors/sms.processor.ts`, `apps/api/src/modules/notifications/notifications.service.ts`, `packages/shared/src/validators/sms.schema.ts`, `apps/api/scripts/smoke-integration-baseline.js`; local checks: `bun test apps/api/src/modules/sms/sms.templates.spec.ts apps/api/src/modules/sms/sms.service.spec.ts apps/api/src/modules/sms/sms.processor.spec.ts apps/api/src/modules/notifications/notifications.service.spec.ts`, `bun run typecheck --filter=api`, `bun run lint --filter=api`; baseline smoke: `sms-runtime` currently `SKIP` until `TWILIO_*` env configured                                                                                                                                                                                                                                                                                                                                                                                                         |
-| 2.23   | Queue Module (BullMQ)                                                           | 🟡 In Progress | 2026-02-26 | Existing queue module baseline completed (`apps/api/src/modules/queue/queue.module.ts`, `apps/api/src/modules/queue/queue-workers.service.ts`, `apps/api/src/modules/queue/queue.redis.ts`, `apps/api/src/modules/queue/jobs/*`, `apps/api/src/modules/queue/processors/notification.processor.ts`, `apps/api/src/modules/queue/processors/report.processor.ts`, `apps/api/src/modules/queue/queue.jobs.spec.ts`, `apps/api/src/modules/queue/queue.processors.spec.ts`); `2.23.5` worker runtime code added (`apps/api/src/worker.main.ts`, `apps/api/src/worker.module.ts`, `apps/api/src/modules/queue/queue-workers.service.spec.ts`), `bun test apps/api/src/modules/queue/queue-workers.service.spec.ts` ✅, `bun run typecheck --filter=api` ✅ (dual-process smoke pending)                                                                                                                                                                                                                                                                                                                |
-| 2.23.5 | Dedicated Queue Worker Runtime (separate process bootstrap + API worker toggle) | 🟡 In Progress | 2026-02-26 | `apps/api/src/worker.main.ts`, `apps/api/src/worker.module.ts`, `apps/api/src/modules/queue/queue-workers.service.ts` (`QUEUE_WORKERS_ENABLED` toggle), `apps/api/package.json` (`dev:worker`, `start:worker*`), `apps/api/src/modules/queue/queue-workers.service.spec.ts`, `bun test apps/api/src/modules/queue/queue-workers.service.spec.ts` ✅, `bun run typecheck --filter=api` ✅ (local dual-process smoke pending)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| 2.24   | Cache Module (Self-hosted Redis via WireGuard)                                  | 🟢 Completed   | 2026-02-26 | `apps/api/src/modules/cache/cache.module.ts`, `apps/api/src/modules/cache/cache.service.ts`, `apps/api/src/modules/cache/cache.keys.ts`, `apps/api/src/modules/cache/cache.service.spec.ts`, `apps/api/src/modules/schedule/schedule.controller.ts`, `apps/api/src/modules/finance/finance.controller.ts`; verification: `bun test apps/api/src/modules/cache/cache.service.spec.ts`, `bun run typecheck --filter=api`, `bun run lint --filter=api`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| 2.25   | Audit Module                                                                    | 🟢 Completed   | 2026-02-26 | `apps/api/src/modules/audit/audit.module.ts`, `apps/api/src/modules/audit/audit.service.ts`, `apps/api/src/modules/audit/audit.interceptor.ts`, `apps/api/src/modules/audit/audit.controller.ts`, `apps/api/src/modules/audit/audit.utils.ts`, `apps/api/src/modules/audit/dto/audit-query.dto.ts`, `packages/shared/src/validators/audit.schema.ts`; verification: `bun run typecheck --filter=api`, `bun run lint --filter=api`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 2.26   | tRPC Integration                                                                | 🟢 Completed   | 2026-02-26 | `packages/trpc/src/context.ts`, `packages/trpc/src/trpc.ts`, `packages/trpc/src/routers/index.ts`, `packages/trpc/src/routers/*.router.ts`, `packages/trpc/src/routers/router-helpers.ts`, `packages/trpc/src/trpc.spec.ts`, `packages/trpc/tsconfig.json`, `packages/trpc/package.json`; verification: `bun run typecheck --filter=@talimy/trpc`, `bun run typecheck --filter=api`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| 3.1    | Next.js Project Setup                                                           | 🟢 Completed   | 2026-02-26 | `apps/web/next.config.ts`, `apps/web/tailwind.config.ts`, `apps/web/src/app/globals.css`, `apps/web/src/app/layout.tsx`, `bun run typecheck --filter=web` ✅                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| 3.2    | Proxy (Critical)                                                                | 🟢 Completed   | 2026-02-26 | `apps/web/proxy.ts` (subdomain scope + lightweight auth gate skeleton + role-route hints + locale handling headers/cookie), `bun run typecheck --filter=web` ✅                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| 3.3    | Providers Setup                                                                 | 🟢 Completed   | 2026-02-26 | `apps/web/src/providers/auth-provider.tsx`, `apps/web/src/providers/query-provider.tsx`, `apps/web/src/providers/theme-provider.tsx`, `apps/web/src/providers/intl-provider.tsx`, `apps/web/src/providers/socket-provider.tsx`, `bun run typecheck --filter=web` ✅                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| 3.4    | Zustand Stores                                                                  | 🟢 Completed   | 2026-02-26 | `apps/web/src/stores/auth-store.ts`, `apps/web/src/stores/sidebar-store.ts`, `apps/web/src/stores/notification-store.ts`, `apps/web/src/stores/theme-store.ts`, `bun run typecheck --filter=web` ✅                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| 3.5    | API Client Setup                                                                | 🟡 In Progress | 2026-02-26 | `apps/web/src/lib/trpc/client.ts`, `apps/web/src/lib/trpc/server.ts`, `apps/web/src/lib/trpc/provider.tsx`, `apps/web/src/lib/api.ts`, `apps/web/src/lib/socket.ts`, `apps/web/src/app/api/trpc/[trpc]/route.ts`, `apps/web/src/app/api/upload/route.ts`, `apps/web/src/lib/server/api-proxy.ts`, `bun run typecheck --filter=web` ✅ (runtime smoke for 3.5.6/3.5.7 pending)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| 3.5.6  | Web tRPC Route Wiring (`app/api/trpc/[trpc]/route.ts`)                          | 🟡 In Progress | 2026-02-26 | `apps/web/src/app/api/trpc/[trpc]/route.ts`, `apps/web/src/lib/server/api-proxy.ts`, header forwarding (`authorization`, `cookie`, `x-tenant-slug`, `x-forwarded-*`), `bun run typecheck --filter=web` ✅ (sample web runtime smoke pending backend `/api/trpc` availability)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| 3.5.7  | Web Upload Route Wiring (`app/api/upload/route.ts`)                             | 🟡 In Progress | 2026-02-26 | `apps/web/src/app/api/upload/route.ts`, `apps/web/src/lib/server/api-proxy.ts`, `apps/web/src/lib/upload.ts` (`mode=signed-url`), `bun run typecheck --filter=web` ✅ (signed-url smoke/error-path contract check pending)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| 3.6    | Custom Hooks                                                                    | 🟢 Completed   | 2026-02-26 | `apps/web/src/hooks/use-auth.ts`, `apps/web/src/hooks/use-tenant.ts`, `apps/web/src/hooks/use-permissions.ts`, `apps/web/src/hooks/use-socket.ts`, `apps/web/src/hooks/use-notifications.ts`, `apps/web/src/hooks/use-sidebar.ts`, `bun run typecheck --filter=web` ✅                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| 3.7    | Navigation Config                                                               | 🟢 Completed   | 2026-02-26 | `apps/web/src/config/navigation/platform-nav.ts`, `apps/web/src/config/navigation/admin-nav.ts`, `apps/web/src/config/navigation/teacher-nav.ts`, `apps/web/src/config/navigation/student-nav.ts`, `apps/web/src/config/navigation/parent-nav.ts`, `apps/web/src/config/navigation/types.ts`, `bun run typecheck --filter=web` ✅                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 3.8    | i18n Setup                                                                      | 🟢 Completed   | 2026-02-26 | `apps/web/src/i18n/request.ts`, `apps/web/src/i18n/routing.ts`, `apps/web/next.config.ts` (`next-intl` plugin), `apps/web/src/messages/{uz,tr,en,ru}.json` (600+ keys each), `bun run typecheck --filter=web` ✅                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| 4.1    | shadcn/ui Primitives (packages/ui)                                              | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 4.2    | Data Table Component                                                            | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 4.3    | Custom Components                                                               | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 5.1    | App Shell                                                                       | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 5.2    | Sidebar                                                                         | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 5.3    | Header                                                                          | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 6.1    | Marketing Layout                                                                | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 6.2    | Landing Page                                                                    | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 6.3    | Other Public Pages                                                              | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 7.1    | Auth Pages                                                                      | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 7.1.8  | NextAuth API Route Wiring (`[...nextauth]/route.ts`)                            | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 8.1    | Platform Layout                                                                 | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 8.2    | Platform Dashboard                                                              | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 8.3    | Platform Dashboard Sub-pages                                                    | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 8.4    | Schools Management                                                              | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 8.5    | Platform Settings                                                               | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 9.1    | Admin Layout                                                                    | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 9.2    | Admin Dashboard                                                                 | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 9.3    | Teachers Management                                                             | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 9.4    | Students Management                                                             | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 9.5    | Classes Management                                                              | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 9.6    | Attendance Management                                                           | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 9.7    | Finance                                                                         | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 9.8    | Exams                                                                           | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 9.9    | Schedule                                                                        | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 9.10   | Notices & Calendar                                                              | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 9.11   | Admin Profile & Settings                                                        | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 10.1   | Teacher Layout & Dashboard                                                      | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 10.2   | Teacher - Students                                                              | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 10.3   | Teacher - Attendance                                                            | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 10.4   | Teacher - Assignments                                                           | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 10.5   | Teacher - Grades                                                                | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 10.6   | Teacher - Exams                                                                 | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 10.7   | Teacher - Other                                                                 | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 11.1   | Student Layout & Dashboard                                                      | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 11.2   | Student Pages                                                                   | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 12.1   | Parent Layout & Pages                                                           | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 13.1   | Real-time Infrastructure                                                        | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 13.2   | Notification System                                                             | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 13.3   | Real-time Events                                                                | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 14.1   | AI Service                                                                      | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 14.2   | Student AI Insights                                                             | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 14.3   | Admin AI Reports                                                                | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 14.4   | Parent Telegram Bot (Optional)                                                  | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 15.1   | SEO                                                                             | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 15.2   | Performance                                                                     | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 15.3   | Security                                                                        | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 16.1   | Backend Tests                                                                   | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 16.2   | Frontend Tests                                                                  | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 17.1   | GitHub Actions                                                                  | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 17.2   | Deployment Config                                                               | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 17.2.6 | Dedicated Queue Worker Deployment Config (separate service/process)             | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| 17.3   | Monitoring                                                                      | ⚪ Not Started | -          | -                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| Task | Name | Status | Updated At | Evidence |
+| ---- | ---- | ------ | ---------- | -------- |
+| 5.1 | Auth Layout | Not Started | - | - |
+| 5.2 | Login Page | Not Started | - | - |
+| 5.3 | Forgot Password + Reset Password Pages | Not Started | - | - |
+| 5.4 | NextAuth API Route Wiring | Not Started | - | - |
+| 6.1 | Admin Layout (Sidebar + Header + Shell) | Not Started | - | - |
+| 6.2 | Admin Dashboard Page | Not Started | - | - |
+| 7.1 | Teachers List Page | Not Started | - | - |
+| 7.2 | Teacher Detail Page | Not Started | - | - |
+| 7.3 | Add Teacher Page | Not Started | - | - |
+| 8.1 | Students List Page (2-bosqichli navigatsiya) | Not Started | - | - |
+| 8.2 | Student Detail Page | Not Started | - | - |
+| 8.3 | Add Student Page | Not Started | - | - |
+| 9.1 | Attendance Page | Not Started | - | - |
+| 9.2 | Finance — Fees Collection Page | Not Started | - | - |
+| 9.3 | Finance — Expenses Page | Not Started | - | - |
+| 9.4 | Notice Board Page | Not Started | - | - |
+| 9.5 | Exams Page | Not Started | - | - |
+| 9.6 | Calendar Page | Not Started | - | - |
+| 9.7 | Admin Profile Page | Not Started | - | - |
+| 9.8 | Admin Settings Page | Not Started | - | - |
+| 10.1 | Student Layout | Not Started | - | - |
+| 10.2 | Student Dashboard Page | Not Started | - | - |
+| 10.3 | Student — Schedule Page | Not Started | - | - |
+| 10.4 | Student — Assignments Page | Not Started | - | - |
+| 10.5 | Student — Grades Page | Not Started | - | - |
+| 10.6 | Student — Attendance Page | Not Started | - | - |
+| 10.7 | Student — Other Pages (Exams, Notices, Calendar, Profile) | Not Started | - | - |
+| 11.1 | Teacher Layout | Not Started | - | - |
+| 11.2 | Teacher Dashboard Page | Not Started | - | - |
+| 11.3 | Teacher — My Students Page | Not Started | - | - |
+| 11.4 | Teacher — Attendance Page | Not Started | - | - |
+| 11.5 | Teacher — Assignments Page | Not Started | - | - |
+| 11.6 | Teacher — Grades, Exams, Schedule, Notices, Calendar, Profile, Settings | Not Started | - | - |
+| 12.1 | Parent Layout + Dashboard + Profile | Not Started | - | - |
+| 13.1 | Platform Admin Layout | Not Started | - | - |
+| 13.2 | Platform Dashboard Page | Not Started | - | - |
+| 13.3 | Schools Management Page | Not Started | - | - |
+| 13.4 | Platform Settings Page | Not Started | - | - |
+| 14.1 | Marketing Layout | Not Started | - | - |
+| 14.2 | Landing Page Sections | Not Started | - | - |
+| 14.3 | Other Public Pages | Not Started | - | - |
+| 15.1 | Real-time Infrastructure Setup | Not Started | - | - |
+| 15.2 | Notification System | Not Started | - | - |
+| 15.3 | Real-time Events in Pages | Not Started | - | - |
+| 16.1 | Student Dashboard AI Advice | Not Started | - | - |
+| 16.2 | Admin AI Reports | Not Started | - | - |
+| 16.3 | Parent Telegram Bot | Not Started | - | - |
+| 17.1 | Unit Tests | Not Started | - | - |
+| 17.2 | Integration Tests | Not Started | - | - |
+| 17.3 | E2E Tests (Playwright) | Not Started | - | - |
+| 18.1 | SEO | Not Started | - | - |
+| 18.2 | Performance | Not Started | - | - |
+| 19.1 | GitHub Actions CI | Not Started | - | - |
+| 19.2 | Dokploy Production Setup | Not Started | - | - |
+| 19.3 | Monitoring | Not Started | - | - |
+| 19.4 | Production Smoke Tests + Rollback | Not Started | - | - |
 
-## FAZA 0: MONOREPO INFRASTRUKTURA VA SETUP
+## 4.3 Planning Policy for FAZA 4+
 
-**Maqsad**: Loyihaning asosiy skeletini yaratish
-**Phase Owner (default)**: Platform Lead
-**Entry Dependency**: None
+1. FAZA 4 keeps only page-agnostic primitives, wrappers, and shared visual building blocks.
+2. Contextual components (for example `empty-state`, page-specific filters, composite dashboard sections) are not treated as isolated final artifacts before their target pages exist.
+3. Those contextual items are deferred into the corresponding page tasks so that size, layout, responsive behavior, and visual hierarchy are solved once in the real container.
+4. Deferred does not mean dropped. It means the page task owns the final implementation and acceptance.
+5. This rule applies from FAZA 4.3.4 onward unless a component is proven page-agnostic.
 
-### Task 0.1: Monorepo Initialization
+## 4.4 Execution Notes
 
-- **Task Owner**: Platform Lead
-- **Task Dependency**: FAZA 0 entry gate
-- **Task Estimate**: 19h
+1. `docReja/old_Reja.md` remains the governance/detail baseline.
+2. Current page-first ordering is preserved where it prevents premature abstraction.
+3. Strong tracking is retained; oversimplified `SKIPPED` wording is replaced by explicit `deferred to page implementation` wording.
+4. When a task depends on screenshots/Figma/page context, the final acceptance belongs to the page task, not the primitive task.
+5. Every future status change must update both the phase tracker and the task tracker.
 
-| Subtask ID | Work item                                                                                                                 | Owner         | Estimate | Dependency        | Acceptance                                                                                                                                                                                                      |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------- | ------------- | -------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0.1.1      | bun init, package.json workspaces sozlash (`packages/*`, `apps/*`, `tooling/*`)                                           | Platform Lead | 2h       | FAZA 0 entry gate | Target outcome: bun init, package.json workspaces sozlash (`packages/*`, `apps/*`, `tooling/*`); verification: lint/typecheck pass; tests when applicable                                                       |
-| 0.1.2      | turbo.json yaratish (build, dev, lint, typecheck pipeline)                                                                | Platform Lead | 2h       | 0.1.1             | Target outcome: turbo.json yaratish (build, dev, lint, typecheck pipeline); verification: lint/typecheck pass; tests when applicable                                                                            |
-| 0.1.3      | Root package.json scripts (dev, build, lint, format, typecheck, db:\*)                                                    | Platform Lead | 3h       | 0.1.2             | Target outcome: Root package.json scripts (dev, build, lint, format, typecheck, db:\*); verification: lint/typecheck pass; tests when applicable                                                                |
-| 0.1.4      | Root tsconfig.base.json (strict mode, path aliases)                                                                       | Platform Lead | 3h       | 0.1.3             | Target outcome: Root tsconfig.base.json (strict mode, path aliases); verification: lint/typecheck pass; tests when applicable                                                                                   |
-| 0.1.5      | .gitignore, .prettierrc, .eslintrc.js, commitlint.config.js                                                               | Platform Lead | 3h       | 0.1.4             | Target outcome: .gitignore, .prettierrc, .eslintrc.js, commitlint.config.js; verification: lint/typecheck pass; tests when applicable                                                                           |
-| 0.1.6      | .husky pre-commit (lint-staged), commit-msg (commitlint)                                                                  | Platform Lead | 2h       | 0.1.5             | Target outcome: .husky pre-commit (lint-staged), commit-msg (commitlint); verification: lint/typecheck pass; tests when applicable                                                                              |
-| 0.1.7      | Remote infra ulanishini sozlash (Self-hosted Supabase PostgreSQL + Redis via WireGuard, local container talab qilinmaydi) | Platform Lead | 2h       | 0.1.6             | Target outcome: Remote infra ulanishini sozlash (Self-hosted Supabase PostgreSQL + Redis via WireGuard, local container talab qilinmaydi); verification: remote connection check logs + env mapping doc updated |
-| 0.1.8      | .env.example barcha kerakli env variablalar bilan                                                                         | Platform Lead | 2h       | 0.1.7             | Target outcome: .env.example barcha kerakli env variablalar bilan; verification: lint/typecheck pass; tests when applicable                                                                                     |
+## 5. Detailed Plan by Phase / Task / Subtask
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+## FAZA 0 — Monorepo Initialization 🟢 Completed
 
-### Task 0.2: Shared Config Packages
-
-- **Task Owner**: Platform Lead
-- **Task Dependency**: Task 0.1 completed
-- **Task Estimate**: 9h
-
-| Subtask ID | Work item                                                                                     | Owner         | Estimate | Dependency | Acceptance                                                                                                                                                              |
-| ---------- | --------------------------------------------------------------------------------------------- | ------------- | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0.2.1      | `packages/config-typescript` - base.json, nextjs.json, nestjs.json                            | Platform Lead | 3h       | 0.1.8      | Target outcome: `packages/config-typescript` - base.json, nextjs.json, nestjs.json; verification: lint/typecheck pass; tests when applicable                            |
-| 0.2.2      | `packages/config-eslint` - base.js, next.js, nest.js                                          | Platform Lead | 3h       | 0.2.1      | Target outcome: `packages/config-eslint` - base.js, next.js, nest.js; verification: lint/typecheck pass; tests when applicable                                          |
-| 0.2.3      | `packages/config-tailwind` - shared Tailwind preset (optional compatibility for v4 CSS-first) | Platform Lead | 3h       | 0.2.2      | Target outcome: `packages/config-tailwind` - shared Tailwind preset (optional compatibility for v4 CSS-first); verification: lint/typecheck pass; tests when applicable |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 0.3: Shared Types Package (`packages/shared`)
-
-- **Task Owner**: Platform Lead
-- **Task Dependency**: Task 0.2 completed
-- **Task Estimate**: 8h
-
-| Subtask ID | Work item                                                                                                                | Owner         | Estimate | Dependency | Acceptance                                                                                                       |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------ | ------------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------- |
-| 0.3.1      | `packages/shared` package skeleton: package.json + tsconfig + folder structure (`types/validators/constants/utils`)      | Platform Lead | 1h       | 0.2.3      | Target outcome: package skeleton and folder tree ready; verification: lint/typecheck pass; tests when applicable |
-| 0.3.2      | Barrel exports yaratish: `src/index.ts`, `types/index.ts`, `validators/index.ts`, `constants/index.ts`, `utils/index.ts` | Platform Lead | 2h       | 0.3.1      | Target outcome: barrel export structure ready; verification: lint/typecheck pass; tests when applicable          |
-| 0.3.3      | Placeholder type files yaratish (`auth/tenant/teacher/student/...`) with module-safe minimal exports                     | Platform Lead | 1h       | 0.3.2      | Target outcome: placeholder type modules ready; verification: lint/typecheck pass; tests when applicable         |
-| 0.3.4      | Placeholder validator files yaratish (`*.schema.ts`) with module-safe minimal exports                                    | Platform Lead | 1h       | 0.3.3      | Target outcome: placeholder validator modules ready; verification: lint/typecheck pass; tests when applicable    |
-| 0.3.5      | Placeholder constants files (`roles/permissions/gender/status`) with module-safe minimal exports                         | Platform Lead | 1h       | 0.3.4      | Target outcome: placeholder constants modules ready; verification: lint/typecheck pass; tests when applicable    |
-| 0.3.6      | Placeholder utils files (`date/format/helpers`) with module-safe minimal exports                                         | Platform Lead | 1h       | 0.3.5      | Target outcome: placeholder utils modules ready; verification: lint/typecheck pass; tests when applicable        |
-| 0.3.7      | Shared package import smoke-check in web/api (`@talimy/shared`)                                                          | Platform Lead | 0.5h     | 0.3.6      | Target outcome: shared package import path resolves; verification: lint/typecheck pass; tests when applicable    |
-| 0.3.8      | Scope boundary note: full domain types + full Zod schemas deferred to FAZA 1/2 after DB/API contracts are finalized      | Platform Lead | 0.5h     | 0.3.7      | Target outcome: phase boundary documented and accepted; verification: lint/typecheck pass; tests when applicable |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-- **Note**: FAZA 0 includes only shared skeleton and module-safe placeholders. Full domain type definitions and full validator logic are completed in FAZA 1/2.
-
-### FAZA 0 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
-   **Status**: Completed (2026-02-20)
+> Barcha subtasklar 2026-02-20 da yakunlandi. Ko'chirish shart emas.
 
 ---
 
-## FAZA 1: DATABASE SCHEMA VA ORM
+## FAZA 1 — Database Schema 🟢 Completed
 
-**Maqsad**: Drizzle ORM bilan to'liq database schema yaratish
-**Phase Owner (default)**: Data Lead
-**Entry Dependency**: FAZA 0 exit gate
-**Status**: Completed (2026-02-20)
-
-### Task 1.1: Database Package Setup
-
-- **Task Owner**: Data Lead
-- **Task Dependency**: FAZA 1 entry gate
-- **Task Estimate**: 12h
-
-| Subtask ID | Work item                                                            | Owner     | Estimate | Dependency        | Acceptance                                                                                                                                     |
-| ---------- | -------------------------------------------------------------------- | --------- | -------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.1.1      | `packages/database` init, drizzle-orm, postgres/pg driver install    | Data Lead | 2h       | FAZA 1 entry gate | Target outcome: `packages/database` init, drizzle-orm, postgres/pg driver install; verification: lint/typecheck pass; tests when applicable    |
-| 1.1.2      | drizzle.config.ts (connection string, schema path, migration output) | Data Lead | 6h       | 1.1.1             | Target outcome: drizzle.config.ts (connection string, schema path, migration output); verification: lint/typecheck pass; tests when applicable |
-| 1.1.3      | client.ts (Supabase self-hosted PostgreSQL connection pool)          | Data Lead | 2h       | 1.1.2             | Target outcome: client.ts (Supabase self-hosted PostgreSQL connection pool); verification: lint/typecheck pass; tests when applicable          |
-| 1.1.4      | index.ts (drizzle instance export)                                   | Data Lead | 2h       | 1.1.3             | Target outcome: index.ts (drizzle instance export); verification: lint/typecheck pass; tests when applicable                                   |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 1.2: Core Schema
-
-- **Task Owner**: Data Lead
-- **Task Dependency**: Task 1.1 completed
-- **Task Estimate**: 13h
-
-| Subtask ID | Work item                                                                                                                | Owner     | Estimate | Dependency | Acceptance                                                                                                                                                                               |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------ | --------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.2.1      | `tenants.ts` - id, name, slug, domain, logo, status, genderPolicy, plan, createdAt, updatedAt                            | Data Lead | 2h       | 1.1.4      | Target outcome: `tenants.ts` - id, name, slug, domain, logo, status, genderPolicy, plan, createdAt, updatedAt; verification: lint/typecheck pass; tests when applicable                  |
-| 1.2.2      | `users.ts` - id, email, phone, passwordHash, firstName, lastName, role, tenantId, avatar, isActive, lastLogin, createdAt | Data Lead | 2h       | 1.2.1      | Target outcome: `users.ts` - id, email, phone, passwordHash, firstName, lastName, role, tenantId, avatar, isActive, lastLog...; verification: lint/typecheck pass; tests when applicable |
-| 1.2.3      | `roles.ts` - id, name (platform_admin, school_admin, teacher, student, parent), tenantId                                 | Data Lead | 3h       | 1.2.2      | Target outcome: `roles.ts` - id, name (platform_admin, school_admin, teacher, student, parent), tenantId; verification: lint/typecheck pass; tests when applicable                       |
-| 1.2.4      | `permissions.ts` - id, roleId, resource, action, genderScope                                                             | Data Lead | 2h       | 1.2.3      | Target outcome: `permissions.ts` - id, roleId, resource, action, genderScope; verification: lint/typecheck pass; tests when applicable                                                   |
-| 1.2.5      | `sessions.ts` - id, userId, tenantId, token, expiresAt, ipAddress, userAgent                                             | Data Lead | 2h       | 1.2.4      | Target outcome: `sessions.ts` - id, userId, tenantId, token, expiresAt, ipAddress, userAgent; verification: lint/typecheck pass; tests when applicable                                   |
-| 1.2.6      | `audit_logs.ts` - id, userId, tenantId, action, resource, resourceId, oldData, newData, ipAddress, timestamp             | Data Lead | 2h       | 1.2.5      | Target outcome: `audit_logs.ts` - id, userId, tenantId, action, resource, resourceId, oldData, newData, ipAddress, timestamp; verification: lint/typecheck pass; tests when applicable   |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 1.3: Education Schema
-
-- **Task Owner**: Data Lead
-- **Task Dependency**: Task 1.2 completed
-- **Task Estimate**: 12h
-
-| Subtask ID | Work item                                                                                         | Owner     | Estimate | Dependency | Acceptance                                                                                                                                                                  |
-| ---------- | ------------------------------------------------------------------------------------------------- | --------- | -------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.3.1      | `academic_years.ts` - id, tenantId, name, startDate, endDate, isCurrent                           | Data Lead | 2h       | 1.2.6      | Target outcome: `academic_years.ts` - id, tenantId, name, startDate, endDate, isCurrent; verification: lint/typecheck pass; tests when applicable                           |
-| 1.3.2      | `terms.ts` - id, academicYearId, name, startDate, endDate, termNumber                             | Data Lead | 2h       | 1.3.1      | Target outcome: `terms.ts` - id, academicYearId, name, startDate, endDate, termNumber; verification: lint/typecheck pass; tests when applicable                             |
-| 1.3.3      | `classes.ts` - id, tenantId, name, grade, section, capacity, academicYearId                       | Data Lead | 2h       | 1.3.2      | Target outcome: `classes.ts` - id, tenantId, name, grade, section, capacity, academicYearId; verification: lint/typecheck pass; tests when applicable                       |
-| 1.3.4      | `sections.ts` - id, classId, name, maxStudents                                                    | Data Lead | 2h       | 1.3.3      | Target outcome: `sections.ts` - id, classId, name, maxStudents; verification: lint/typecheck pass; tests when applicable                                                    |
-| 1.3.5      | `subjects.ts` - id, tenantId, name, code, description, isActive                                   | Data Lead | 2h       | 1.3.4      | Target outcome: `subjects.ts` - id, tenantId, name, code, description, isActive; verification: lint/typecheck pass; tests when applicable                                   |
-| 1.3.6      | `schedules.ts` - id, tenantId, classId, subjectId, teacherId, dayOfWeek, startTime, endTime, room | Data Lead | 2h       | 1.3.5      | Target outcome: `schedules.ts` - id, tenantId, classId, subjectId, teacherId, dayOfWeek, startTime, endTime, room; verification: lint/typecheck pass; tests when applicable |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 1.4: People Schema
-
-- **Task Owner**: Data Lead
-- **Task Dependency**: Task 1.3 completed
-- **Task Estimate**: 8h
-
-| Subtask ID | Work item                                                                                                                      | Owner     | Estimate | Dependency | Acceptance                                                                                                                                                                               |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------ | --------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.4.1      | `teachers.ts` - id, userId, tenantId, employeeId, gender, dateOfBirth, joinDate, qualification, specialization, salary, status | Data Lead | 2h       | 1.3.6      | Target outcome: `teachers.ts` - id, userId, tenantId, employeeId, gender, dateOfBirth, joinDate, qualification, specializat...; verification: lint/typecheck pass; tests when applicable |
-| 1.4.2      | `students.ts` - id, userId, tenantId, studentId, gender, dateOfBirth, classId, enrollmentDate, status, bloodGroup, address     | Data Lead | 2h       | 1.4.1      | Target outcome: `students.ts` - id, userId, tenantId, studentId, gender, dateOfBirth, classId, enrollmentDate, status, bloo...; verification: lint/typecheck pass; tests when applicable |
-| 1.4.3      | `parents.ts` - id, userId, tenantId, phone, occupation, address, relationship                                                  | Data Lead | 2h       | 1.4.2      | Target outcome: `parents.ts` - id, userId, tenantId, phone, occupation, address, relationship; verification: lint/typecheck pass; tests when applicable                                  |
-| 1.4.4      | `parent_student.ts` - id, tenantId, parentId, studentId (many-to-many)                                                         | Data Lead | 2h       | 1.4.3      | Target outcome: `parent_student.ts` - id, tenantId, parentId, studentId (many-to-many); verification: tenant-scoped relation checks + lint/typecheck pass                                |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 1.5: Attendance Schema
-
-- **Task Owner**: Data Lead
-- **Task Dependency**: Task 1.4 completed
-- **Task Estimate**: 4h
-
-| Subtask ID | Work item                                                                                                      | Owner     | Estimate | Dependency | Acceptance                                                                                                                                                                               |
-| ---------- | -------------------------------------------------------------------------------------------------------------- | --------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.5.1      | `attendance.ts` - id, tenantId, studentId, classId, date, status (present/absent/late/excused), markedBy, note | Data Lead | 2h       | 1.4.4      | Target outcome: `attendance.ts` - id, tenantId, studentId, classId, date, status (present/absent/late/excused), markedBy, note; verification: lint/typecheck pass; tests when applicable |
-| 1.5.2      | `attendance_settings.ts` - id, tenantId, lateThreshold, absentAlertThreshold, autoNotifyParent                 | Data Lead | 2h       | 1.5.1      | Target outcome: `attendance_settings.ts` - id, tenantId, lateThreshold, absentAlertThreshold, autoNotifyParent; verification: lint/typecheck pass; tests when applicable                 |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 1.6: Grades & Exams Schema
-
-- **Task Owner**: Data Lead
-- **Task Dependency**: Task 1.5 completed
-- **Task Estimate**: 12h
-
-| Subtask ID | Work item                                                                                                         | Owner     | Estimate | Dependency | Acceptance                                                                                                                                                                                            |
-| ---------- | ----------------------------------------------------------------------------------------------------------------- | --------- | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.6.1      | `grade_scales.ts` - id, tenantId, name, minScore, maxScore, grade, gpa                                            | Data Lead | 2h       | 1.5.2      | Target outcome: `grade_scales.ts` - id, tenantId, name, minScore, maxScore, grade, gpa; verification: lint/typecheck pass; tests when applicable                                                      |
-| 1.6.2      | `grades.ts` - id, tenantId, studentId, subjectId, termId, score, grade, teacherId, comment                        | Data Lead | 2h       | 1.6.1      | Target outcome: `grades.ts` - id, tenantId, studentId, subjectId, termId, score, grade, teacherId, comment; verification: lint/typecheck pass; tests when applicable                                  |
-| 1.6.3      | `exams.ts` - id, tenantId, name, type (midterm/final/quiz), subjectId, classId, date, totalMarks, duration        | Data Lead | 2h       | 1.6.2      | Target outcome: `exams.ts` - id, tenantId, name, type (midterm/final/quiz), subjectId, classId, date, totalMarks, duration; verification: lint/typecheck pass; tests when applicable                  |
-| 1.6.4      | `exam_results.ts` - id, tenantId, examId, studentId, score, grade, rank                                           | Data Lead | 2h       | 1.6.3      | Target outcome: `exam_results.ts` - id, tenantId, examId, studentId, score, grade, rank; verification: tenant-scoped exam-result query checks + lint/typecheck pass                                   |
-| 1.6.5      | `assignments.ts` - id, tenantId, teacherId, subjectId, classId, title, description, dueDate, totalPoints, fileUrl | Data Lead | 2h       | 1.6.4      | Target outcome: `assignments.ts` - id, tenantId, teacherId, subjectId, classId, title, description, dueDate, totalPoints, f...; verification: lint/typecheck pass; tests when applicable              |
-| 1.6.6      | `assignment_submissions.ts` - id, tenantId, assignmentId, studentId, fileUrl, submittedAt, score, feedback        | Data Lead | 2h       | 1.6.5      | Target outcome: `assignment_submissions.ts` - id, tenantId, assignmentId, studentId, fileUrl, submittedAt, score, feedback; verification: tenant-scoped submission query checks + lint/typecheck pass |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 1.7: Finance Schema
-
-- **Task Owner**: Data Lead
-- **Task Dependency**: Task 1.6 completed
-- **Task Estimate**: 8h
-
-| Subtask ID | Work item                                                                                                   | Owner     | Estimate | Dependency | Acceptance                                                                                                                                                                            |
-| ---------- | ----------------------------------------------------------------------------------------------------------- | --------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.7.1      | `fee_structures.ts` - id, tenantId, name, amount, frequency (monthly/termly/yearly), classId, description   | Data Lead | 2h       | 1.6.6      | Target outcome: `fee_structures.ts` - id, tenantId, name, amount, frequency (monthly/termly/yearly), classId, description; verification: lint/typecheck pass; tests when applicable   |
-| 1.7.2      | `payments.ts` - id, tenantId, studentId, amount, method, status (pending/paid/overdue), date, receiptNumber | Data Lead | 2h       | 1.7.1      | Target outcome: `payments.ts` - id, tenantId, studentId, amount, method, status (pending/paid/overdue), date, receiptNumber; verification: lint/typecheck pass; tests when applicable |
-| 1.7.3      | `payment_plans.ts` - id, tenantId, studentId, feeStructureId, totalAmount, paidAmount, dueDate              | Data Lead | 2h       | 1.7.2      | Target outcome: `payment_plans.ts` - id, tenantId, studentId, feeStructureId, totalAmount, paidAmount, dueDate; verification: lint/typecheck pass; tests when applicable              |
-| 1.7.4      | `invoices.ts` - id, tenantId, studentId, items (jsonb), totalAmount, status, issuedDate, dueDate            | Data Lead | 2h       | 1.7.3      | Target outcome: `invoices.ts` - id, tenantId, studentId, items (jsonb), totalAmount, status, issuedDate, dueDate; verification: lint/typecheck pass; tests when applicable            |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 1.8: Communication Schema
-
-- **Task Owner**: Data Lead
-- **Task Dependency**: Task 1.7 completed
-- **Task Estimate**: 8h
-
-| Subtask ID | Work item                                                                                             | Owner     | Estimate | Dependency | Acceptance                                                                                                                                                                      |
-| ---------- | ----------------------------------------------------------------------------------------------------- | --------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.8.1      | `notices.ts` - id, tenantId, title, content, targetRole, priority, createdBy, publishDate, expiryDate | Data Lead | 2h       | 1.7.4      | Target outcome: `notices.ts` - id, tenantId, title, content, targetRole, priority, createdBy, publishDate, expiryDate; verification: lint/typecheck pass; tests when applicable |
-| 1.8.2      | `events.ts` - id, tenantId, title, description, startDate, endDate, location, type                    | Data Lead | 2h       | 1.8.1      | Target outcome: `events.ts` - id, tenantId, title, description, startDate, endDate, location, type; verification: lint/typecheck pass; tests when applicable                    |
-| 1.8.3      | `notifications.ts` - id, userId, tenantId, title, message, type, isRead, data (jsonb), createdAt      | Data Lead | 2h       | 1.8.2      | Target outcome: `notifications.ts` - id, userId, tenantId, title, message, type, isRead, data (jsonb), createdAt; verification: lint/typecheck pass; tests when applicable      |
-| 1.8.4      | `messages.ts` - id, tenantId, senderId, receiverId, subject, body, isRead, createdAt                  | Data Lead | 2h       | 1.8.3      | Target outcome: `messages.ts` - id, tenantId, senderId, receiverId, subject, body, isRead, createdAt; verification: lint/typecheck pass; tests when applicable                  |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 1.9: AI Schema
-
-- **Task Owner**: Data Lead
-- **Task Dependency**: Task 1.8 completed
-- **Task Estimate**: 6h
-
-| Subtask ID | Work item                                                                                        | Owner     | Estimate | Dependency | Acceptance                                                                                                                                                                 |
-| ---------- | ------------------------------------------------------------------------------------------------ | --------- | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.9.1      | `ai_conversations.ts` - id, userId, tenantId, messages (jsonb), model, tokenUsage, createdAt     | Data Lead | 2h       | 1.8.4      | Target outcome: `ai_conversations.ts` - id, userId, tenantId, messages (jsonb), model, tokenUsage, createdAt; verification: lint/typecheck pass; tests when applicable     |
-| 1.9.2      | `ai_insights.ts` - id, tenantId, studentId, type, content, confidence, generatedAt               | Data Lead | 2h       | 1.9.1      | Target outcome: `ai_insights.ts` - id, tenantId, studentId, type, content, confidence, generatedAt; verification: lint/typecheck pass; tests when applicable               |
-| 1.9.3      | `ai_reports.ts` - id, tenantId, type, parameters (jsonb), result (jsonb), generatedBy, createdAt | Data Lead | 2h       | 1.9.2      | Target outcome: `ai_reports.ts` - id, tenantId, type, parameters (jsonb), result (jsonb), generatedBy, createdAt; verification: lint/typecheck pass; tests when applicable |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 1.10: Relations & Migrations
-
-- **Task Owner**: Data Lead
-- **Task Dependency**: Task 1.9 completed
-- **Task Estimate**: 17h
-
-| Subtask ID | Work item                                                            | Owner     | Estimate | Dependency | Acceptance                                                                                                                                     |
-| ---------- | -------------------------------------------------------------------- | --------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| 1.10.1     | relations.ts - barcha jadvallar o'rtasida Drizzle relations aniqlash | Data Lead | 2h       | 1.9.3      | Target outcome: relations.ts - barcha jadvallar o'rtasida Drizzle relations aniqlash; verification: lint/typecheck pass; tests when applicable |
-| 1.10.2     | Initial migration generate (`drizzle-kit generate`)                  | Data Lead | 6h       | 1.10.1     | Target outcome: Initial migration generate (`drizzle-kit generate`); verification: lint/typecheck pass; tests when applicable                  |
-| 1.10.3     | Migration runner script (migrate.ts)                                 | Data Lead | 6h       | 1.10.2     | Target outcome: Migration runner script (migrate.ts); verification: lint/typecheck pass; tests when applicable                                 |
-| 1.10.4     | Seed data yaratish (demo tenants, users, teachers, students)         | Data Lead | 3h       | 1.10.3     | Target outcome: Seed data yaratish (demo tenants, users, teachers, students); verification: lint/typecheck pass; tests when applicable         |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### FAZA 1 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+> Barcha subtasklar (1.1–1.10) 2026-02-20 da yakunlandi.
 
 ---
 
-## FAZA 2: NESTJS BACKEND API
+## FAZA 2 — NestJS Backend Modules 🟡 In Progress
 
-**Maqsad**: To'liq backend API yaratish
-**Phase Owner (default)**: Backend Lead
-**Entry Dependency**: FAZA 1 exit gate
-
-### FAZA 2 Implementation Note (2026-02-21)
-
-1. Service qatlamida `thin-service` pattern qo'llanadi: controller -> service -> repository.
-2. Katta business/query logika `*.repository.ts` fayliga ajratiladi.
-3. Mapping va return-shape `*.mapper.ts` va `*.types.ts` fayllarida saqlanadi.
-4. `*.service.ts` 300+ qatorga yaqinlashsa (yoki oshsa) darhol modullarga bo'linadi.
-5. Refactor faqat minimal-diff bilan qilinadi; mavjud behavior o'zgarmasligi shart.
-6. Har bir yangi subtaskni boshlashdan oldin `docReja/Reja.md` va `docReja/Documentation.html` qayta o'qilib, aniq acceptance va scope bo'yicha checklist tuziladi.
-7. Env talab qiladigan integratsiya (masalan Permify PDP) uchun aniq env path ko'rsatiladi: backend qiymatlar `apps/api/.env` ga yoziladi (`PERMIFY_GRPC_ENDPOINT`, `PERMIFY_SCHEMA_VERSION`, `PERMIFY_TIMEOUT_MS`, `PERMIFY_INSECURE`).
-
-### Task 2.1: NestJS Project Setup
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: FAZA 2 entry gate
-- **Task Estimate**: 14h
-
-| Subtask ID | Work item                                                           | Owner        | Estimate | Dependency        | Acceptance                                                                                                                                    |
-| ---------- | ------------------------------------------------------------------- | ------------ | -------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2.1.1      | `apps/api` init, NestJS CLI, tsconfig, nest-cli.json                | Backend Lead | 3h       | FAZA 2 entry gate | Target outcome: `apps/api` init, NestJS CLI, tsconfig, nest-cli.json; verification: lint/typecheck pass; tests when applicable                |
-| 2.1.2      | Main bootstrap (CORS, global pipes, filters, interceptors, Swagger) | Backend Lead | 3h       | 2.1.1             | Target outcome: Main bootstrap (CORS, global pipes, filters, interceptors, Swagger); verification: lint/typecheck pass; tests when applicable |
-| 2.1.3      | AppModule (global imports, ConfigModule, DatabaseModule)            | Backend Lead | 4h       | 2.1.2             | Target outcome: AppModule (global imports, ConfigModule, DatabaseModule); verification: lint/typecheck pass; tests when applicable            |
-| 2.1.4      | Environment config (database, redis, auth, r2, email, sms, ai)      | Backend Lead | 4h       | 2.1.3             | Target outcome: Environment config (database, redis, auth, r2, email, sms, ai); verification: lint/typecheck pass; tests when applicable      |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.2: Common Utilities
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.1 completed
-- **Task Estimate**: 24h
-
-| Subtask ID | Work item                                                                                                                             | Owner        | Estimate | Dependency | Acceptance                                                                                                                                                                                                                                             |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------ | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 2.2.1      | Guards: auth.guard.ts, roles.guard.ts, tenant.guard.ts, gender.guard.ts                                                               | Backend Lead | 4h       | 2.1.4      | Target outcome: Guards: auth.guard.ts, roles.guard.ts, tenant.guard.ts, gender.guard.ts; verification: guard matrix tests (authorized/forbidden/unauthorized) + lint/typecheck pass                                                                    |
-| 2.2.2      | Decorators: @Roles(), @CurrentUser(), @Tenant(), @GenderScope()                                                                       | Backend Lead | 3h       | 2.2.1      | Target outcome: Decorators: @Roles(), @CurrentUser(), @Tenant(), @GenderScope(); verification: lint/typecheck pass; tests when applicable                                                                                                              |
-| 2.2.3      | Interceptors: logging, transform (standard API response), timeout                                                                     | Backend Lead | 3h       | 2.2.2      | Target outcome: Interceptors: logging, transform (standard API response), timeout; verification: lint/typecheck pass; tests when applicable                                                                                                            |
-| 2.2.4      | Filters: http-exception.filter.ts, all-exceptions.filter.ts                                                                           | Backend Lead | 3h       | 2.2.3      | Target outcome: Filters: http-exception.filter.ts, all-exceptions.filter.ts; verification: lint/typecheck pass; tests when applicable                                                                                                                  |
-| 2.2.5      | Pipes: zod-validation.pipe.ts                                                                                                         | Backend Lead | 2h       | 2.2.4      | Target outcome: Pipes: zod-validation.pipe.ts; verification: lint/typecheck pass; tests when applicable                                                                                                                                                |
-| 2.2.6      | Backend middleware (NestJS): tenant.middleware.ts (subdomain -> tenantId), logger.middleware.ts                                       | Backend Lead | 6h       | 2.2.5      | Target outcome: Backend middleware (NestJS): tenant.middleware.ts (subdomain -> tenantId), logger.middleware.ts; verification: tenant resolution test (`platform` vs school slug) + tenant-isolation e2e check                                         |
-| 2.2.7      | DTOs: pagination.dto.ts, api-response.dto.ts                                                                                          | Backend Lead | 3h       | 2.2.6      | Target outcome: DTOs: pagination.dto.ts, api-response.dto.ts; verification: lint/typecheck pass; tests when applicable                                                                                                                                 |
-| 2.2.8      | Tenant slug resolver hardening (`tenantSlug` -> `tenants.id` UUID), unknown-slug fail-closed rules, and request context normalization | Backend Lead | 4h       | 2.2.6      | Target outcome: subdomain slug is resolved to canonical tenant UUID (not stored as `tenantId` directly), `tenantSlug` preserved separately, unknown/private-tenant host requests fail closed; verification: host matrix + tenant UUID resolution tests |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### FAZA 2 Validation Strategy Update (2026-02-25)
-
-- **Decision (backend REST input contracts)**: Shared Zod schemas are the canonical source of truth. DTO classes should be derived from those schemas (Hybrid pattern: Zod + auto-generated DTO via `nestjs-zod` / `createZodDto`) to avoid contract drift between `class-validator` decorators and shared Zod schemas.
-- **Reason**: `2.6 Teachers` runtime smoke exposed a real production mismatch where duplicate validation layers (`ValidationPipe` + route-level Zod) rejected valid-looking `POST /api/teachers` payloads with generic `Validation failed`.
-- **POC scope completed**: `2.6 Teachers Module` DTOs (`create/update/list`) migrated to `createZodDto(...)`; controller inputs standardized to Zod-validated query/body flow.
-- **Rollout audit (Tasks <= 2.6)**:
-  - `2.1 NestJS Project Setup`: No module DTO migration required (infrastructure task).
-  - `2.2 Common Utilities`: Keep `zod-validation.pipe.ts`; no endpoint DTO migration, but this task owns the shared validation infrastructure.
-  - `2.3 Auth Module`: Apply Hybrid Zod+generated DTO to auth request DTOs (`login/register/refresh/logout`) to remove duplicate schema maintenance.
-  - `2.4 Tenants Module`: Apply Hybrid pattern to create/update/billing DTOs and query DTOs used with route-level `ZodValidationPipe`.
-  - `2.5 Users Module`: High priority for migration (`create/update/role/password/avatar` DTOs) because user APIs are dependency roots for later modules.
-  - `2.6 Teachers Module`: POC/first migration target (current standard reference for subsequent modules).
-
-#### Validation Rollout Audit (Tasks 2.3-2.13, completed 2026-02-25)
-
-| Task | Module      | Zod-first controller (parameter-level) | `createZodDto` DTO migration | Status                              | Evidence                                                                                                                                                                        |
-| ---- | ----------- | -------------------------------------- | ---------------------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2.3  | Auth        | ✅                                     | ✅                           | Done                                | `apps/api/src/modules/auth/auth.controller.ts`, `apps/api/src/modules/auth/dto/*`, commit `4a12fc3`                                                                             |
-| 2.4  | Tenants     | ✅                                     | ✅                           | Done                                | `apps/api/src/modules/tenants/tenants.controller.ts`, `apps/api/src/modules/tenants/dto/*`, commit `4a12fc3`                                                                    |
-| 2.5  | Users       | ✅                                     | ✅                           | Done                                | `apps/api/src/modules/users/users.controller.ts`, `apps/api/src/modules/users/dto/*`, commit `d46c6a2`                                                                          |
-| 2.6  | Teachers    | ✅                                     | ✅                           | Done (POC + blocker root-cause fix) | `apps/api/src/modules/teachers/teachers.controller.ts`, `apps/api/src/modules/teachers/dto/*`, commits `f98f62a`, `38c1df2`                                                     |
-| 2.7  | Students    | ✅                                     | ✅                           | Done                                | `apps/api/src/modules/students/students.controller.ts`, `apps/api/src/modules/students/dto/*`, commit `73bef46`                                                                 |
-| 2.8  | Parents     | ✅                                     | ✅                           | Done                                | `apps/api/src/modules/parents/parents.controller.ts`, `apps/api/src/modules/parents/dto/*`, commit `73bef46`                                                                    |
-| 2.9  | Classes     | ✅                                     | ✅                           | Done                                | `apps/api/src/modules/classes/classes.controller.ts`, `apps/api/src/modules/classes/dto/*`, commit `73bef46`                                                                    |
-| 2.10 | Attendance  | ✅                                     | ✅                           | Done                                | `apps/api/src/modules/attendance/attendance.controller.ts`, `apps/api/src/modules/attendance/dto/*`, commit `73bef46`                                                           |
-| 2.11 | Grades      | ✅                                     | ✅                           | Done                                | `apps/api/src/modules/grades/grades.controller.ts`, `apps/api/src/modules/grades/dto/*`, commit `563e163`                                                                       |
-| 2.12 | Exams       | ✅                                     | ✅                           | Done                                | `apps/api/src/modules/exams/exams.controller.ts`, `apps/api/src/modules/exams/dto/*`, `packages/shared/src/validators/exam.schema.ts`, commit `563e163`                         |
-| 2.13 | Assignments | ✅                                     | ✅                           | Done                                | `apps/api/src/modules/assignments/assignments.controller.ts`, `apps/api/src/modules/assignments/dto/*`, `packages/shared/src/validators/assignment.schema.ts`, commit `563e163` |
-
-- **Rollout verification (summary)**:
-  - `bun run typecheck --filter=api` ✅ after `2.7-2.10` migration (`73bef46`)
-  - `bun run typecheck --filter=api` ✅ after `2.11-2.13` migration (`563e163`)
-  - `rg "class-validator" apps/api/src/modules/grades/dto apps/api/src/modules/exams/dto apps/api/src/modules/assignments/dto` -> no matches (post-migration)
-  - `rg "UsePipes\\(new ZodValidationPipe" apps/api/src/modules/grades apps/api/src/modules/exams apps/api/src/modules/assignments -g *.controller.ts` -> no matches (post-migration)
-
-### Task 2.3: Auth Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.2 completed
-- **Task Estimate**: 19h
-- **Implementation note (2026-02-25 fix)**: `AuthStoreRepository` in-memory user store production architecturega mos emas edi (register/login DB `users` jadvali bilan sync bo'lmagan). Auth user credential storage DB-backed (`public.users`) qilinishi talab etiladi va shu root-cause fix qo'llandi. `register` flowdagi hardcoded `school_admin` role ham olib tashlanib, schema-cheklangan role (`school_admin` / `platform_admin`) asosida token/user yaratiladi; `platform_admin` self-register esa security uchun defaultda yopiq va faqat `AUTH_PLATFORM_ADMIN_BOOTSTRAP_KEY` bilan ruxsat etiladi. **Production qoida**: platform super-admin accountlari (`platform_admin`) mijoz tenantida emas, alohida `platform` tenant (`platform.talimy.space`) scope ichida saqlanadi; maktab adminlari (`school_admin`) esa o'z tenantida (`[school-slug].talimy.space`) saqlanadi. Refresh-token revoke storage esa `2.3.4 Session management (Redis-backed)` to'liq yakunlanguncha vaqtincha memory-backed qolishi mumkin.
-
-| Subtask ID | Work item                                                                                  | Owner        | Estimate | Dependency | Acceptance                                                                                                                                                                        |
-| ---------- | ------------------------------------------------------------------------------------------ | ------------ | -------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2.3.1      | auth.module.ts + auth.service.ts (register, login, refresh, logout, forgot/reset password) | Backend Lead | 4h       | 2.2.7      | Target outcome: auth.module.ts + auth.service.ts (register, login, refresh, logout, forgot/reset password); verification: curl flow test (register -> login -> refresh -> logout) |
-| 2.3.2      | JWT strategy, Local strategy, Refresh strategy                                             | Backend Lead | 2h       | 2.3.1      | Target outcome: JWT strategy, Local strategy, Refresh strategy; verification: lint/typecheck pass; tests when applicable                                                          |
-| 2.3.3      | Password hashing (bcrypt), token generation                                                | Backend Lead | 2h       | 2.3.2      | Target outcome: Password hashing (bcrypt), token generation; verification: lint/typecheck pass; tests when applicable                                                             |
-| 2.3.4      | Session management (Redis-backed)                                                          | Backend Lead | 4h       | 2.3.3      | Target outcome: Session management (Redis-backed); verification: Redis key lifecycle check (create/refresh/revoke) + lint/typecheck pass                                          |
-| 2.3.5      | Rate limiting on auth endpoints                                                            | Backend Lead | 4h       | 2.3.4      | Target outcome: Rate limiting on auth endpoints; verification: repeated request test with 429 + rate-limit headers                                                                |
-| 2.3.6      | DTOs: login, register, refresh-token                                                       | Backend Lead | 3h       | 2.3.5      | Target outcome: DTOs: login, register, refresh-token; verification: lint/typecheck pass; tests when applicable                                                                    |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.4: Tenants Module (Platform Admin)
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.3 completed
-- **Task Estimate**: 15h
-
-| Subtask ID | Work item                                                              | Owner        | Estimate | Dependency | Acceptance                                                                                                                                       |
-| ---------- | ---------------------------------------------------------------------- | ------------ | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 2.4.1      | CRUD: create, findAll (paginated, filterable), findOne, update, delete | Backend Lead | 4h       | 2.3.6      | Target outcome: CRUD: create, findAll (paginated, filterable), findOne, update, delete; verification: lint/typecheck pass; tests when applicable |
-| 2.4.2      | Activate/deactivate tenant                                             | Backend Lead | 2h       | 2.4.1      | Target outcome: Activate/deactivate tenant; verification: lint/typecheck pass; tests when applicable                                             |
-| 2.4.3      | Tenant statistics (students count, teachers count, revenue)            | Backend Lead | 2h       | 2.4.2      | Target outcome: Tenant statistics (students count, teachers count, revenue); verification: lint/typecheck pass; tests when applicable            |
-| 2.4.4      | Billing/subscription management                                        | Backend Lead | 4h       | 2.4.3      | Target outcome: Billing/subscription management; verification: lint/typecheck pass; tests when applicable                                        |
-| 2.4.5      | DTOs: create-tenant, update-tenant                                     | Backend Lead | 3h       | 2.4.4      | Target outcome: DTOs: create-tenant, update-tenant; verification: lint/typecheck pass; tests when applicable                                     |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.5: Users Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.4 completed
-- **Task Estimate**: 9h
-
-| Subtask ID | Work item                                                        | Owner        | Estimate | Dependency | Acceptance                                                                                                                                 |
-| ---------- | ---------------------------------------------------------------- | ------------ | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| 2.5.1      | CRUD: create, findAll (by tenant, role), findOne, update, delete | Backend Lead | 4h       | 2.4.5      | Target outcome: CRUD: create, findAll (by tenant, role), findOne, update, delete; verification: lint/typecheck pass; tests when applicable |
-| 2.5.2      | Role assignment, password change, avatar upload                  | Backend Lead | 2h       | 2.5.1      | Target outcome: Role assignment, password change, avatar upload; verification: lint/typecheck pass; tests when applicable                  |
-| 2.5.3      | DTOs: create-user, update-user                                   | Backend Lead | 3h       | 2.5.2      | Target outcome: DTOs: create-user, update-user; verification: lint/typecheck pass; tests when applicable                                   |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.6: Teachers Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.5 completed
-- **Task Estimate**: 15h
-
-| Subtask ID | Work item                                                                                       | Owner        | Estimate | Dependency | Acceptance                                                                                                                                                                                                                                            |
-| ---------- | ----------------------------------------------------------------------------------------------- | ------------ | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2.6.1      | CRUD: create (stepper data), findAll (paginated, filterable by gender), findOne, update, delete | Backend Lead | 4h       | 2.5.3      | Target outcome: CRUD: create (stepper data), findAll (paginated, filterable by gender), findOne, update, delete; verification: lint/typecheck pass; tests when applicable                                                                             |
-| 2.6.2      | Teacher's schedule, classes, subjects                                                           | Backend Lead | 2h       | 2.6.1      | Target outcome: Teacher's schedule, classes, subjects; verification: lint/typecheck pass; tests when applicable                                                                                                                                       |
-| 2.6.3      | Gender-based filtering (Permify integration)                                                    | Backend Lead | 6h       | 2.6.2      | Target outcome: Gender-based filtering (Permify integration) with real Permify SDK/client -> external PDP check (not local-only filter); verification: lint/typecheck pass + deny/allow integration test + fallback behavior (fail-closed) documented |
-| 2.6.4      | DTOs: create-teacher, update-teacher                                                            | Backend Lead | 3h       | 2.6.3      | Target outcome: DTOs: create-teacher, update-teacher; verification: lint/typecheck pass; tests when applicable                                                                                                                                        |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.7: Students Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.6 completed
-- **Task Estimate**: 12h
-
-| Subtask ID | Work item                                                                                             | Owner        | Estimate | Dependency | Acceptance                                                                                                                                                                                                                                |
-| ---------- | ----------------------------------------------------------------------------------------------------- | ------------ | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2.7.1      | CRUD: create (stepper data), findAll (paginated, filterable by gender/class), findOne, update, delete | Backend Lead | 4h       | 2.6.4      | Target outcome: CRUD: create (stepper data), findAll (paginated, filterable by gender/class), findOne, update, delete; verification: lint/typecheck pass; tests when applicable                                                           |
-| 2.7.2      | Student's grades, attendance, assignments summary                                                     | Backend Lead | 2h       | 2.7.1      | Target outcome: Student's grades, attendance, assignments summary; verification: lint/typecheck pass; tests when applicable                                                                                                               |
-| 2.7.3      | Gender-based filtering (Permify)                                                                      | Backend Lead | 3h       | 2.7.2      | Target outcome: Gender-based filtering (Permify) with real Permify SDK/client -> external PDP check (not local-only filter); verification: lint/typecheck pass + deny/allow integration test + fallback behavior (fail-closed) documented |
-| 2.7.4      | DTOs: create-student, update-student                                                                  | Backend Lead | 3h       | 2.7.3      | Target outcome: DTOs: create-student, update-student; verification: lint/typecheck pass; tests when applicable                                                                                                                            |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.8: Parents Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.7 completed
-- **Task Estimate**: 11h
-
-| Subtask ID | Work item                                             | Owner        | Estimate | Dependency | Acceptance                                                                                                                      |
-| ---------- | ----------------------------------------------------- | ------------ | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| 2.8.1      | CRUD: create, findAll, findOne, update, delete        | Backend Lead | 4h       | 2.7.4      | Target outcome: CRUD: create, findAll, findOne, update, delete; verification: lint/typecheck pass; tests when applicable        |
-| 2.8.2      | Link/unlink student-parent relationship               | Backend Lead | 2h       | 2.8.1      | Target outcome: Link/unlink student-parent relationship; verification: lint/typecheck pass; tests when applicable               |
-| 2.8.3      | Parent's children list with grades/attendance summary | Backend Lead | 2h       | 2.8.2      | Target outcome: Parent's children list with grades/attendance summary; verification: lint/typecheck pass; tests when applicable |
-| 2.8.4      | DTOs: create-parent, update-parent                    | Backend Lead | 3h       | 2.8.3      | Target outcome: DTOs: create-parent, update-parent; verification: lint/typecheck pass; tests when applicable                    |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.9: Classes Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.8 completed
-- **Task Estimate**: 11h
-
-| Subtask ID | Work item                                                  | Owner        | Estimate | Dependency | Acceptance                                                                                                                           |
-| ---------- | ---------------------------------------------------------- | ------------ | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| 2.9.1      | CRUD: create, findAll (by tenant), findOne, update, delete | Backend Lead | 4h       | 2.8.4      | Target outcome: CRUD: create, findAll (by tenant), findOne, update, delete; verification: lint/typecheck pass; tests when applicable |
-| 2.9.2      | Class students list, class teachers list                   | Backend Lead | 2h       | 2.9.1      | Target outcome: Class students list, class teachers list; verification: lint/typecheck pass; tests when applicable                   |
-| 2.9.3      | Class schedule, class statistics                           | Backend Lead | 2h       | 2.9.2      | Target outcome: Class schedule, class statistics; verification: lint/typecheck pass; tests when applicable                           |
-| 2.9.4      | DTOs: create-class, update-class                           | Backend Lead | 3h       | 2.9.3      | Target outcome: DTOs: create-class, update-class; verification: lint/typecheck pass; tests when applicable                           |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.10: Attendance Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.9 completed
-- **Task Estimate**: 11h
-
-| Subtask ID | Work item                                    | Owner        | Estimate | Dependency | Acceptance                                                                                                             |
-| ---------- | -------------------------------------------- | ------------ | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
-| 2.10.1     | Mark attendance (bulk for class)             | Backend Lead | 2h       | 2.9.4      | Target outcome: Mark attendance (bulk for class); verification: lint/typecheck pass; tests when applicable             |
-| 2.10.2     | Get attendance by student, class, date range | Backend Lead | 2h       | 2.10.1     | Target outcome: Get attendance by student, class, date range; verification: lint/typecheck pass; tests when applicable |
-| 2.10.3     | Attendance reports/statistics                | Backend Lead | 2h       | 2.10.2     | Target outcome: Attendance reports/statistics; verification: lint/typecheck pass; tests when applicable                |
-| 2.10.4     | Auto-notify parents if absent (BullMQ job)   | Backend Lead | 2h       | 2.10.3     | Target outcome: Auto-notify parents if absent (BullMQ job); verification: lint/typecheck pass; tests when applicable   |
-| 2.10.5     | DTOs: mark-attendance, attendance-query      | Backend Lead | 3h       | 2.10.4     | Target outcome: DTOs: mark-attendance, attendance-query; verification: lint/typecheck pass; tests when applicable      |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.11: Grades Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.10 completed
-- **Task Estimate**: 13h
-
-| Subtask ID | Work item                                   | Owner        | Estimate | Dependency | Acceptance                                                                                                            |
-| ---------- | ------------------------------------------- | ------------ | -------- | ---------- | --------------------------------------------------------------------------------------------------------------------- |
-| 2.11.1     | Enter grades (bulk for class/subject)       | Backend Lead | 2h       | 2.10.5     | Target outcome: Enter grades (bulk for class/subject); verification: lint/typecheck pass; tests when applicable       |
-| 2.11.2     | Get grades by student, class, subject, term | Backend Lead | 2h       | 2.11.1     | Target outcome: Get grades by student, class, subject, term; verification: lint/typecheck pass; tests when applicable |
-| 2.11.3     | Grade reports, GPA calculation              | Backend Lead | 2h       | 2.11.2     | Target outcome: Grade reports, GPA calculation; verification: lint/typecheck pass; tests when applicable              |
-| 2.11.4     | Grade scale management                      | Backend Lead | 4h       | 2.11.3     | Target outcome: Grade scale management; verification: lint/typecheck pass; tests when applicable                      |
-| 2.11.5     | DTOs: create-grade, grade-query             | Backend Lead | 3h       | 2.11.4     | Target outcome: DTOs: create-grade, grade-query; verification: lint/typecheck pass; tests when applicable             |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.12: Exams Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.11 completed
-- **Task Estimate**: 13h
-
-| Subtask ID | Work item                                  | Owner        | Estimate | Dependency | Acceptance                                                                                                           |
-| ---------- | ------------------------------------------ | ------------ | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------- |
-| 2.12.1     | CRUD: create exam, update, delete          | Backend Lead | 4h       | 2.11.5     | Target outcome: CRUD: create exam, update, delete; verification: lint/typecheck pass; tests when applicable          |
-| 2.12.2     | Enter exam results (bulk)                  | Backend Lead | 2h       | 2.12.1     | Target outcome: Enter exam results (bulk); verification: lint/typecheck pass; tests when applicable                  |
-| 2.12.3     | Get results by exam, student               | Backend Lead | 2h       | 2.12.2     | Target outcome: Get results by exam, student; verification: lint/typecheck pass; tests when applicable               |
-| 2.12.4     | Exam statistics (average, highest, lowest) | Backend Lead | 2h       | 2.12.3     | Target outcome: Exam statistics (average, highest, lowest); verification: lint/typecheck pass; tests when applicable |
-| 2.12.5     | DTOs: create-exam, exam-result             | Backend Lead | 3h       | 2.12.4     | Target outcome: DTOs: create-exam, exam-result; verification: lint/typecheck pass; tests when applicable             |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.13: Assignments Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.12 completed
-- **Task Estimate**: 13h
-- **Status**: Completed (2026-02-23)
-- **Evidence**: `apps/api/src/modules/assignments/assignments.controller.ts`, `apps/api/src/modules/assignments/assignments.service.ts`, `apps/api/src/modules/assignments/assignments.repository.ts`, `apps/api/src/modules/assignments/assignment-submission-files.service.ts`, `apps/api/src/modules/assignments/dto/submit-assignment.dto.ts`, `packages/shared/src/validators/assignment.schema.ts`, `apps/api/src/modules/assignments/assignments.controller.spec.ts`, `apps/api/src/modules/assignments/assignments.service.spec.ts`
-- **Verification**: `bun run --cwd apps/api typecheck` ✅, `bun run --cwd apps/api lint` ✅, `bun test ...assignments*.spec.ts` blocked locally by missing `reflect-metadata` resolution in test runtime
-
-| Subtask ID | Work item                                  | Owner        | Estimate | Dependency | Acceptance                                                                                                           |
-| ---------- | ------------------------------------------ | ------------ | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------- |
-| 2.13.1     | CRUD: create assignment, update, delete    | Backend Lead | 4h       | 2.12.5     | Target outcome: CRUD: create assignment, update, delete; verification: lint/typecheck pass; tests when applicable    |
-| 2.13.2     | Submit assignment (student), file upload   | Backend Lead | 2h       | 2.13.1     | Target outcome: Submit assignment (student), file upload; verification: lint/typecheck pass; tests when applicable   |
-| 2.13.3     | Grade submission (teacher)                 | Backend Lead | 2h       | 2.13.2     | Target outcome: Grade submission (teacher); verification: lint/typecheck pass; tests when applicable                 |
-| 2.13.4     | Assignment statistics                      | Backend Lead | 2h       | 2.13.3     | Target outcome: Assignment statistics; verification: lint/typecheck pass; tests when applicable                      |
-| 2.13.5     | DTOs: create-assignment, submit-assignment | Backend Lead | 3h       | 2.13.4     | Target outcome: DTOs: create-assignment, submit-assignment; verification: lint/typecheck pass; tests when applicable |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.14: Schedule Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.13 completed
-- **Task Estimate**: 11h
-- **Status**: Completed (2026-02-23)
-- **Evidence**: `apps/api/src/modules/schedule/schedule.controller.ts`, `apps/api/src/modules/schedule/schedule.service.ts`, `apps/api/src/modules/schedule/dto/create-schedule.dto.ts`, `apps/api/src/modules/schedule/dto/schedule-query.dto.ts`, `packages/shared/src/validators/schedule.schema.ts`, `apps/api/src/modules/schedule/schedule.schema.spec.ts`, `apps/api/src/modules/schedule/schedule.service.spec.ts`
-- **Verification**: `bun run --cwd apps/api typecheck` ✅, `bun run --cwd apps/api lint` ✅, `bun test apps/api/src/modules/schedule/schedule.schema.spec.ts apps/api/src/modules/schedule/schedule.service.spec.ts` ✅
-
-| Subtask ID | Work item                                   | Owner        | Estimate | Dependency | Acceptance                                                                                                            |
-| ---------- | ------------------------------------------- | ------------ | -------- | ---------- | --------------------------------------------------------------------------------------------------------------------- |
-| 2.14.1     | CRUD: create schedule entry, update, delete | Backend Lead | 4h       | 2.13.5     | Target outcome: CRUD: create schedule entry, update, delete; verification: lint/typecheck pass; tests when applicable |
-| 2.14.2     | Get schedule by class, teacher, day         | Backend Lead | 2h       | 2.14.1     | Target outcome: Get schedule by class, teacher, day; verification: lint/typecheck pass; tests when applicable         |
-| 2.14.3     | Conflict detection (same teacher/room/time) | Backend Lead | 2h       | 2.14.2     | Target outcome: Conflict detection (same teacher/room/time); verification: lint/typecheck pass; tests when applicable |
-| 2.14.4     | DTOs: create-schedule, schedule-query       | Backend Lead | 3h       | 2.14.3     | Target outcome: DTOs: create-schedule, schedule-query; verification: lint/typecheck pass; tests when applicable       |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.15: Finance Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.14 completed
-- **Task Estimate**: 13h
-- **Status**: Completed (2026-02-23)
-- **Evidence**: `apps/api/src/modules/finance/finance.controller.ts`, `apps/api/src/modules/finance/finance.service.ts`, `apps/api/src/modules/finance/finance.repository.ts`, `apps/api/src/modules/finance/dto/create-payment.dto.ts`, `apps/api/src/modules/finance/dto/create-invoice.dto.ts`, `apps/api/src/modules/finance/dto/fee-structure.dto.ts`, `apps/api/src/modules/finance/dto/payment-plan.dto.ts`, `packages/shared/src/validators/finance.schema.ts`, `packages/shared/src/validators/index.ts`, `apps/api/src/modules/finance/finance.schema.spec.ts`, `apps/api/src/modules/finance/finance.service.spec.ts`
-- **Verification**: `bun run --cwd apps/api typecheck` ✅, `bun run --cwd apps/api lint` ✅, `bun test apps/api/src/modules/finance/finance.schema.spec.ts apps/api/src/modules/finance/finance.service.spec.ts` ✅
-
-| Subtask ID | Work item                                       | Owner        | Estimate | Dependency | Acceptance                                                                                                                |
-| ---------- | ----------------------------------------------- | ------------ | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- |
-| 2.15.1     | Fee structure CRUD                              | Backend Lead | 4h       | 2.14.4     | Target outcome: Fee structure CRUD; verification: lint/typecheck pass; tests when applicable                              |
-| 2.15.2     | Payment recording, payment plans                | Backend Lead | 2h       | 2.15.1     | Target outcome: Payment recording, payment plans; verification: lint/typecheck pass; tests when applicable                |
-| 2.15.3     | Invoice generation                              | Backend Lead | 2h       | 2.15.2     | Target outcome: Invoice generation; verification: lint/typecheck pass; tests when applicable                              |
-| 2.15.4     | Finance reports (revenue, outstanding, overdue) | Backend Lead | 2h       | 2.15.3     | Target outcome: Finance reports (revenue, outstanding, overdue); verification: lint/typecheck pass; tests when applicable |
-| 2.15.5     | DTOs: create-payment, create-invoice            | Backend Lead | 3h       | 2.15.4     | Target outcome: DTOs: create-payment, create-invoice; verification: lint/typecheck pass; tests when applicable            |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.16: Notices Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.15 completed
-- **Task Estimate**: 11h
-
-| Subtask ID | Work item                                         | Owner        | Estimate | Dependency | Acceptance                                                                                                                  |
-| ---------- | ------------------------------------------------- | ------------ | -------- | ---------- | --------------------------------------------------------------------------------------------------------------------------- |
-| 2.16.1     | CRUD: create notice, update, delete               | Backend Lead | 4h       | 2.15.5     | Target outcome: CRUD: create notice, update, delete; verification: lint/typecheck pass; tests when applicable               |
-| 2.16.2     | Target by role (all, teachers, students, parents) | Backend Lead | 2h       | 2.16.1     | Target outcome: Target by role (all, teachers, students, parents); verification: lint/typecheck pass; tests when applicable |
-| 2.16.3     | Priority levels (low, medium, high, urgent)       | Backend Lead | 2h       | 2.16.2     | Target outcome: Priority levels (low, medium, high, urgent); verification: lint/typecheck pass; tests when applicable       |
-| 2.16.4     | DTOs: create-notice                               | Backend Lead | 3h       | 2.16.3     | Target outcome: DTOs: create-notice; verification: lint/typecheck pass; tests when applicable                               |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.17: Notifications Module + Real-time
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.16 completed
-- **Task Estimate**: 15h
-
-| Subtask ID | Work item                                    | Owner        | Estimate | Dependency | Acceptance                                                                                                             |
-| ---------- | -------------------------------------------- | ------------ | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
-| 2.17.1     | notifications.module.ts, service, controller | Backend Lead | 4h       | 2.16.4     | Target outcome: notifications.module.ts, service, controller; verification: lint/typecheck pass; tests when applicable |
-| 2.17.2     | Socket.IO gateway (notifications.gateway.ts) | Backend Lead | 4h       | 2.17.1     | Target outcome: Socket.IO gateway (notifications.gateway.ts); verification: lint/typecheck pass; tests when applicable |
-| 2.17.3     | Send notification (in-app, email, SMS)       | Backend Lead | 2h       | 2.17.2     | Target outcome: Send notification (in-app, email, SMS); verification: lint/typecheck pass; tests when applicable       |
-| 2.17.4     | Mark as read, get unread count               | Backend Lead | 2h       | 2.17.3     | Target outcome: Mark as read, get unread count; verification: lint/typecheck pass; tests when applicable               |
-| 2.17.5     | DTOs: send-notification                      | Backend Lead | 3h       | 2.17.4     | Target outcome: DTOs: send-notification; verification: lint/typecheck pass; tests when applicable                      |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.18: Calendar Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.17 completed
-- **Task Estimate**: 9h
-
-| Subtask ID | Work item                              | Owner        | Estimate | Dependency | Acceptance                                                                                                       |
-| ---------- | -------------------------------------- | ------------ | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------- |
-| 2.18.1     | CRUD: create event, update, delete     | Backend Lead | 4h       | 2.17.5     | Target outcome: CRUD: create event, update, delete; verification: lint/typecheck pass; tests when applicable     |
-| 2.18.2     | Get events by date range, type, tenant | Backend Lead | 2h       | 2.18.1     | Target outcome: Get events by date range, type, tenant; verification: lint/typecheck pass; tests when applicable |
-| 2.18.3     | DTOs: create-event                     | Backend Lead | 3h       | 2.18.2     | Target outcome: DTOs: create-event; verification: lint/typecheck pass; tests when applicable                     |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.19: Upload Module (Cloudflare R2)
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.18 completed
-- **Task Estimate**: 6h
-
-| Subtask ID | Work item                                                   | Owner        | Estimate | Dependency | Acceptance                                                                                                                            |
-| ---------- | ----------------------------------------------------------- | ------------ | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| 2.19.1     | upload.service.ts - R2 client, upload, delete, getSignedUrl | Backend Lead | 2h       | 2.18.3     | Target outcome: upload.service.ts - R2 client, upload, delete, getSignedUrl; verification: lint/typecheck pass; tests when applicable |
-| 2.19.2     | upload.controller.ts - file upload endpoint (multipart)     | Backend Lead | 2h       | 2.19.1     | Target outcome: upload.controller.ts - file upload endpoint (multipart); verification: lint/typecheck pass; tests when applicable     |
-| 2.19.3     | File type/size validation                                   | Backend Lead | 2h       | 2.19.2     | Target outcome: File type/size validation; verification: lint/typecheck pass; tests when applicable                                   |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.20: AI Module (Claude API)
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.19 completed
-- **Task Estimate**: 17h
-
-| Subtask ID | Work item                                                          | Owner        | Estimate | Dependency | Acceptance                                                                                                                                   |
-| ---------- | ------------------------------------------------------------------ | ------------ | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2.20.1     | ai.service.ts - Claude API integration                             | Backend Lead | 6h       | 2.19.3     | Target outcome: ai.service.ts - Claude API integration; verification: lint/typecheck pass; tests when applicable                             |
-| 2.20.2     | Student insight generation (motivational advice, study strategies) | Backend Lead | 2h       | 2.20.1     | Target outcome: Student insight generation (motivational advice, study strategies); verification: lint/typecheck pass; tests when applicable |
-| 2.20.3     | Report generation (admin-level AI reports)                         | Backend Lead | 2h       | 2.20.2     | Target outcome: Report generation (admin-level AI reports); verification: lint/typecheck pass; tests when applicable                         |
-| 2.20.4     | Chat endpoint (stream response)                                    | Backend Lead | 2h       | 2.20.3     | Target outcome: Chat endpoint (stream response); verification: lint/typecheck pass; tests when applicable                                    |
-| 2.20.5     | Token usage tracking                                               | Backend Lead | 2h       | 2.20.4     | Target outcome: Token usage tracking; verification: lint/typecheck pass; tests when applicable                                               |
-| 2.20.6     | DTOs: chat, report                                                 | Backend Lead | 3h       | 2.20.5     | Target outcome: DTOs: chat, report; verification: lint/typecheck pass; tests when applicable                                                 |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.21: Email Module (Resend)
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.20 completed
-- **Task Estimate**: 11h
-
-| Subtask ID | Work item                                                       | Owner        | Estimate | Dependency | Acceptance                                                                                                                                |
-| ---------- | --------------------------------------------------------------- | ------------ | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| 2.21.1     | email.service.ts - Resend API integration                       | Backend Lead | 6h       | 2.20.6     | Target outcome: email.service.ts - Resend API integration; verification: lint/typecheck pass; tests when applicable                       |
-| 2.21.2     | Email templates: welcome, password-reset, invoice, notification | Backend Lead | 3h       | 2.21.1     | Target outcome: Email templates: welcome, password-reset, invoice, notification; verification: lint/typecheck pass; tests when applicable |
-| 2.21.3     | BullMQ email processor                                          | Backend Lead | 2h       | 2.21.2     | Target outcome: BullMQ email processor; verification: lint/typecheck pass; tests when applicable                                          |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.22: SMS Module (Twilio)
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.21 completed
-- **Task Estimate**: 11h
-- **Status**: In Progress (2026-02-26)
-- **Evidence (current)**:
-  - `apps/api/src/modules/sms/sms.service.ts` (Twilio SDK integration + `sendNotificationSms`)
-  - `apps/api/src/modules/sms/sms.templates.ts` (attendance/grade/notification SMS templates)
-  - `apps/api/src/modules/queue/jobs/sms.job.ts`, `apps/api/src/modules/queue/processors/sms.processor.ts` (BullMQ SMS processor pieces)
-  - `apps/api/src/modules/notifications/notifications.service.ts` (real SMS dispatch via `SmsService`, no longer stub count)
-  - `apps/api/scripts/smoke-integration-baseline.js` (`sms-runtime` step added; strict mode supported via `--strict-sms=true`)
-  - Local verification: `bun test apps/api/src/modules/sms/sms.templates.spec.ts apps/api/src/modules/sms/sms.service.spec.ts apps/api/src/modules/sms/sms.processor.spec.ts apps/api/src/modules/notifications/notifications.service.spec.ts`, `bun run typecheck --filter=api`, `bun run lint --filter=api`
-  - Runtime baseline: `sms-runtime` currently `SKIP` until `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_PHONE_NUMBER` are configured in `apps/api/.env` (local) and Dokploy API env (deploy)
-
-| Subtask ID | Work item                                     | Owner        | Estimate | Dependency | Acceptance                                                                                                              |
-| ---------- | --------------------------------------------- | ------------ | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------- |
-| 2.22.1     | sms.service.ts - Twilio integration           | Backend Lead | 6h       | 2.21.3     | Target outcome: sms.service.ts - Twilio integration; verification: lint/typecheck pass; tests when applicable           |
-| 2.22.2     | SMS templates (attendance alert, grade alert) | Backend Lead | 3h       | 2.22.1     | Target outcome: SMS templates (attendance alert, grade alert); verification: lint/typecheck pass; tests when applicable |
-| 2.22.3     | BullMQ SMS processor                          | Backend Lead | 2h       | 2.22.2     | Target outcome: BullMQ SMS processor; verification: lint/typecheck pass; tests when applicable                          |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.23: Queue Module (BullMQ)
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.22 completed
-- **Task Estimate**: 10h
-- **Status**: In Progress (2026-02-26)
-- **Evidence (current)**:
-  - `apps/api/src/modules/queue/queue.module.ts`, `apps/api/src/modules/queue/queue-workers.service.ts`, `apps/api/src/modules/queue/queue.redis.ts`
-  - `apps/api/src/modules/queue/jobs/notification.job.ts`, `apps/api/src/modules/queue/jobs/report.job.ts`
-  - `apps/api/src/modules/queue/processors/notification.processor.ts`, `apps/api/src/modules/queue/processors/report.processor.ts`
-  - Tests: `apps/api/src/modules/queue/queue.jobs.spec.ts`, `apps/api/src/modules/queue/queue.processors.spec.ts`
-  - Verification: `bun test apps/api/src/modules/queue/queue.jobs.spec.ts apps/api/src/modules/queue/queue.processors.spec.ts`, `bun run typecheck --filter=api`
-  - Extended (2.23.5): `apps/api/src/worker.main.ts`, `apps/api/src/worker.module.ts`, `apps/api/src/modules/queue/queue-workers.service.spec.ts`
-  - Extended verification: `bun test apps/api/src/modules/queue/queue-workers.service.spec.ts`, `bun run typecheck --filter=api` (local dual-process smoke pending)
-
-| Subtask ID | Work item                                                                                                                      | Owner        | Estimate | Dependency | Acceptance                                                                                                                                                                                                                            |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------ | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2.23.1     | queue.module.ts - BullMQ + Redis setup                                                                                         | Backend Lead | 4h       | 2.22.3     | Target outcome: queue.module.ts - BullMQ + Redis setup; verification: lint/typecheck pass; tests when applicable                                                                                                                      |
-| 2.23.2     | Email processor, SMS processor                                                                                                 | Backend Lead | 2h       | 2.23.1     | Target outcome: Email processor, SMS processor; verification: lint/typecheck pass; tests when applicable                                                                                                                              |
-| 2.23.3     | Notification processor                                                                                                         | Backend Lead | 2h       | 2.23.2     | Target outcome: Notification processor; verification: lint/typecheck pass; tests when applicable                                                                                                                                      |
-| 2.23.4     | Report generation processor (AI reports)                                                                                       | Backend Lead | 2h       | 2.23.3     | Target outcome: Report generation processor (AI reports); verification: lint/typecheck pass; tests when applicable                                                                                                                    |
-| 2.23.5     | Dedicated worker runtime bootstrap (separate process entrypoint + API worker toggle to avoid duplicate consumers in scale-out) | Backend Lead | 4h       | 2.23.4     | Target outcome: queue workers can run outside API process (single-purpose worker runtime) and API process can disable worker startup; verification: local dual-process smoke (`api` + `worker`) + duplicate-consumer prevention check |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.24: Cache Module (Self-hosted Redis via WireGuard)
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.23 completed
-- **Task Estimate**: 12h
-- **Status**: Completed (2026-02-26)
-- **Evidence (current)**:
-  - `apps/api/src/modules/cache/cache.module.ts`, `apps/api/src/modules/cache/cache.service.ts`, `apps/api/src/modules/cache/cache.keys.ts`
-  - `apps/api/src/modules/cache/cache.service.spec.ts` (memory fallback cache tests)
-  - Cached endpoint integration: `apps/api/src/modules/schedule/schedule.controller.ts`, `apps/api/src/modules/finance/finance.controller.ts`
-  - Verification: `bun test apps/api/src/modules/cache/cache.service.spec.ts`, `bun run typecheck --filter=api`, `bun run lint --filter=api`
-
-| Subtask ID | Work item                                     | Owner        | Estimate | Dependency | Acceptance                                                                                                              |
-| ---------- | --------------------------------------------- | ------------ | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------- |
-| 2.24.1     | cache.module.ts + cache.service.ts            | Backend Lead | 4h       | 2.23.4     | Target outcome: cache.module.ts + cache.service.ts; verification: lint/typecheck pass; tests when applicable            |
-| 2.24.2     | Cache strategies (TTL, invalidation)          | Backend Lead | 4h       | 2.24.1     | Target outcome: Cache strategies (TTL, invalidation); verification: lint/typecheck pass; tests when applicable          |
-| 2.24.3     | Cached endpoints (dashboard stats, schedules) | Backend Lead | 4h       | 2.24.2     | Target outcome: Cached endpoints (dashboard stats, schedules); verification: lint/typecheck pass; tests when applicable |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.25: Audit Module
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.24 completed
-- **Task Estimate**: 9h
-- **Status**: Completed (2026-02-26)
-- **Evidence (current)**:
-  - `apps/api/src/modules/audit/audit.module.ts`, `apps/api/src/modules/audit/audit.service.ts`, `apps/api/src/modules/audit/audit.interceptor.ts`
-  - `apps/api/src/modules/audit/audit.controller.ts`, `apps/api/src/modules/audit/audit.utils.ts`, `apps/api/src/modules/audit/dto/audit-query.dto.ts`
-  - Shared validator: `packages/shared/src/validators/audit.schema.ts`
-  - Global interceptor registration via `APP_INTERCEPTOR` in `apps/api/src/modules/audit/audit.module.ts`
-  - Verification: `bun run typecheck --filter=api`, `bun run lint --filter=api`
-
-| Subtask ID | Work item                                       | Owner        | Estimate | Dependency | Acceptance                                                                                                                |
-| ---------- | ----------------------------------------------- | ------------ | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- |
-| 2.25.1     | audit.service.ts - log all CRUD operations      | Backend Lead | 4h       | 2.24.3     | Target outcome: audit.service.ts - log all CRUD operations; verification: lint/typecheck pass; tests when applicable      |
-| 2.25.2     | audit.interceptor.ts - auto-log via interceptor | Backend Lead | 3h       | 2.25.1     | Target outcome: audit.interceptor.ts - auto-log via interceptor; verification: lint/typecheck pass; tests when applicable |
-| 2.25.3     | Audit log query endpoint (admin only)           | Backend Lead | 2h       | 2.25.2     | Target outcome: Audit log query endpoint (admin only); verification: lint/typecheck pass; tests when applicable           |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 2.26: tRPC Integration
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 2.25 completed
-- **Task Estimate**: 19h
-- **Status**: Completed (2026-02-26)
-- **Evidence (current)**:
-  - `packages/trpc/src/context.ts`, `packages/trpc/src/trpc.ts`, `packages/trpc/src/index.ts`
-  - Routers: `packages/trpc/src/routers/index.ts`, `packages/trpc/src/routers/*.router.ts`, `packages/trpc/src/routers/router-helpers.ts`
-  - Tests: `packages/trpc/src/trpc.spec.ts`
-  - Package config: `packages/trpc/package.json`, `packages/trpc/tsconfig.json`
-  - Verification: `bun run typecheck --filter=@talimy/trpc`, `bun run typecheck --filter=api`
-- **Execution note**: To avoid late integration risk, start contract skeleton (`2.26.1`/`2.26.2`) immediately after tenant/auth modules are stable, while keeping final merge and completion in this task block.
-
-| Subtask ID | Work item                                       | Owner        | Estimate | Dependency | Acceptance                                                                                                                |
-| ---------- | ----------------------------------------------- | ------------ | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- |
-| 2.26.1     | `packages/trpc` - tRPC init, context, routers   | Backend Lead | 3h       | 2.25.3     | Target outcome: `packages/trpc` - tRPC init, context, routers; verification: lint/typecheck pass; tests when applicable   |
-| 2.26.2     | Auth router, tenant router, teacher router      | Backend Lead | 4h       | 2.26.1     | Target outcome: Auth router, tenant router, teacher router; verification: lint/typecheck pass; tests when applicable      |
-| 2.26.3     | Student router, attendance router, grade router | Backend Lead | 3h       | 2.26.2     | Target outcome: Student router, attendance router, grade router; verification: lint/typecheck pass; tests when applicable |
-| 2.26.4     | Exam router, assignment router, finance router  | Backend Lead | 3h       | 2.26.3     | Target outcome: Exam router, assignment router, finance router; verification: lint/typecheck pass; tests when applicable  |
-| 2.26.5     | Notification router, schedule router, AI router | Backend Lead | 3h       | 2.26.4     | Target outcome: Notification router, schedule router, AI router; verification: lint/typecheck pass; tests when applicable |
-| 2.26.6     | App router merge (all routers combined)         | Backend Lead | 3h       | 2.26.5     | Target outcome: App router merge (all routers combined); verification: lint/typecheck pass; tests when applicable         |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### FAZA 2 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+> Barcha modullar (2.1–2.26) qisman yoki to'liq yakunlandi.
+> Qolgan: 2.16 (Notices — GET /:id fix), 2.21 (Email runtime), 2.22 (SMS runtime), 2.23 (Queue dual-process smoke).
 
 ---
 
-## FAZA 3: NEXT.JS FRONTEND - SHARED INFRA
+## FAZA 3 — Next.js Frontend Foundation 🟡 In Progress
 
-**Maqsad**: Web app asosiy tuzilmasini yaratish
-**Phase Owner (default)**: Frontend Lead
-**Entry Dependency**: FAZA 2 exit gate
-
-### Task 3.1: Next.js Project Setup
-
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: FAZA 3 entry gate
-- **Task Estimate**: 15h
-
-| Subtask ID | Work item                                                                         | Owner         | Estimate | Dependency        | Acceptance                                                                                                                                               |
-| ---------- | --------------------------------------------------------------------------------- | ------------- | -------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 3.1.1      | `apps/web` init (Next.js 16, App Router)                                          | Frontend Lead | 3h       | FAZA 3 entry gate | Target outcome: `apps/web` init (Next.js 16, App Router); verification: lint/typecheck pass; tests when applicable                                       |
-| 3.1.2      | next.config.ts (images, transpilePackages, experimental features)                 | Frontend Lead | 3h       | 3.1.1             | Target outcome: next.config.ts (images, transpilePackages, experimental features); verification: lint/typecheck pass; tests when applicable              |
-| 3.1.3      | tailwind.config.ts (optional compatibility file for tooling/legacy plugins in v4) | Frontend Lead | 1h       | 3.1.2             | Optional: create tailwind.config.ts only if required by tooling/plugin integration; otherwise CSS-first setup is valid.                                  |
-| 3.1.4      | globals.css (Tailwind v4 CSS-first: @import, @theme tokens, custom animations)    | Frontend Lead | 2h       | 3.1.2             | Target outcome: globals.css (Tailwind v4 CSS-first: @import, @theme tokens, custom animations); verification: lint/typecheck pass; tests when applicable |
-| 3.1.5      | Root layout.tsx (fonts, providers, metadata)                                      | Frontend Lead | 4h       | 3.1.4             | Target outcome: Root layout.tsx (fonts, providers, metadata); verification: lint/typecheck pass; tests when applicable                                   |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 3.2: Proxy (Critical)
-
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 3.1 completed
-- **Task Estimate**: 15h
-
-| Subtask ID | Work item                                                                                                                                 | Owner         | Estimate | Dependency | Acceptance                                                                                                                                                                                                                                                    |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 3.2.1      | proxy.ts - subdomain detection (platform.talimy.space, [school].talimy.space)                                                             | Frontend Lead | 6h       | 3.1.5      | Target outcome: proxy.ts - subdomain detection (platform.talimy.space, [school].talimy.space); verification: host matrix test (`platform`, valid school slug, bare domain)                                                                                    |
-| 3.2.2      | Lightweight auth gate skeleton in proxy (public/private redirect only; no heavy authorization logic, final provider integration in 7.1.7) | Frontend Lead | 4h       | 3.2.1      | Target outcome: Lightweight auth gate skeleton in proxy (public/private redirect only; no heavy authorization logic, final provider integration in 7.1.7); verification: unauthenticated redirect checks for protected prefixes with placeholder auth context |
-| 3.2.3      | Role-route normalization hints in proxy; final authorization enforced in server guards/handlers                                           | Frontend Lead | 2h       | 3.2.2      | Target outcome: Role-route normalization hints in proxy; final authorization enforced in server guards/handlers; verification: role mismatch attempts blocked by server-side auth                                                                             |
-| 3.2.4      | i18n locale detection (next-intl) with safe exclusions for assets/API routes                                                              | Frontend Lead | 3h       | 3.2.3      | Target outcome: i18n locale detection (next-intl) with safe exclusions for assets/API routes; verification: locale redirect tests + static/API bypass checks                                                                                                  |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 3.3: Providers Setup
-
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 3.2 completed
-- **Task Estimate**: 20h
-
-| Subtask ID | Work item                                    | Owner         | Estimate | Dependency | Acceptance                                                                                                             |
-| ---------- | -------------------------------------------- | ------------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------- |
-| 3.3.1      | auth-provider.tsx (NextAuth SessionProvider) | Frontend Lead | 4h       | 3.2.4      | Target outcome: auth-provider.tsx (NextAuth SessionProvider); verification: lint/typecheck pass; tests when applicable |
-| 3.3.2      | query-provider.tsx (TanStack Query)          | Frontend Lead | 4h       | 3.3.1      | Target outcome: query-provider.tsx (TanStack Query); verification: lint/typecheck pass; tests when applicable          |
-| 3.3.3      | theme-provider.tsx (light/dark mode)         | Frontend Lead | 4h       | 3.3.2      | Target outcome: theme-provider.tsx (light/dark mode); verification: lint/typecheck pass; tests when applicable         |
-| 3.3.4      | intl-provider.tsx (next-intl)                | Frontend Lead | 4h       | 3.3.3      | Target outcome: intl-provider.tsx (next-intl); verification: lint/typecheck pass; tests when applicable                |
-| 3.3.5      | socket-provider.tsx (Socket.IO client)       | Frontend Lead | 4h       | 3.3.4      | Target outcome: socket-provider.tsx (Socket.IO client); verification: lint/typecheck pass; tests when applicable       |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 3.4: Zustand Stores
-
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 3.3 completed
-- **Task Estimate**: 13h
-
-| Subtask ID | Work item                                                | Owner         | Estimate | Dependency | Acceptance                                                                                                                         |
-| ---------- | -------------------------------------------------------- | ------------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| 3.4.1      | auth-store.ts (user, tenant, permissions)                | Frontend Lead | 4h       | 3.3.5      | Target outcome: auth-store.ts (user, tenant, permissions); verification: lint/typecheck pass; tests when applicable                |
-| 3.4.2      | sidebar-store.ts (collapsed/expanded, active item)       | Frontend Lead | 3h       | 3.4.1      | Target outcome: sidebar-store.ts (collapsed/expanded, active item); verification: lint/typecheck pass; tests when applicable       |
-| 3.4.3      | notification-store.ts (unread count, notifications list) | Frontend Lead | 3h       | 3.4.2      | Target outcome: notification-store.ts (unread count, notifications list); verification: lint/typecheck pass; tests when applicable |
-| 3.4.4      | theme-store.ts (theme mode)                              | Frontend Lead | 3h       | 3.4.3      | Target outcome: theme-store.ts (theme mode); verification: lint/typecheck pass; tests when applicable                              |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 3.5: API Client Setup
-
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 3.4 completed
-- **Task Estimate**: 14h
-
-| Subtask ID | Work item                                                                                                       | Owner         | Estimate | Dependency | Acceptance                                                                                                                                                                                                        |
-| ---------- | --------------------------------------------------------------------------------------------------------------- | ------------- | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 3.5.1      | lib/trpc/client.ts - tRPC client init                                                                           | Frontend Lead | 2h       | 3.4.4      | Target outcome: lib/trpc/client.ts - tRPC client init; verification: lint/typecheck pass; tests when applicable                                                                                                   |
-| 3.5.2      | lib/trpc/server.ts - tRPC server caller                                                                         | Frontend Lead | 2h       | 3.5.1      | Target outcome: lib/trpc/server.ts - tRPC server caller; verification: lint/typecheck pass; tests when applicable                                                                                                 |
-| 3.5.3      | lib/trpc/provider.tsx - tRPC provider wrapper                                                                   | Frontend Lead | 4h       | 3.5.2      | Target outcome: lib/trpc/provider.tsx - tRPC provider wrapper; verification: lint/typecheck pass; tests when applicable                                                                                           |
-| 3.5.4      | lib/api.ts - REST API client (fallback, file uploads)                                                           | Frontend Lead | 2h       | 3.5.3      | Target outcome: lib/api.ts - REST API client (fallback, file uploads); verification: lint/typecheck pass; tests when applicable                                                                                   |
-| 3.5.5      | lib/socket.ts - Socket.IO client init                                                                           | Frontend Lead | 4h       | 3.5.4      | Target outcome: lib/socket.ts - Socket.IO client init; verification: lint/typecheck pass; tests when applicable                                                                                                   |
-| 3.5.6      | `app/api/trpc/[trpc]/route.ts` wiring (Next route adapter/proxy, auth header forwarding, error contract parity) | Frontend Lead | 4h       | 3.5.3      | Target outcome: web app tRPC route is fully wired (no placeholder success/501 in target environment), forwards auth/tenant headers correctly; verification: sample tRPC query/mutation smoke from web app runtime |
-| 3.5.7      | `app/api/upload/route.ts` wiring (REST upload proxy/signed URL fallback) and non-fake status handling           | Frontend Lead | 3h       | 3.5.4      | Target outcome: upload API route proxies signed-url/upload requests to backend or is explicitly disabled by config (not fake success); verification: signed URL request smoke + error-path contract check         |
-
-- **Scope note (Task 3.5 vs FAZA 7)**: `apps/web/src/app/api/auth/[...nextauth]/route.ts` final production wiring belongs to `Task 7.1` (auth pages + NextAuth integration). `Task 3.5` only prepares shared API client plumbing (`trpc`, REST fallback, socket).
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 3.6: Custom Hooks
-
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 3.5 completed
-- **Task Estimate**: 18h
-
-| Subtask ID | Work item                                          | Owner         | Estimate | Dependency | Acceptance                                                                                                                   |
-| ---------- | -------------------------------------------------- | ------------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| 3.6.1      | use-auth.ts (session, user, role, permissions)     | Frontend Lead | 4h       | 3.5.5      | Target outcome: use-auth.ts (session, user, role, permissions); verification: lint/typecheck pass; tests when applicable     |
-| 3.6.2      | use-tenant.ts (current tenant info)                | Frontend Lead | 2h       | 3.6.1      | Target outcome: use-tenant.ts (current tenant info); verification: lint/typecheck pass; tests when applicable                |
-| 3.6.3      | use-permissions.ts (can(), hasRole(), genderScope) | Frontend Lead | 2h       | 3.6.2      | Target outcome: use-permissions.ts (can(), hasRole(), genderScope); verification: lint/typecheck pass; tests when applicable |
-| 3.6.4      | use-socket.ts (socket connection, events)          | Frontend Lead | 4h       | 3.6.3      | Target outcome: use-socket.ts (socket connection, events); verification: lint/typecheck pass; tests when applicable          |
-| 3.6.5      | use-notifications.ts (real-time notifications)     | Frontend Lead | 4h       | 3.6.4      | Target outcome: use-notifications.ts (real-time notifications); verification: lint/typecheck pass; tests when applicable     |
-| 3.6.6      | use-sidebar.ts (sidebar state)                     | Frontend Lead | 2h       | 3.6.5      | Target outcome: use-sidebar.ts (sidebar state); verification: lint/typecheck pass; tests when applicable                     |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 3.7: Navigation Config
-
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 3.6 completed
-- **Task Estimate**: 11h
-
-| Subtask ID | Work item                                      | Owner         | Estimate | Dependency | Acceptance                                                                                                               |
-| ---------- | ---------------------------------------------- | ------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------ |
-| 3.7.1      | platform-nav.ts (Platform Admin sidebar items) | Frontend Lead | 3h       | 3.6.6      | Target outcome: platform-nav.ts (Platform Admin sidebar items); verification: lint/typecheck pass; tests when applicable |
-| 3.7.2      | admin-nav.ts (School Admin sidebar items)      | Frontend Lead | 2h       | 3.7.1      | Target outcome: admin-nav.ts (School Admin sidebar items); verification: lint/typecheck pass; tests when applicable      |
-| 3.7.3      | teacher-nav.ts (Teacher sidebar items)         | Frontend Lead | 2h       | 3.7.2      | Target outcome: teacher-nav.ts (Teacher sidebar items); verification: lint/typecheck pass; tests when applicable         |
-| 3.7.4      | student-nav.ts (Student sidebar items)         | Frontend Lead | 2h       | 3.7.3      | Target outcome: student-nav.ts (Student sidebar items); verification: lint/typecheck pass; tests when applicable         |
-| 3.7.5      | parent-nav.ts (Parent sidebar items)           | Frontend Lead | 2h       | 3.7.4      | Target outcome: parent-nav.ts (Parent sidebar items); verification: lint/typecheck pass; tests when applicable           |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 3.8: i18n Setup
-
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 3.7 completed
-- **Task Estimate**: 11h
-
-| Subtask ID | Work item                                     | Owner         | Estimate | Dependency | Acceptance                                                                                                              |
-| ---------- | --------------------------------------------- | ------------- | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------- |
-| 3.8.1      | next-intl configuration                       | Frontend Lead | 3h       | 3.7.5      | Target outcome: next-intl configuration; verification: lint/typecheck pass; tests when applicable                       |
-| 3.8.2      | uz.json - O'zbek tili tarjimalari (200+ keys) | Frontend Lead | 2h       | 3.8.1      | Target outcome: uz.json - O'zbek tili tarjimalari (200+ keys); verification: lint/typecheck pass; tests when applicable |
-| 3.8.3      | tr.json - Turk tili tarjimalari               | Frontend Lead | 2h       | 3.8.2      | Target outcome: tr.json - Turk tili tarjimalari; verification: lint/typecheck pass; tests when applicable               |
-| 3.8.4      | en.json - Ingliz tili tarjimalari             | Frontend Lead | 2h       | 3.8.3      | Target outcome: en.json - Ingliz tili tarjimalari; verification: lint/typecheck pass; tests when applicable             |
-| 3.8.5      | ru.json - Rus tili tarjimalari                | Frontend Lead | 2h       | 3.8.4      | Target outcome: ru.json - Rus tili tarjimalari; verification: lint/typecheck pass; tests when applicable                |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### FAZA 3 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+> 3.1–3.8 yakunlandi. Qolgan: 3.5.6 va 3.5.7 runtime smoke (backend /:trpc availability talab qiladi).
 
 ---
 
-## FAZA 4: UI KOMPONENTLAR KUTUBXONASI
+## FAZA 4 — UI Foundation (shadcn/ui + Custom Components) 🟡 In Progress
 
-**Maqsad**: Shared UI package yaratish
-**Phase Owner (default)**: Frontend Lead
-**Entry Dependency**: FAZA 3 exit gate
+> 4.1–4.3.3 yakunlandi. **4.3.4+ deferred to page implementation** — qolgan komponentlar tegishli sahifalar ichida quriladi.
 
-### Task 4.1: shadcn/ui Primitives (packages/ui)
+### Yakunlangan (evidence mavjud):
+- **4.1** — `packages/ui` shadcn/ui primitives: Button, Input, Card, Badge, Dialog, Sheet, Select, Checkbox, Switch, Tabs, Avatar, Dropdown, Calendar, Pagination, Toast/Sonner, Tooltip, Skeleton.
+- **4.2** — Data Table (`@tanstack/react-table`): sort, filter, pagination, row selection.
+- **4.3.1** — StatsCard component (icon, title, value, change %, variant: navy/pink/sky/white).
+- **4.3.2** — Chart wrapper components (Recharts): LineChart, AreaChart, BarChart, DonutChart — responsive, yagona dizayn tizimida.
+- **4.3.3** — PageHeader component (title, breadcrumb, action buttons slot).
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: FAZA 4 entry gate
-- **Task Estimate**: 15h
-
-| Subtask ID | Work item                                                                        | Owner         | Estimate | Dependency        | Acceptance                                                                                                                                                 |
-| ---------- | -------------------------------------------------------------------------------- | ------------- | -------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 4.1.1      | shadcn/ui init (button, input, label, select, checkbox, radio, switch, textarea) | Frontend Lead | 2h       | FAZA 4 entry gate | Target outcome: shadcn/ui init (button, input, label, select, checkbox, radio, switch, textarea); verification: lint/typecheck pass; tests when applicable |
-| 4.1.2      | Dialog, alert-dialog, dropdown-menu, popover, tooltip                            | Frontend Lead | 2h       | 4.1.1             | Target outcome: Dialog, alert-dialog, dropdown-menu, popover, tooltip; verification: lint/typecheck pass; tests when applicable                            |
-| 4.1.3      | Tabs, card, badge, avatar, separator, skeleton                                   | Frontend Lead | 2h       | 4.1.2             | Target outcome: Tabs, card, badge, avatar, separator, skeleton; verification: lint/typecheck pass; tests when applicable                                   |
-| 4.1.4      | Sheet, scroll-area, command, calendar, table                                     | Frontend Lead | 3h       | 4.1.3             | Target outcome: Sheet, scroll-area, command, calendar, table; verification: lint/typecheck pass; tests when applicable                                     |
-| 4.1.5      | Form, toast (Sileo), progress, slider, accordion                                 | Frontend Lead | 3h       | 4.1.4             | Target outcome: Form, toast (Sileo), progress, slider, accordion; verification: lint/typecheck pass; tests when applicable                                 |
-| 4.1.6      | Breadcrumb, pagination, chart (Recharts wrapper)                                 | Frontend Lead | 3h       | 4.1.5             | Target outcome: Breadcrumb, pagination, chart (Recharts wrapper); verification: lint/typecheck pass; tests when applicable                                 |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 4.2: Data Table Component
-
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 4.1 completed
-- **Task Estimate**: 21h
-
-| Subtask ID | Work item                                              | Owner         | Estimate | Dependency | Acceptance                                                                                                                       |
-| ---------- | ------------------------------------------------------ | ------------- | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| 4.2.1      | data-table.tsx (TanStack Table + shadcn wrapper)       | Frontend Lead | 3h       | 4.1.6      | Target outcome: data-table.tsx (TanStack Table + shadcn wrapper); verification: lint/typecheck pass; tests when applicable       |
-| 4.2.2      | data-table-toolbar.tsx (search, filters, view options) | Frontend Lead | 3h       | 4.2.1      | Target outcome: data-table-toolbar.tsx (search, filters, view options); verification: lint/typecheck pass; tests when applicable |
-| 4.2.3      | data-table-pagination.tsx                              | Frontend Lead | 3h       | 4.2.2      | Target outcome: data-table-pagination.tsx; verification: lint/typecheck pass; tests when applicable                              |
-| 4.2.4      | data-table-column-header.tsx (sortable columns)        | Frontend Lead | 3h       | 4.2.3      | Target outcome: data-table-column-header.tsx (sortable columns); verification: lint/typecheck pass; tests when applicable        |
-| 4.2.5      | data-table-faceted-filter.tsx                          | Frontend Lead | 3h       | 4.2.4      | Target outcome: data-table-faceted-filter.tsx; verification: lint/typecheck pass; tests when applicable                          |
-| 4.2.6      | data-table-view-options.tsx (column visibility)        | Frontend Lead | 3h       | 4.2.5      | Target outcome: data-table-view-options.tsx (column visibility); verification: lint/typecheck pass; tests when applicable        |
-| 4.2.7      | data-table-row-actions.tsx (edit, delete, view)        | Frontend Lead | 3h       | 4.2.6      | Target outcome: data-table-row-actions.tsx (edit, delete, view); verification: lint/typecheck pass; tests when applicable        |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 4.3: Custom Components
-
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 4.2 completed
-- **Task Estimate**: 33h
-
-| Subtask ID | Work item                                            | Owner         | Estimate | Dependency | Acceptance                                                                                                                     |
-| ---------- | ---------------------------------------------------- | ------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| 4.3.1      | stat-card.tsx (icon, title, value, trend, sparkline) | Frontend Lead | 2h       | 4.2.7      | Target outcome: stat-card.tsx (icon, title, value, trend, sparkline); verification: lint/typecheck pass; tests when applicable |
-| 4.3.2      | stat-card.tsx (big number + comparison variant)      | Frontend Lead | 2h       | 4.3.1      | Target outcome: stat-card.tsx (big number + comparison variant); verification: lint/typecheck pass; tests when applicable      |
-| 4.3.3      | mini-chart.tsx (reusable chart layout: bar/line/pie) | Frontend Lead | 3h       | 4.3.2      | Target outcome: mini-chart.tsx reusable wrapper (title/filter/legend + chart slot + optional metrics); verification: lint/typecheck pass; tests when applicable |
-| 4.3.4      | empty-state.tsx (icon, title, description, action)   | Frontend Lead | 2h       | 4.3.3      | Target outcome: empty-state.tsx (icon, title, description, action); verification: lint/typecheck pass; tests when applicable   |
-| 4.3.5      | error-boundary.tsx (React error boundary)            | Frontend Lead | 2h       | 4.3.4      | Target outcome: error-boundary.tsx (React error boundary); verification: lint/typecheck pass; tests when applicable            |
-| 4.3.6      | loading-skeleton.tsx (page/card/table skeletons)     | Frontend Lead | 3h       | 4.3.5      | Target outcome: loading-skeleton.tsx (page/card/table skeletons); verification: lint/typecheck pass; tests when applicable     |
-| 4.3.7      | confirm-dialog.tsx (action confirmation)             | Frontend Lead | 2h       | 4.3.6      | Target outcome: confirm-dialog.tsx (action confirmation); verification: lint/typecheck pass; tests when applicable             |
-| 4.3.8      | file-upload.tsx (drag-drop, preview, R2 upload)      | Frontend Lead | 2h       | 4.3.7      | Target outcome: file-upload.tsx (drag-drop, preview, R2 upload); verification: lint/typecheck pass; tests when applicable      |
-| 4.3.9      | phone-input.tsx (international phone input)          | Frontend Lead | 2h       | 4.3.8      | Target outcome: phone-input.tsx (international phone input); verification: lint/typecheck pass; tests when applicable          |
-| 4.3.10     | searchable-select.tsx (async search, multi-select)   | Frontend Lead | 2h       | 4.3.9      | Target outcome: searchable-select.tsx (async search, multi-select); verification: lint/typecheck pass; tests when applicable   |
-| 4.3.11     | date-picker.tsx (single, range)                      | Frontend Lead | 2h       | 4.3.10     | Target outcome: date-picker.tsx (single, range); verification: lint/typecheck pass; tests when applicable                      |
-| 4.3.12     | time-picker.tsx                                      | Frontend Lead | 2h       | 4.3.11     | Target outcome: time-picker.tsx; verification: lint/typecheck pass; tests when applicable                                      |
-| 4.3.13     | stepper-form.tsx (multi-step form with validation)   | Frontend Lead | 3h       | 4.3.12     | Target outcome: stepper-form.tsx (multi-step form with validation); verification: lint/typecheck pass; tests when applicable   |
-| 4.3.14     | gender-select.tsx                                    | Frontend Lead | 2h       | 4.3.13     | Target outcome: gender-select.tsx; verification: lint/typecheck pass; tests when applicable                                    |
-| 4.3.15     | command-palette.tsx (Cmd+K global search)            | Frontend Lead | 2h       | 4.3.14     | Target outcome: command-palette.tsx (Cmd+K global search); verification: lint/typecheck pass; tests when applicable            |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### FAZA 4 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+### Skipped (sahifalar ichida quriladi):
+4.3.4 va undan keyingi barcha komponent subtasklar — **SKIP**.
 
 ---
 
-## FAZA 5: LAYOUT KOMPONENTLARI
+## FAZA 5 — Auth Pages
 
-**Maqsad**: App shell, sidebar, header tuzilmasini yaratish
-**Phase Owner (default)**: Frontend Lead
-**Entry Dependency**: FAZA 4 exit gate
+> Route group: `apps/web/src/app/(auth)/`
+> Barcha auth sahifalari — maktab subdomainida `[school].talimy.space/login`.
 
-### Task 5.1: App Shell
+### Task 5.1: Auth Layout
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: FAZA 5 entry gate
-- **Task Estimate**: 5h
+**File:** `apps/web/src/app/(auth)/layout.tsx`
 
-| Subtask ID | Work item                                                           | Owner         | Estimate | Dependency        | Acceptance                                                                                                                                    |
-| ---------- | ------------------------------------------------------------------- | ------------- | -------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| 5.1.1      | app-shell.tsx (sidebar + header + main content area)                | Frontend Lead | 2h       | FAZA 5 entry gate | Target outcome: app-shell.tsx (sidebar + header + main content area); verification: lint/typecheck pass; tests when applicable                |
-| 5.1.2      | Responsive behavior (mobile drawer, tablet collapsed, desktop full) | Frontend Lead | 3h       | 5.1.1             | Target outcome: Responsive behavior (mobile drawer, tablet collapsed, desktop full); verification: lint/typecheck pass; tests when applicable |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 5.1.1 | Auth layout: centered card, logo (Talimy), brand background gradient (navy), responsive | 2h |
+| 5.1.2 | NextAuth session provider wrapping, redirect logic (authlangan foydalanuvchi → /[role]/dashboard) | 1h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+**Exit:** Auth layout render qiladi, authlangan user redirect bo'ladi.
 
-### Task 5.2: Sidebar
+---
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 5.1 completed
-- **Task Estimate**: 10h
+### Task 5.2: Login Page
 
-| Subtask ID | Work item                                                          | Owner         | Estimate | Dependency | Acceptance                                                                                                                                   |
-| ---------- | ------------------------------------------------------------------ | ------------- | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| 5.2.1      | sidebar.tsx (280px expanded, 72px collapsed)                       | Frontend Lead | 2h       | 5.1.2      | Target outcome: sidebar.tsx (280px expanded, 72px collapsed); verification: lint/typecheck pass; tests when applicable                       |
-| 5.2.2      | sidebar-logo.tsx (logo + app name)                                 | Frontend Lead | 2h       | 5.2.1      | Target outcome: sidebar-logo.tsx (logo + app name); verification: lint/typecheck pass; tests when applicable                                 |
-| 5.2.3      | sidebar-nav.tsx (nav items with icons, active state, nested items) | Frontend Lead | 2h       | 5.2.2      | Target outcome: sidebar-nav.tsx (nav items with icons, active state, nested items); verification: lint/typecheck pass; tests when applicable |
-| 5.2.4      | sidebar-user.tsx (avatar, name, role, logout)                      | Frontend Lead | 2h       | 5.2.3      | Target outcome: sidebar-user.tsx (avatar, name, role, logout); verification: lint/typecheck pass; tests when applicable                      |
-| 5.2.5      | sidebar-mobile.tsx (drawer variant for mobile)                     | Frontend Lead | 2h       | 5.2.4      | Target outcome: sidebar-mobile.tsx (drawer variant for mobile); verification: lint/typecheck pass; tests when applicable                     |
+**Route:** `/login`
+**File:** `apps/web/src/app/(auth)/login/page.tsx`
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 5.2.1 | Login form: Email/Telefon input, Parol input (ko'rish toggle), "Eslab qolish" checkbox, [Kirish] tugmasi | 2h |
+| 5.2.2 | Form validation: React Hook Form + Zod (`loginSchema`), real-time xato xabarlari | 1h |
+| 5.2.3 | NextAuth `signIn("credentials", {...})` integratsiyasi, server-side error mapping (noto'g'ri parol, foydalanuvchi topilmadi, tenant noto'g'ri) | 2h |
+| 5.2.4 | Loading state (Skeleton yoki spinner), submit disabled holat | 0.5h |
+| 5.2.5 | "Parolni unutdingizmi?" link → `/forgot-password` | 0.5h |
+| 5.2.6 | Tenant slug proxy orqali tenantId resolve (subdomain → backend `x-tenant-slug` header) | 1h |
 
-### Task 5.3: Header
+**Exit:** Login ishlaydi, rol bo'yicha redirect bo'ladi (admin → /admin/dashboard, teacher → /teacher/dashboard, student → /student/dashboard, parent → /parent/dashboard).
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 5.2 completed
-- **Task Estimate**: 15h
+---
 
-| Subtask ID | Work item                                                         | Owner         | Estimate | Dependency | Acceptance                                                                                                                                  |
-| ---------- | ----------------------------------------------------------------- | ------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| 5.3.1      | header.tsx (search, notifications, user menu)                     | Frontend Lead | 2h       | 5.2.5      | Target outcome: header.tsx (search, notifications, user menu); verification: lint/typecheck pass; tests when applicable                     |
-| 5.3.2      | header-search.tsx (global search trigger -> Cmd+K)                | Frontend Lead | 2h       | 5.3.1      | Target outcome: header-search.tsx (global search trigger -> Cmd+K); verification: lint/typecheck pass; tests when applicable                |
-| 5.3.3      | header-notifications.tsx (bell icon + dropdown + real-time count) | Frontend Lead | 4h       | 5.3.2      | Target outcome: header-notifications.tsx (bell icon + dropdown + real-time count); verification: lint/typecheck pass; tests when applicable |
-| 5.3.4      | header-user-menu.tsx (avatar, profile, settings, logout)          | Frontend Lead | 2h       | 5.3.3      | Target outcome: header-user-menu.tsx (avatar, profile, settings, logout); verification: lint/typecheck pass; tests when applicable          |
-| 5.3.5      | header-language-switcher.tsx (uz/tr/en/ru)                        | Frontend Lead | 2h       | 5.3.4      | Target outcome: header-language-switcher.tsx (uz/tr/en/ru); verification: lint/typecheck pass; tests when applicable                        |
-| 5.3.6      | breadcrumb-nav.tsx (auto-generated from route)                    | Frontend Lead | 3h       | 5.3.5      | Target outcome: breadcrumb-nav.tsx (auto-generated from route); verification: lint/typecheck pass; tests when applicable                    |
+### Task 5.3: Forgot Password + Reset Password Pages
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+**Routes:** `/forgot-password`, `/reset-password`
+
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 5.3.1 | Forgot password: Email input, [Yuborish] tugmasi, success state ("Emailga havola yuborildi") | 1.5h |
+| 5.3.2 | API: `POST /api/auth/forgot-password` wiring | 0.5h |
+| 5.3.3 | Reset password: Yangi parol + Tasdiqlash input, token URL param orqali, validation | 1.5h |
+| 5.3.4 | API: `POST /api/auth/reset-password` wiring + success redirect `/login` | 0.5h |
+
+**Exit:** Parol tiklash flow to'liq ishlaydi.
+
+---
+
+### Task 5.4: NextAuth API Route Wiring
+
+**File:** `apps/web/src/app/api/auth/[...nextauth]/route.ts`
+
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 5.4.1 | NextAuth `auth.ts` config: CredentialsProvider, JWT strategy, session callback (user + role + tenantId + genderScope) | 3h |
+| 5.4.2 | Backend `/api/auth/login` REST endpoint bilan integratsiya (tenantSlug forwarding) | 2h |
+| 5.4.3 | Proxy middleware auth guard: session yo'q → `/login` redirect, role mismatch → 403 | 1.5h |
+
+**Exit:** `bun run typecheck --filter=web` pass. Login → session → role redirect ishlaydi.
+
+---
 
 ### FAZA 5 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+1. Login, forgot-password, reset-password sahifalari ishlaydi.
+2. Rol bo'yicha redirect to'g'ri (admin/teacher/student/parent).
+3. Proxy middleware auth gate ishlaydi.
 
 ---
 
-## FAZA 6: PUBLIC (MARKETING) SAHIFALAR
+## FAZA 6 — School Admin: Layout + Dashboard
 
-**Maqsad**: talimy.space landing va public pages
-**Phase Owner (default)**: Frontend Lead
-**Entry Dependency**: FAZA 5 exit gate
+> Subdomain: `[school].talimy.space/admin`
+> Route group: `apps/web/src/app/(dashboard)/admin/`
+> UI dizayn: Figma Image 1 (Dashboard sahifasi) asosida.
 
-### Task 6.1: Marketing Layout
+### Task 6.1: Admin Layout (Sidebar + Header + Shell)
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: FAZA 6 entry gate
-- **Task Estimate**: 8h
+**Files:**
+- `apps/web/src/app/(dashboard)/admin/layout.tsx`
+- `apps/web/src/components/admin/layout/AdminSidebar.tsx`
+- `apps/web/src/components/admin/layout/AdminHeader.tsx`
+- `apps/web/src/components/admin/layout/AdminShell.tsx`
 
-| Subtask ID | Work item                                                 | Owner         | Estimate | Dependency        | Acceptance                                                                                                                          |
-| ---------- | --------------------------------------------------------- | ------------- | -------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| 6.1.1      | layout.tsx (navbar + footer wrapper)                      | Frontend Lead | 4h       | FAZA 6 entry gate | Target outcome: layout.tsx (navbar + footer wrapper); verification: lint/typecheck pass; tests when applicable                      |
-| 6.1.2      | navbar.tsx (logo, links, login button, language switcher) | Frontend Lead | 2h       | 6.1.1             | Target outcome: navbar.tsx (logo, links, login button, language switcher); verification: lint/typecheck pass; tests when applicable |
-| 6.1.3      | footer.tsx (links, social, copyright)                     | Frontend Lead | 2h       | 6.1.2             | Target outcome: footer.tsx (links, social, copyright); verification: lint/typecheck pass; tests when applicable                     |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 6.1.1 | **AdminSidebar** — Fixed left sidebar (w-52), logo (Talimy + "S" icon, navy/pink), nav items ro'yxati, active highlight (pink background), hover state, Moliya collapse/expand submenu (To'lovlar, Xarajatlar), "New Tools Available" promo banner (bottom), Logout tugmasi | 4h |
+| 6.1.2 | **Sidebar nav items (admin):** Dashboard, Inbox, Calendar, Teachers, Students, Attendance, Finance (submenyu: Fees Collection, Expenses), Notice Board | 1h |
+| 6.1.3 | **AdminHeader** — "Search anything" input (icon + placeholder), Filter icon, Settings icon (circle), Notification bell icon (circle), User avatar + nomi + "Admin" subtitle (top-right) | 2h |
+| 6.1.4 | **AdminShell** — Main layout wrapper: sidebar (fixed, left) + main content area (ml-52, flex-1), responsive breakpoints (sidebar collapse < lg) | 1.5h |
+| 6.1.5 | **Breadcrumb component** — "Dashboard / Teachers" ko'rinishida, dynamic route asosida | 1h |
+| 6.1.6 | Auth guard: `admin` rol tekshiruvi (NextAuth session + Permify role check), unauthorized → `/login` | 1h |
+| 6.1.7 | i18n layout wrapper (`next-intl`), til switching support | 0.5h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+**Exit:** Admin layout render qiladi, sidebar va header ishlaydi, auth guard ishlaydi.
 
-### Task 6.2: Landing Page
+---
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 6.1 completed
-- **Task Estimate**: 12h
+### Task 6.2: Admin Dashboard Page
 
-| Subtask ID | Work item                                                          | Owner         | Estimate | Dependency | Acceptance                                                                                                                                   |
-| ---------- | ------------------------------------------------------------------ | ------------- | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| 6.2.1      | hero-section.tsx (headline, subtext, CTA, illustration)            | Frontend Lead | 2h       | 6.1.3      | Target outcome: hero-section.tsx (headline, subtext, CTA, illustration); verification: lint/typecheck pass; tests when applicable            |
-| 6.2.2      | features-section.tsx (icon cards: attendance, grades, finance, AI) | Frontend Lead | 2h       | 6.2.1      | Target outcome: features-section.tsx (icon cards: attendance, grades, finance, AI); verification: lint/typecheck pass; tests when applicable |
-| 6.2.3      | pricing-section.tsx (plan cards: Free, Basic, Pro, Enterprise)     | Frontend Lead | 2h       | 6.2.2      | Target outcome: pricing-section.tsx (plan cards: Free, Basic, Pro, Enterprise); verification: lint/typecheck pass; tests when applicable     |
-| 6.2.4      | testimonials-section.tsx (maktab direktorlari fikriari)            | Frontend Lead | 2h       | 6.2.3      | Target outcome: testimonials-section.tsx (maktab direktorlari fikriari); verification: lint/typecheck pass; tests when applicable            |
-| 6.2.5      | cta-section.tsx (final call to action)                             | Frontend Lead | 2h       | 6.2.4      | Target outcome: cta-section.tsx (final call to action); verification: lint/typecheck pass; tests when applicable                             |
-| 6.2.6      | SEO: meta tags, JSON-LD, Open Graph                                | Frontend Lead | 2h       | 6.2.5      | Target outcome: SEO: meta tags, JSON-LD, Open Graph; verification: lint/typecheck pass; tests when applicable                                |
+**Route:** `/admin/dashboard`
+**File:** `apps/web/src/app/(dashboard)/admin/dashboard/page.tsx`
+**Dizayn ref:** Figma Image 1
+**Layout:** 2 ustun — Chap+Markaz (flex-1) + O'ng panel (w-80, sticky)
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 6.2.1 | **StatsRow** (4 ta karta) — `<StatsCard>` komponentidan foydalanib: (1) Enrolled Students [navy icon], (2) Active Teachers [pink icon], (3) Support Staff [sky icon], (4) Total Awards [pink icon]. Har birida son va icon. API: `GET /api/admin/dashboard/stats` | 2h |
+| 6.2.2 | **StudentPerformance Chart** (chap, grouped bar) — Sarlavha: "Student Performance", filter: "Last Semester ▼", Recharts `<BarChart>` grouped, Grade 7 (light navy) / Grade 8 (pink) / Grade 9 (dark navy), X-axis: Jul–Dec, Y-axis: 0–100%, legend, tooltip. API: `GET /api/admin/students/performance?period=last_semester` | 3h |
+| 6.2.3 | **EarningsChart** (o'ng, line chart) — Sarlavha: "Earnings", filter: "Last Year ▼", Recharts `<LineChart>`, 2 chiziq: Earnings (navy) va Expenses (pink dashed), X-axis: Jan–Dec, hover tooltip: "July 2034: Earnings $5,785 / Expenses $4,020". API: `GET /api/admin/finance/earnings?period=last_year` | 3h |
+| 6.2.4 | **StudentsByGenderChart** (chap, donut) — Sarlavha: "Students by Gender", filter: "Grade 9 ▼", Recharts `<PieChart>` donut, Boys (navy) / Girls (pink), markazda son (1,245), pastda: "Boys 560 · Girls 685". API: `GET /api/admin/students/by-gender?gradeId=9` | 2h |
+| 6.2.5 | **StudentAttendanceChart** (markaz, bar chart) — Sarlavha: "Student Attendance", filter: "Weekly ▼", Recharts `<BarChart>` stacked (Present navy / Absent pink), X-axis: Mon–Fri, har bir ustun ustida son. API: `GET /api/admin/attendance/weekly` | 2h |
+| 6.2.6 | **ToDoList** — Sarlavha: "To Do List" + "..." menyu, checkbox list: ☑ (done, navy check), ☐ (pending), har birida nomi va sana (📅 March 11, 2035), hover edit/delete. API: `GET /api/admin/todos`, `PATCH /api/admin/todos/:id`, `DELETE /api/admin/todos/:id`, `POST /api/admin/todos` | 3h |
+| 6.2.7 | **NoticeBoard** — Sarlavha: "Notice Board" + "Sort by: Popular ▼", 4 ta card: thumbnail rasm (60×60), kategoriya badge (Academic/Training/Resources/Announcement rang bo'yicha), sarlavha, Audience, Date, Created By, "..." menyu. API: `GET /api/notices?limit=4&sort=popular` | 2h |
+| 6.2.8 | **O'ng panel — MiniCalendar** — "March 2035" sarlavha, prev/next chevron, haftalar grid (S M T W T F S), bugun highlight (pink circle), event bor kunlar (rang dot). Kun bosganida Agenda filter. Zustand: selectedDate state | 2h |
+| 6.2.9 | **O'ng panel — Events (Agenda)** — Sarlavha: "Events" + "...", 3 ta kelgusi event card: sana badge (rang: pink/sky/navy), sana range (09:00 AM – 12:00 PM), sarlavha (bold), location/class. API: `GET /api/events?tenantId=...&dateFrom=...&dateTo=...&limit=3` | 2h |
+| 6.2.10 | **O'ng panel — Recent Activity** — Sarlavha: "Recent Activity" + "...", timeline list: colored circle icon (avatar/action type), matn (bold + normal), vaqt (grey). API: `GET /api/admin/activity?limit=5` | 1.5h |
+| 6.2.11 | TanStack Query: barcha widgetlar uchun `useQuery` hooklar, `queryKey` standartlari, `refetchInterval: 60000`, loading skeleton (Skeleton component) | 2h |
+| 6.2.12 | Zustand store: `dashboardStore` — selectedDate, activeGradeFilter, activePeriodFilters | 1h |
+| 6.2.13 | Responsive: md/lg breakpoint adjustments, o'ng panel collapse (< lg sticky → bottom sheet) | 2h |
 
-### Task 6.3: Other Public Pages
+**Exit:** Dashboard to'liq render qiladi, barcha widgetlar real API datani ko'rsatadi, filter dropdown'lar ishlaydi.
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 6.2 completed
-- **Task Estimate**: 12h
-
-| Subtask ID | Work item                                      | Owner         | Estimate | Dependency | Acceptance                                                                                                               |
-| ---------- | ---------------------------------------------- | ------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------ |
-| 6.3.1      | pricing/page.tsx (detailed pricing comparison) | Frontend Lead | 3h       | 6.2.6      | Target outcome: pricing/page.tsx (detailed pricing comparison); verification: lint/typecheck pass; tests when applicable |
-| 6.3.2      | about/page.tsx                                 | Frontend Lead | 3h       | 6.3.1      | Target outcome: about/page.tsx; verification: lint/typecheck pass; tests when applicable                                 |
-| 6.3.3      | contact/page.tsx (form + map)                  | Frontend Lead | 3h       | 6.3.2      | Target outcome: contact/page.tsx (form + map); verification: lint/typecheck pass; tests when applicable                  |
-| 6.3.4      | features/page.tsx (detailed features)          | Frontend Lead | 3h       | 6.3.3      | Target outcome: features/page.tsx (detailed features); verification: lint/typecheck pass; tests when applicable          |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
 ### FAZA 6 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+1. Admin layout (sidebar, header, shell) ishlaydi.
+2. Dashboard barcha widgetlari ishlaydi (real data, loading states).
+3. Auth guard ishlaydi.
 
 ---
 
-## FAZA 7: AUTH SAHIFALAR
+## FAZA 7 — School Admin: Teachers Pages
 
-**Maqsad**: Authentication flows
-**Phase Owner (default)**: Frontend Lead
-**Entry Dependency**: FAZA 6 exit gate
+> Dizayn ref: Figma Image 3 (Teachers list), Image 4 (Teacher Detail)
 
-### Task 7.1: Auth Pages
+### Task 7.1: Teachers List Page
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: FAZA 7 entry gate
-- **Task Estimate**: 27h
+**Route:** `/admin/teachers`
+**File:** `apps/web/src/app/(dashboard)/admin/teachers/page.tsx`
+**Layout:** Chap+Markaz (stat cards + charts + grid) + O'ng panel (Department donut)
 
-| Subtask ID | Work item                                                      | Owner         | Estimate | Dependency        | Acceptance                                                                                                                                                                                                                                      |
-| ---------- | -------------------------------------------------------------- | ------------- | -------- | ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 7.1.1      | Auth layout (centered card, gradient background, logo)         | Frontend Lead | 4h       | FAZA 7 entry gate | Target outcome: Auth layout (centered card, gradient background, logo); verification: lint/typecheck pass; tests when applicable                                                                                                                |
-| 7.1.2      | Login page (email/phone + password, social login, remember me) | Frontend Lead | 3h       | 7.1.1             | Target outcome: Login page (email/phone + password, social login, remember me); verification: lint/typecheck pass; tests when applicable                                                                                                        |
-| 7.1.3      | Register page (school registration multi-step)                 | Frontend Lead | 3h       | 7.1.2             | Target outcome: Register page (school registration multi-step); verification: lint/typecheck pass; tests when applicable                                                                                                                        |
-| 7.1.4      | Forgot password page (email/phone input)                       | Frontend Lead | 3h       | 7.1.3             | Target outcome: Forgot password page (email/phone input); verification: lint/typecheck pass; tests when applicable                                                                                                                              |
-| 7.1.5      | Reset password page (new password + confirm)                   | Frontend Lead | 3h       | 7.1.4             | Target outcome: Reset password page (new password + confirm); verification: lint/typecheck pass; tests when applicable                                                                                                                          |
-| 7.1.6      | Verify email page                                              | Frontend Lead | 3h       | 7.1.5             | Target outcome: Verify email page; verification: lint/typecheck pass; tests when applicable                                                                                                                                                     |
-| 7.1.7      | NextAuth config (credentials provider, JWT, session callbacks) | Frontend Lead | 4h       | 7.1.6             | Target outcome: NextAuth config (credentials provider, JWT, session callbacks); verification: lint/typecheck pass; tests when applicable                                                                                                        |
-| 7.1.8      | API routes: [...nextauth]/route.ts                             | Frontend Lead | 4h       | 7.1.7             | Target outcome: API routes: [...nextauth]/route.ts fully wired to NextAuth handlers (no placeholder response), cookie/session flow works across subdomains; verification: login/logout/session callback smoke + protected-route redirect checks |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 7.1.1 | **TeachersStatsRow** (4 karta) — Total Teachers (86, navy), Full-Time Teacher (62, pink), Part-Time Teacher (18, sky), Substitute Teacher (6, light). API: `GET /api/teachers/stats` | 1.5h |
+| 7.1.2 | **AttendanceOverviewChart** (chap, line chart) — Sarlavha: "Attendance Overview", filter: "Weekly ▼", Recharts `<LineChart>` + area fill (pink), Y-axis: 0–100%, X-axis: Mon–Fri, dot markers + value (62). API: `GET /api/teachers/attendance-overview?period=weekly` | 2h |
+| 7.1.3 | **WorkloadDistributionChart** (markaz, grouped bar) — Sarlavha: "Workload Distribution", filtrlar: "Science ▼" + "Weekly ▼", Recharts `<BarChart>` grouped (3 series: Total Classes pink / Teaching Hours sky / Extra Duties navy), X-axis: o'qituvchi nomlari (Rayan, Aliyah...), Y-axis: 0–40h. API: `GET /api/teachers/workload?subjectId=...&period=weekly` | 2.5h |
+| 7.1.4 | **DepartmentDonutChart** (o'ng panel, donut) — Sarlavha: "Department", Recharts `<PieChart>`, markazda "Total Teachers 86", legend: Science 19 (22%) / Mathematics 17 (20%) / Language 15 (18%) / Social 13 (15%) / Arts 11 (13%) / Physical Education 11 (12%), color mapping. API: `GET /api/teachers/by-department` | 2h |
+| 7.1.5 | **TeachersFilterBar** — `[🔍 Search teacher]` input, `[Filter ▼]` dropdown (Department, Status, Gender), `Sort by: Latest ▼`, `[+ Add Teacher]` button (navy bg, white text, + icon) | 1.5h |
+| 7.1.6 | **TeacherCard** (grid karta) — Round avatar (80×80), ID badge (T-1001, top-left), Ism (bold), ID · Fan (grey), 📞 telefon, ✉️ email, `[💬 Message]` tugmasi (sky/light border). Karta hover: shadow. Click → `/admin/teachers/[id]` | 2h |
+| 7.1.7 | **TeachersGrid** — 4 ustunli responsive grid (xl:4, lg:3, md:2, sm:1), `TeacherCard` mapping | 1h |
+| 7.1.8 | **TeachersPagination** — "Show 8 ▼ of 82 results", numbered pagination (1, 2, 3, ..., 11), prev/next chevron. API: `GET /api/teachers?page=1&limit=8&search=...&departmentId=...&status=...` | 2h |
+| 7.1.9 | Gender scope guard: `genderScope` session'dan o'qiladi, API request'ga `genderScope` query param qo'shiladi, Permify guard backend'da ishlaydi | 1h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+**Exit:** Teacher list to'liq ishlaydi, search/filter/pagination ishlaydi, gender scope qo'llaniladi.
+
+---
+
+### Task 7.2: Teacher Detail Page
+
+**Route:** `/admin/teachers/[id]`
+**File:** `apps/web/src/app/(dashboard)/admin/teachers/[id]/page.tsx`
+**Layout:** 3 ustun — Chap (profil info), Markaz (workload, schedule, training), O'ng (calendar, leave, performance)
+
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 7.2.1 | **TeacherProfileCard** (chap, top) — Round avatar (120×120, pink border), Ism (bold, pink), ID + "Full-Time" status badge (sky). API: `GET /api/teachers/:id` | 1h |
+| 7.2.2 | **TeacherInfoCard** (chap) — Subject, Class (8C – 9A – 9B), bo'sh qator; toggle: work time variant (Yarim kun / Butun kun / Custom) — admin uchun edit toggle, teacher uchun faqat ko'rish | 1h |
+| 7.2.3 | **TeacherPersonalInfo** (chap) — Gender icon + Male/Female, 🎂 Date of Birth, ✉️ Email, 📞 Phone, 🏠 Address — ko'rinish mode default, edit icon bosganida inline edit (admin only) | 2h |
+| 7.2.4 | **TeacherDocuments** (chap) — PDF list: fayl nomi (truncated), tur (PDF), hajm (2.4 MB), 📎 icon. Admin: fayl qo'shish/o'chirish. API: `GET /api/teachers/:id/documents` | 1.5h |
+| 7.2.5 | **WorkloadSummaryChart** (markaz) — Sarlavha: "Workload Summary", filter: "Last 8 months ▼", Recharts `<AreaChart>` 3 area (Total Classes sky / Teaching Hours light-navy / Extra Duties pink), hover tooltip: "October 2034: 149h / 134h / 32h". API: `GET /api/teachers/:id/workload?months=8` | 3h |
+| 7.2.6 | **WeeklyScheduleGrid** (markaz) — Sarlavha: "Schedule", filter: "Weekly ▼", timetable grid: Y-axis vaqt (08:00–15:00, har 1 soat), X-axis: Mon–Fri, cell: sinf nomi (8C, 9A...) rang bo'yicha (navy/sky), bo'sh cells: transparaent. API: `GET /api/teachers/:id/schedule?period=weekly` | 3h |
+| 7.2.7 | **DevelopmentTrainingTable** (markaz) — Sarlavha: "Development & Training", filter: "This Semester ▼", table: Event ↕ / Date ↕ / Loc-Platform ↕ / Status ↕, status badge: Upcoming (sky) / Completed (green) / Cancelled (red). API: `GET /api/teachers/:id/training?semester=current` | 2h |
+| 7.2.8 | **TeacherMiniCalendar** (o'ng) — "March 2035", prev/next, grid, bugun highlight, Present/Late/On Leave statistika: "Present 11 · Late 4 · On Leave 2" pastda. API: `GET /api/teachers/:id/attendance-calendar?month=2035-03` | 2h |
+| 7.2.9 | **LeaveRequestCard** (o'ng) — Sarlavha: "Leave Request", aktif leave: badge (Sick Leave), sabab matni, [Approve] (navy) + [Decline] (white/border) tugmalar — admin ko'radi va tasdiqlaydi. Teacher: [+ Yangi so'rov] modal. API: `GET /api/teachers/:id/leave-requests`, `PATCH /api/teachers/:id/leave-requests/:reqId` | 2.5h |
+| 7.2.10 | **PerformanceCard** (o'ng) — Sarlavha: "Performance", filter: "Last Month ▼", 3 metrika: (1) Grading Timeliness 95%/90% "Excellent" (pink progress bar), (2) Student Avg. Grade 85/90 "Good", (3) Student Feedback 78%/85% "Good". API: `GET /api/teachers/:id/performance` | 2h |
+| 7.2.11 | Page header: "Teacher Details", breadcrumb "Dashboard / Teachers / Teacher Details", ← orqaga tugmasi | 0.5h |
+
+**Exit:** Teacher detail page to'liq render qiladi, barcha panellar real data ko'rsatadi, leave approve/decline ishlaydi.
+
+---
+
+### Task 7.3: Add Teacher Page
+
+**Route:** `/admin/teachers/new`
+**File:** `apps/web/src/app/(dashboard)/admin/teachers/new/page.tsx`
+
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 7.3.1 | **Shaxsiy Ma'lumotlar section** — Teacher ID (auto, disabled, "T-1009"), Ism + Familiya, Tug'ilgan sana (DatePicker), Millati (Select), Jinsi (Radio: Erkak/Ayol — gender scope uchun muhim), Holat (Radio: Active/Inactive) | 2h |
+| 7.3.2 | **Kontakt Ma'lumotlar section** — Email, Telefon (+XX prefix select), Telegram username, Yashash manzili (textarea) | 1.5h |
+| 7.3.3 | **Akademik Ma'lumotlar section** — Mutaxassisligi (multi-checkbox, tenant fanlari ro'yxatidan), Guruhlari (multi-checkbox + search, gender scope bo'yicha filtered), Ish holati (Radio: To'liq/Yarim/Soatbay), Ishga kirgan sana | 2h |
+| 7.3.4 | **Profile Photo upload** — Drag & drop yoki click, preview, max 2MB, JPG/PNG, R2 presigned URL | 1.5h |
+| 7.3.5 | **Hujjatlar section** — Dynamic table: tur (select: Diplom/Sertifikat/ID karta/Boshqa) + fayl upload (R2), qo'shish/o'chirish | 2h |
+| 7.3.6 | Form validation (React Hook Form + Zod), required field highlights, real-time xato | 1.5h |
+| 7.3.7 | `[Cancel]` + `[Save & Add Teacher]` tugmalar. API: `POST /api/teachers` → success toast → redirect `/admin/teachers` | 1.5h |
+
+**Exit:** Form ishlaydi, validation ishlaydi, teacher qo'shiladi va redirect bo'ladi.
+
+---
 
 ### FAZA 7 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+1. Teachers list (search, filter, pagination, gender scope) ishlaydi.
+2. Teacher detail (barcha panellar, leave approve) ishlaydi.
+3. Add Teacher form ishlaydi.
 
 ---
 
-## FAZA 8: PLATFORM ADMIN PANEL
+## FAZA 8 — School Admin: Students Pages
 
-**Maqsad**: platform.talimy.space - Super Admin
-**Phase Owner (default)**: Frontend Lead
-**Entry Dependency**: FAZA 7 exit gate
+> Dizayn ref: Figma Image 5 (Students list), Image 6 (Student Detail), Image 7 (Add Student)
 
-### Task 8.1: Platform Layout
+### Task 8.1: Students List Page (2-bosqichli navigatsiya)
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: FAZA 8 entry gate
-- **Task Estimate**: 7h
+**Route:** `/admin/students`
+**File:** `apps/web/src/app/(dashboard)/admin/students/page.tsx`
 
-| Subtask ID | Work item                                       | Owner         | Estimate | Dependency        | Acceptance                                                                                                                |
-| ---------- | ----------------------------------------------- | ------------- | -------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| 8.1.1      | Platform sidebar layout (platform-specific nav) | Frontend Lead | 4h       | FAZA 8 entry gate | Target outcome: Platform sidebar layout (platform-specific nav); verification: lint/typecheck pass; tests when applicable |
-| 8.1.2      | Platform header (admin badge, global search)    | Frontend Lead | 3h       | 8.1.1             | Target outcome: Platform header (admin badge, global search); verification: lint/typecheck pass; tests when applicable    |
+#### Bosqich 1 — Stats + Charts + Enrollment + Table
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 8.1.1 | **StudentsStatsRow** (4 karta) — Total Students 1,245, Grade 7: 410, Grade 8: 415, Grade 9: 420. API: `GET /api/students/stats` | 1.5h |
+| 8.1.2 | **AcademicPerformanceChart** (markaz, grouped bar) — Sarlavha: "Academic Performance", filter: "Last Semester ▼", Recharts `<BarChart>` grouped (Grade 7 light / Grade 8 navy / Grade 9 pink), X-axis: Jul–Dec, Y-axis: 0–100%. API: `GET /api/admin/students/performance?period=last_semester` | 2h |
+| 8.1.3 | **EnrollmentTrendsChart** (o'ng top, area/line) — Sarlavha: "Enrollment Trends", filter: "Last 5 Years ▼", Recharts `<LineChart>` single line (navy), hover: "8,015", X-axis: 2030–2035. API: `GET /api/admin/students/enrollment-trends?years=5` | 2h |
+| 8.1.4 | **AttendanceOverviewChart** (o'ng pastki, bar) — Sarlavha: "Attendance Overview", filter: "This Week ▼", 5 bar (Mon-Fri), har birida son. API: `GET /api/admin/attendance/weekly?week=current` | 1.5h |
+| 8.1.5 | **SpecialProgramsList** (o'ng) — Sarlavha: "Special Programs", 4 ta card: avatar, ism, ID · sinf, badge (Enrichment sky / Academic Support pink / Finance+Enrichment), dastur nomi. API: `GET /api/students/special-programs?hasGrant=true&limit=4` | 1.5h |
+| 8.1.6 | **StudentsFilterBar** — `[🔍 Search for a student]`, `[⚙ filter icon]`, `All Status ▼` (Active/On Leave/Suspended), `[+ Add Student]` button | 1h |
+| 8.1.7 | **StudentsTable** — Columns: Student (avatar + ism + ID), Class, GPA (rangli: ≥3.5 navy/bold, 2.5–3.4 normal, <2.5 red), Performance (● Good navy / ● Needs Support yellow / ● At Risk red), Attendance % (circle progress), Status badge (Active green / On Leave navy). Sort icons har bir column'da. API: `GET /api/students?page=1&limit=10&status=...&search=...` | 3h |
+| 8.1.8 | **StudentsPagination** — "Show 10 ▼ of 40 results", numbered pages, prev/next. | 1h |
+| 8.1.9 | Row click → `/admin/students/[id]` | 0.5h |
 
-### Task 8.2: Platform Dashboard
+**Exit:** Students list ishlaydi, filter/sort/pagination ishlaydi.
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 8.1 completed
-- **Task Estimate**: 16h
+---
 
-| Subtask ID | Work item                                              | Owner         | Estimate | Dependency | Acceptance                                                                                                                       |
-| ---------- | ------------------------------------------------------ | ------------- | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| 8.2.1      | Stat cards (total schools, students, teachers, revenue) | Frontend Lead | 2h       | 8.1.2      | Target outcome: Stat cards (total schools, students, teachers, revenue); verification: lint/typecheck pass; tests when applicable |
-| 8.2.2      | Schools overview chart (bar chart - schools by region) | Frontend Lead | 3h       | 8.2.1      | Target outcome: Schools overview chart (bar chart - schools by region); verification: lint/typecheck pass; tests when applicable |
-| 8.2.3      | Revenue chart (line chart - monthly revenue)           | Frontend Lead | 3h       | 8.2.2      | Target outcome: Revenue chart (line chart - monthly revenue); verification: lint/typecheck pass; tests when applicable           |
-| 8.2.4      | Growth chart (area chart - student/school growth)      | Frontend Lead | 3h       | 8.2.3      | Target outcome: Growth chart (area chart - student/school growth); verification: lint/typecheck pass; tests when applicable      |
-| 8.2.5      | Recent schools table (last 10 registered)              | Frontend Lead | 3h       | 8.2.4      | Target outcome: Recent schools table (last 10 registered); verification: lint/typecheck pass; tests when applicable              |
-| 8.2.6      | System health indicators                               | Frontend Lead | 2h       | 8.2.5      | Target outcome: System health indicators; verification: lint/typecheck pass; tests when applicable                               |
+### Task 8.2: Student Detail Page
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+**Route:** `/admin/students/[id]`
+**File:** `apps/web/src/app/(dashboard)/admin/students/[id]/page.tsx`
+**Layout:** 3 ustun — Chap (profil, parent, docs), Markaz (calendar, scholarships, health), O'ng (academic performance, extracurricular, behavior log)
 
-### Task 8.3: Platform Dashboard Sub-pages
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 8.2.1 | **StudentProfileCard** (chap top) — Round avatar (120×120, pink border), Ism (bold, pink), ID + Sinf + Status badge (Active green). API: `GET /api/students/:id` | 1h |
+| 8.2.2 | **StudentPersonalInfo** (chap) — Gender icon, 🎂 Date of Birth, 📞 Phone, 🏠 Address | 1h |
+| 8.2.3 | **ParentGuardianInfo** (chap) — "Parent/Guardian Info" sarlavha + "..." menyu, Father (ism + telefon), Mother (ism + telefon), Alternative Guardian (ism + munosabat + telefon) | 1.5h |
+| 8.2.4 | **StudentDocuments** (chap) — PDF list: ReportCard, Certificate, IDCard — ikon (pink PDF), nomi, hajm, ko'rish/yuklab olish. API: `GET /api/students/:id/documents` | 1h |
+| 8.2.5 | **AttendanceCalendar** (markaz top) — "March 2035" mini calendar, prev/next, har bir kunga rang: Present (green circle), Late (yellow), Sick (navy), Absent (grey). Pastda: "Present 14 · Late 3 · Sick 2 · Absent 1". API: `GET /api/students/:id/attendance-calendar?month=2035-03` | 2.5h |
+| 8.2.6 | **ScholarshipsCard** (markaz) — "Scholarships" sarlavha + "..." menyu, har bir stipendiya: icon (pink circle), nomi (bold), turi (Finance / Enrichment badge). API: `GET /api/students/:id/scholarships` | 1.5h |
+| 8.2.7 | **HealthMedicalCard** (markaz) — "Health & Medical Info" sarlavha, badge-style cards: "Medical Record" (pink text, light pink bg), "Allergy" (yellow), "Peanut Allergy" (red — critical). Har birida tavsif matni. API: `GET /api/students/:id/health` | 1.5h |
+| 8.2.8 | **AcademicPerformanceCard** (o'ng top) — "Academic Performance" sarlavha, filter: "Last 6 Months ▼", Half-donut gauge (Recharts): 3.9/4.0, barcha oylar uchun bar chart (Jan–Jun), AI tavsif matni. API: `GET /api/students/:id/academic-performance` | 3h |
+| 8.2.9 | **ExtracurricularTable** (o'ng) — "Extracurricular" sarlavha, table: Club · icon / Achievements ↕ / Duration ↕ / Advisor ↕, sport/dance/robotics icon. API: `GET /api/students/:id/extracurricular` | 1.5h |
+| 8.2.10 | **BehaviorDisciplineLog** (o'ng) — "Behavior & Discipline Log" sarlavha, table: Date / Type&Details / Reported By / Status-Action dropdown (Record Recognition / Recognition Recorded / Issue Warning / Parent Notified). Rang: Positive Note (green) / Minor Issue (yellow) / Major (red). API: `GET /api/students/:id/behavior-log` | 2h |
+| 8.2.11 | Back button (← ), page header breadcrumb | 0.5h |
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 8.2 completed
-- **Task Estimate**: 6h
+**Exit:** Student detail to'liq render qiladi.
 
-| Subtask ID | Work item                                                     | Owner         | Estimate | Dependency | Acceptance                                                                                                                              |
-| ---------- | ------------------------------------------------------------- | ------------- | -------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| 8.3.1      | Revenue analytics page (detailed financial charts, filters)   | Frontend Lead | 3h       | 8.2.6      | Target outcome: Revenue analytics page (detailed financial charts, filters); verification: lint/typecheck pass; tests when applicable   |
-| 8.3.2      | Growth analytics page (user growth, school growth, retention) | Frontend Lead | 3h       | 8.3.1      | Target outcome: Growth analytics page (user growth, school growth, retention); verification: lint/typecheck pass; tests when applicable |
+---
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+### Task 8.3: Add Student Page
 
-### Task 8.4: Schools Management
+**Route:** `/admin/students/new`
+**File:** `apps/web/src/app/(dashboard)/admin/students/new/page.tsx`
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 8.3 completed
-- **Task Estimate**: 12h
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 8.3.1 | **Shaxsiy Ma'lumotlar section** — Student ID (auto, "S-2111", disabled), Full Name, Date of Birth (DatePicker), Gender (Radio: Male/Female — disabled after save, gender scope), Profile Photo (drag&drop, R2) | 2h |
+| 8.3.2 | **Kontakt section** — Email Address (auto-generated option), Phone Number (+XX prefix), Address (Street, City, State, ZIP) | 1.5h |
+| 8.3.3 | **Parent/Guardian Info section** — Father (Name + Phone), Mother (Name + Phone), Alternative Guardian (Name + Relation select + Phone) | 2h |
+| 8.3.4 | **O'ng panel — Administration section** — Admission Number (auto, "ADM-1009", disabled), Grade (Select: 7/8/9), Section (Select: A/B/C...), Enrollment Date (DatePicker), Previous School (text input, validation) | 2h |
+| 8.3.5 | **O'ng panel — Additional Information section** — Hobbies/Interests (text), Special Needs Support (toggle), Medical Condition Alert (toggle → textarea expand: sabab matni) | 1.5h |
+| 8.3.6 | **Akademik section** — Sinf/Bo'lim, Grant turi (Zakot/Homiy/Boshqa — tenant moduli yoqilgan bo'lsa), umumiy to'lov, to'langan | 1.5h |
+| 8.3.7 | **Modul-based fields** (tenant sozlamalariga qarab): Dormitory (xona), Meals (0/1/3 mahal), Residence permit (olingan/90 kun/yo'q → conditional), Contract number | 2h |
+| 8.3.8 | Form validation: React Hook Form + Zod, required fields, "Previous school cannot be empty" kabi error messages | 1.5h |
+| 8.3.9 | `[Save as Draft]` (chap), `[Cancel]` + `[Save & Add Student]` (o'ng). API: `POST /api/students` → success → redirect `/admin/students` | 1.5h |
 
-| Subtask ID | Work item                                                                  | Owner         | Estimate | Dependency | Acceptance                                                                                                                                           |
-| ---------- | -------------------------------------------------------------------------- | ------------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 8.4.1      | Schools list page (DataTable: name, slug, plan, students, status, actions) | Frontend Lead | 3h       | 8.3.2      | Target outcome: Schools list page (DataTable: name, slug, plan, students, status, actions); verification: lint/typecheck pass; tests when applicable |
-| 8.4.2      | Add school page (form: name, slug, admin email, plan, gender policy)       | Frontend Lead | 3h       | 8.4.1      | Target outcome: Add school page (form: name, slug, admin email, plan, gender policy); verification: lint/typecheck pass; tests when applicable       |
-| 8.4.3      | School detail page (stats, admin info, billing info, activity log)         | Frontend Lead | 3h       | 8.4.2      | Target outcome: School detail page (stats, admin info, billing info, activity log); verification: lint/typecheck pass; tests when applicable         |
-| 8.4.4      | Edit school page                                                           | Frontend Lead | 3h       | 8.4.3      | Target outcome: Edit school page; verification: lint/typecheck pass; tests when applicable                                                           |
+**Exit:** Add student form to'liq ishlaydi, barcha fieldlar va validation ishlaydi.
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 8.5: Platform Settings
-
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 8.4 completed
-- **Task Estimate**: 16h
-
-| Subtask ID | Work item                                              | Owner         | Estimate | Dependency | Acceptance                                                                                                                       |
-| ---------- | ------------------------------------------------------ | ------------- | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| 8.5.1      | General settings (platform name, logo, contact info)   | Frontend Lead | 3h       | 8.4.4      | Target outcome: General settings (platform name, logo, contact info); verification: lint/typecheck pass; tests when applicable   |
-| 8.5.2      | Billing settings (tariff plans CRUD, payment methods)  | Frontend Lead | 4h       | 8.5.1      | Target outcome: Billing settings (tariff plans CRUD, payment methods); verification: lint/typecheck pass; tests when applicable  |
-| 8.5.3      | Security settings (2FA, IP whitelist, session timeout) | Frontend Lead | 6h       | 8.5.2      | Target outcome: Security settings (2FA, IP whitelist, session timeout); verification: lint/typecheck pass; tests when applicable |
-| 8.5.4      | Profile page (admin profile edit)                      | Frontend Lead | 3h       | 8.5.3      | Target outcome: Profile page (admin profile edit); verification: lint/typecheck pass; tests when applicable                      |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
 ### FAZA 8 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+1. Students list (filter, sort, pagination, special programs) ishlaydi.
+2. Student detail (barcha panellar) ishlaydi.
+3. Add student form ishlaydi.
 
 ---
 
-## FAZA 9: MAKTAB ADMIN PANEL
+## FAZA 9 — School Admin: Qolgan Sahifalar
 
-**Maqsad**: [school].talimy.space/admin - School Admin
-**Phase Owner (default)**: Frontend Lead
-**Entry Dependency**: FAZA 8 exit gate
+> Attendance, Finance, Notices, Exams, Calendar, Profile, Settings
 
-### Task 9.1: Admin Layout
+### Task 9.1: Attendance Page
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: FAZA 9 entry gate
-- **Task Estimate**: 6h
+**Route:** `/admin/attendance`
+**File:** `apps/web/src/app/(dashboard)/admin/attendance/page.tsx`
+**Dizayn ref:** Figma Image 8
 
-| Subtask ID | Work item                                       | Owner         | Estimate | Dependency        | Acceptance                                                                                                                |
-| ---------- | ----------------------------------------------- | ------------- | -------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| 9.1.1      | Admin sidebar layout (admin-specific nav items) | Frontend Lead | 4h       | FAZA 9 entry gate | Target outcome: Admin sidebar layout (admin-specific nav items); verification: lint/typecheck pass; tests when applicable |
-| 9.1.2      | Admin header (school name, gender scope badge)  | Frontend Lead | 2h       | 9.1.1             | Target outcome: Admin header (school name, gender scope badge); verification: lint/typecheck pass; tests when applicable  |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 9.1.1 | **AttendanceSummaryCards** (3 ta renkli karta) — Students (pink bg: 1180 present, 94.8%, On-Time 1090/87.5%, Late 90/7.2%, Absent 65/5.2%), Teachers (sky bg: 80, 93%), Staff (navy bg: 32, 91.6%). Filter: "Today ▼". API: `GET /api/admin/attendance/summary?date=today` | 2.5h |
+| 9.1.2 | **AttendanceOverviewLineChart** (o'ng) — Sarlavha: "Attendance Overview", filter: "Last Semester ▼", 3 chiziq: Students (pink) / Teachers (sky) / Staff (navy), X-axis: Jan–Jun, Y-axis: 0–100%. API: `GET /api/admin/attendance/overview?period=last_semester` | 2h |
+| 9.1.3 | **AttendanceTabs** — [Students ●] [Teachers] [Staff] tab switcher, Class filter "Class 9A ▼", Oy filter "Mar 2035 ▼" | 1h |
+| 9.1.4 | **AttendanceCalendarGrid** (asosiy) — Table: Student column (ID + ism), keyin kunlar (Thu Mar 1, Fri Mar 2... Sun Mar 10...), cell: ✅ (present green), ❌ (absent red), — (holiday/weekend). Sticky Student column. API: `GET /api/admin/attendance/grid?classId=9A&month=2035-03&type=students` | 3h |
+| 9.1.5 | **AttendancePagination** — "Show 10 ▼ of 25 results", page buttons | 1h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+**Exit:** Attendance to'liq ishlaydi, 3 tab (students/teachers/staff) ishlaydi, grid filter ishlaydi.
 
-### Task 9.2: Admin Dashboard
+---
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 9.1 completed
-- **Task Estimate**: 9h
+### Task 9.2: Finance — Fees Collection Page
 
-| Subtask ID | Work item                                                             | Owner         | Estimate | Dependency | Acceptance                                                                                                                                      |
-| ---------- | --------------------------------------------------------------------- | ------------- | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| 9.2.1      | Stat cards (total students, teachers, attendance %, tuition collected) | Frontend Lead | 2h       | 9.1.2      | Target outcome: Stat cards (total students, teachers, attendance %, tuition collected); verification: lint/typecheck pass; tests when applicable |
-| 9.2.2      | Attendance overview chart (daily/weekly)                              | Frontend Lead | 3h       | 9.2.1      | Target outcome: Attendance overview chart (daily/weekly); verification: lint/typecheck pass; tests when applicable                              |
-| 9.2.3      | Recent activities feed                                                | Frontend Lead | 2h       | 9.2.2      | Target outcome: Recent activities feed; verification: lint/typecheck pass; tests when applicable                                                |
-| 9.2.4      | Quick action cards (add student, mark attendance, create exam)        | Frontend Lead | 2h       | 9.2.3      | Target outcome: Quick action cards (add student, mark attendance, create exam); verification: lint/typecheck pass; tests when applicable        |
+**Route:** `/admin/finance/payments` (canonical: `/admin/finance/fees`)
+**File:** `apps/web/src/app/(dashboard)/admin/finance/fees/page.tsx`
+**Dizayn ref:** Figma Image 9
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 9.2.1 | **FeesStatCards** (vertikal 3 karta, chap) — Fees Collected ($92,500, navy icon), Pending Fees ($12,300, sky icon), Overdue Payments ($4,750, pink/warning icon) | 1.5h |
+| 9.2.2 | **FeesCollectionTrendChart** (markaz, line) — Sarlavha: "Fees Collection Trend", filter: "Last 8 Months ▼", Recharts `<LineChart>` + area fill, hover tooltip: "April 2035: $67,250". API: `GET /api/finance/fees/trend?months=8` | 2h |
+| 9.2.3 | **FeesProgressBars** (o'ng) — 4 kategoriya progress bars: Tuition Fee 87.5% ($70k/$80k), Books & Supplies 87.5%, Activities 90%, Miscellaneous 86.5%. API: `GET /api/finance/fees/progress` | 1.5h |
+| 9.2.4 | **FeesFilterBar** — "All Classes ▼", "All Status ▼", "This Month ▼" | 0.5h |
+| 9.2.5 | **FeesTable** (grouped by student) — Student ID (sky link), Ism, Class, Fee Category (Tuition/Books/Activities/Misc), Total Amount, Due Date, Status badge (Paid green / Pending yellow / Overdue red / Partially Paid purple). API: `GET /api/finance/fees?page=1&limit=5&classId=...&status=...&month=...` | 3h |
+| 9.2.6 | Pagination: "Show 5 ▼ of 25 results" | 0.5h |
 
-### Task 9.3: Teachers Management
+**Exit:** Fees page to'liq ishlaydi.
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 9.2 completed
-- **Task Estimate**: 15h
+---
 
-| Subtask ID | Work item                                                                                     | Owner         | Estimate | Dependency | Acceptance                                                                                                                                                              |
-| ---------- | --------------------------------------------------------------------------------------------- | ------------- | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 9.3.1      | Teachers list page (DataTable + gender filter)                                                | Frontend Lead | 3h       | 9.2.4      | Target outcome: Teachers list page (DataTable + gender filter); verification: lint/typecheck pass; tests when applicable                                                |
-| 9.3.2      | Add teacher page (stepper: personal info -> qualifications -> subjects -> schedule -> review) | Frontend Lead | 3h       | 9.3.1      | Target outcome: Add teacher page (stepper: personal info -> qualifications -> subjects -> schedule -> review); verification: lint/typecheck pass; tests when applicable |
-| 9.3.3      | Teacher profile page (info card, schedule, classes, performance)                              | Frontend Lead | 6h       | 9.3.2      | Target outcome: Teacher profile page (info card, schedule, classes, performance); verification: lint/typecheck pass; tests when applicable                              |
-| 9.3.4      | Edit teacher page                                                                             | Frontend Lead | 3h       | 9.3.3      | Target outcome: Edit teacher page; verification: lint/typecheck pass; tests when applicable                                                                             |
+### Task 9.3: Finance — Expenses Page
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+**Route:** `/admin/finance/expenses` (canonical: `/admin/finance/invoices`)
+**File:** `apps/web/src/app/(dashboard)/admin/finance/expenses/page.tsx`
+**Dizayn ref:** Figma Image 10
 
-### Task 9.4: Students Management
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 9.3.1 | **ExpenseTrendChart** (chap, bar) — Sarlavha: "Expense Trend", filter: "Last 8 Months ▼", Recharts `<BarChart>`, joriy oy dark navy, boshqalar pink. Hover: "April 2035: $73,250". API: `GET /api/finance/expenses/trend?months=8` | 2h |
+| 9.3.2 | **ExpenseBreakdownDonut** — Sarlavha: "Expense Breakdown" + "...", Recharts `<PieChart>` donut, markazda "Total Expense $125,000", legend: Salaries 55% ($68,750) / Supplies 15% / Events 10% / Maintenance 12% / Others 8%. API: `GET /api/finance/expenses/breakdown` | 2h |
+| 9.3.3 | **ReimbursementsTable** (Kommunal To'lovlar) — sarlavha: "Kommunal To'lovlar", filter: "This Week ▼", table: Request ID (sky) / Staff Name+Dept / Amount (sky bold) / Date / Proof (View File link) / Status (Approved green / Declined red / Approve+Decline actions). API: `GET /api/finance/reimbursements?week=current` | 2.5h |
+| 9.3.4 | **ExpensesFilterBar** — "All Categories ▼", "This Month ▼", `[+ Qo'shish]` button | 0.5h |
+| 9.3.5 | **ExpensesTable** — table: Expense ID (sky) / Date / Department / Category badge (Supplies sky / Events blue / Maintenance orange / Salaries green) / Description / Amount (red bold). API: `GET /api/finance/expenses?page=1&limit=8&category=...&month=...` | 2.5h |
+| 9.3.6 | **Add Expense Modal** — `[+ Qo'shish]` bosganida: Department (select), Izoh (textarea), Kategoriya (select: Maosh/Tadbir/Tamirlash/Boshqa/Custom), Summa. API: `POST /api/finance/expenses` | 2h |
+| 9.3.7 | Pagination: "Show 8 ▼ of 40 results" | 0.5h |
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 9.3 completed
-- **Task Estimate**: 12h
+**Exit:** Expenses page to'liq ishlaydi, add expense modal ishlaydi.
 
-| Subtask ID | Work item                                                                                | Owner         | Estimate | Dependency | Acceptance                                                                                                                                                         |
-| ---------- | ---------------------------------------------------------------------------------------- | ------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 9.4.1      | Students list page (DataTable + class/gender filter)                                     | Frontend Lead | 3h       | 9.3.4      | Target outcome: Students list page (DataTable + class/gender filter); verification: lint/typecheck pass; tests when applicable                                     |
-| 9.4.2      | Add student page (stepper: personal info -> parent info -> class -> documents -> review) | Frontend Lead | 3h       | 9.4.1      | Target outcome: Add student page (stepper: personal info -> parent info -> class -> documents -> review); verification: lint/typecheck pass; tests when applicable |
-| 9.4.3      | Student profile page (info, grades summary, attendance chart, assignments)               | Frontend Lead | 3h       | 9.4.2      | Target outcome: Student profile page (info, grades summary, attendance chart, assignments); verification: lint/typecheck pass; tests when applicable               |
-| 9.4.4      | Edit student page                                                                        | Frontend Lead | 3h       | 9.4.3      | Target outcome: Edit student page; verification: lint/typecheck pass; tests when applicable                                                                        |
+---
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+### Task 9.4: Notice Board Page
 
-### Task 9.5: Classes Management
+**Route:** `/admin/notices`
+**File:** `apps/web/src/app/(dashboard)/admin/notices/page.tsx`
+**Dizayn ref:** Figma Image 11
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 9.4 completed
-- **Task Estimate**: 9h
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 9.4.1 | **NoticeFilterBar** — "All Categories ▼" (Academic/Events/Finance/Maintenance/Training/Notice/Arts/Announcement + Custom), "Sort by: Latest ▼" (Latest/Oldest/Expiring/Most Viewed), `[+ E'lon qo'shish]` button | 1h |
+| 9.4.2 | **NoticeCard** (list item) — thumbnail (64×64), kategoriya badge (rang: Academic=purple/Events=blue/Finance=green/etc.), sarlavha (bold), audience icon+text, Post Date, Exp. Date, Created By, Status badge (Active green / Scheduled blue / Draft grey / Expired red), "..." menyu | 2h |
+| 9.4.3 | **NoticeList** — vertical scroll list, click → detail panel ochiladi | 0.5h |
+| 9.4.4 | **NoticeDetailPanel** (o'ng panel, slide-in yoki sticky) — banner rasm, kategoriya badge, views count, status badge, Sarlavha (bold), "by [Author]", Audience/Post Date/Exp. Date metadata, Content matn (to'liq), Attachment (PDF icon, nom, hajm), `[Edit]` / `[Delete]` / `[Share]` / `[Archive]` tugmalar. API: `GET /api/notices/:id` | 3h |
+| 9.4.5 | **AddEditNoticeModal** — `[+ E'lon qo'shish]` yoki `[Edit]` bosganida: Sarlavha, Kategoriya (select + rang picker), Audience (multi-select: All/Grade 7/8/9/Specific class/Teachers/Parents), Post Date+Time, Exp. Date+Time, Content (textarea), Attachment upload (R2), Gender scope toggle. API: `POST /api/notices`, `PATCH /api/notices/:id` | 3.5h |
+| 9.4.6 | **Pagination** — "Show 9 ▼ of 25 results" | 0.5h |
 
-| Subtask ID | Work item                                                            | Owner         | Estimate | Dependency | Acceptance                                                                                                                                     |
-| ---------- | -------------------------------------------------------------------- | ------------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| 9.5.1      | Classes grid page (cards: class name, students count, teacher)       | Frontend Lead | 3h       | 9.4.4      | Target outcome: Classes grid page (cards: class name, students count, teacher); verification: lint/typecheck pass; tests when applicable       |
-| 9.5.2      | Add class page (form: name, grade, section, capacity, academic year) | Frontend Lead | 3h       | 9.5.1      | Target outcome: Add class page (form: name, grade, section, capacity, academic year); verification: lint/typecheck pass; tests when applicable |
-| 9.5.3      | Class detail page (students list, schedule, statistics)              | Frontend Lead | 3h       | 9.5.2      | Target outcome: Class detail page (students list, schedule, statistics); verification: lint/typecheck pass; tests when applicable              |
+**Exit:** Notice board to'liq ishlaydi, detail panel, add/edit modal ishlaydi.
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
-### Task 9.6: Attendance Management
+### Task 9.5: Exams Page
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 9.5 completed
-- **Task Estimate**: 11h
+**Route:** `/admin/exams`
+**File:** `apps/web/src/app/(dashboard)/admin/exams/page.tsx`
 
-| Subtask ID | Work item                                                                  | Owner         | Estimate | Dependency | Acceptance                                                                                                                                           |
-| ---------- | -------------------------------------------------------------------------- | ------------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 9.6.1      | Attendance page (class selector + date picker + attendance grid)           | Frontend Lead | 3h       | 9.5.3      | Target outcome: Attendance page (class selector + date picker + attendance grid); verification: lint/typecheck pass; tests when applicable           |
-| 9.6.2      | Attendance grid component (students list with present/absent/late buttons) | Frontend Lead | 2h       | 9.6.1      | Target outcome: Attendance grid component (students list with present/absent/late buttons); verification: lint/typecheck pass; tests when applicable |
-| 9.6.3      | Attendance report (monthly/weekly stats, charts)                           | Frontend Lead | 3h       | 9.6.2      | Target outcome: Attendance report (monthly/weekly stats, charts); verification: lint/typecheck pass; tests when applicable                           |
-| 9.6.4      | Attendance filters (class, date range, status)                             | Frontend Lead | 3h       | 9.6.3      | Target outcome: Attendance filters (class, date range, status); verification: lint/typecheck pass; tests when applicable                             |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 9.5.1 | **ExamsMonthFilter** — horizontal scroll, 12 oylik tab (Jan–Dec), aktiv oy highlight (navy) | 1h |
+| 9.5.2 | **ExamCalendarGrid** — kun raqamlari (1,2,3...), har kunda o'sha kundagi imtihon cards (grid). API: `GET /api/exams?month=2035-03` | 2h |
+| 9.5.3 | **ExamCard** — Fan rangi (Matematika=yellow, Fizika=purple, Ingliz=blue, Kimyo=green...), Xona raqami, Sinf, Vaqt, Fan nomi, Tasdiqlangan o'quvchilar soni, Status badge, countdown (4 kun qoldi: green→orange→red) | 2h |
+| 9.5.4 | **MiniCalendar** (o'ng) — exam bor kunlar dot bilan belgilangan | 1h |
+| 9.5.5 | **AddExamModal** — Fan, Sinf, Xona, Sana, Vaqt, Tasviriyot. API: `POST /api/exams` | 2h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+**Exit:** Exams page ishlaydi.
 
-### Task 9.7: Finance
+---
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 9.6 completed
-- **Task Estimate**: 12h
+### Task 9.6: Calendar Page
 
-| Subtask ID | Work item                                                              | Owner         | Estimate | Dependency | Acceptance                                                                                                                                       |
-| ---------- | ---------------------------------------------------------------------- | ------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 9.7.1      | Finance overview page (Stat cards: collected, pending, overdue + chart) | Frontend Lead | 3h       | 9.6.4      | Target outcome: Finance overview page (Stat cards: collected, pending, overdue + chart); verification: lint/typecheck pass; tests when applicable |
-| 9.7.2      | Payments page (DataTable: student, amount, date, status, receipt)      | Frontend Lead | 3h       | 9.7.1      | Target outcome: Payments page (DataTable: student, amount, date, status, receipt); verification: lint/typecheck pass; tests when applicable      |
-| 9.7.3      | Payment form (record payment)                                          | Frontend Lead | 3h       | 9.7.2      | Target outcome: Payment form (record payment); verification: lint/typecheck pass; tests when applicable                                          |
-| 9.7.4      | Invoices page (generate, send, track)                                  | Frontend Lead | 3h       | 9.7.3      | Target outcome: Invoices page (generate, send, track); verification: lint/typecheck pass; tests when applicable                                  |
+**Route:** `/admin/calendar`
+**File:** `apps/web/src/app/(dashboard)/admin/calendar/page.tsx`
+**Dizayn ref:** Figma Image 2
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 9.6.1 | **CalendarCategoryTabs** — "All Schedules 12" / "Academic 4" / "Events 3" / "Finance 2" / "Administration 3" — har biri count badge bilan | 1h |
+| 9.6.2 | **CalendarHeader** — "March 2035 ▼" (month picker dropdown), [Day] [Week] [Month●] toggle buttons, `[+ Add Agenda]` button | 1h |
+| 9.6.3 | **MonthView** (default) — full month grid (Sun–Sat), event chips (kategoriya rangida: Academic pink / Events sky / Finance navy / Admin grey), multi-event cells. API: `GET /api/events?month=2035-03&tenantId=...` | 4h |
+| 9.6.4 | **WeekView** — 7 ustun, time slots (08:00–20:00), event blocks | 2h |
+| 9.6.5 | **DayView** — timeline, 1 kun, event blocks | 1.5h |
+| 9.6.6 | **ScheduleDetailPanel** (o'ng sticky) — event bosganida: kategoriya badge, sarlavha (bold), 📅 sana, ⏰ vaqt, 📍 joy, 📝 Notes. `[x]` yopish. Multiple events: stacked cards. API: `GET /api/events/:id` | 2h |
+| 9.6.7 | **AddAgendaModal** — Nomi, Kategoriya (select), Sana, Vaqt (from–to), Joy/Platform, Ko'rish huquqi (All/Admin/Teachers/Students). API: `POST /api/events` | 2h |
 
-### Task 9.8: Exams
+**Exit:** Calendar 3 ko'rinish (Month/Week/Day) ishlaydi, detail panel ishlaydi, add agenda ishlaydi.
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 9.7 completed
-- **Task Estimate**: 9h
+---
 
-| Subtask ID | Work item                                                     | Owner         | Estimate | Dependency | Acceptance                                                                                                                              |
-| ---------- | ------------------------------------------------------------- | ------------- | -------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| 9.8.1      | Exams list page (DataTable: name, type, date, subject, class) | Frontend Lead | 3h       | 9.7.4      | Target outcome: Exams list page (DataTable: name, type, date, subject, class); verification: lint/typecheck pass; tests when applicable |
-| 9.8.2      | Create exam page (form)                                       | Frontend Lead | 3h       | 9.8.1      | Target outcome: Create exam page (form); verification: lint/typecheck pass; tests when applicable                                       |
-| 9.8.3      | Exam detail page (results table, statistics)                  | Frontend Lead | 3h       | 9.8.2      | Target outcome: Exam detail page (results table, statistics); verification: lint/typecheck pass; tests when applicable                  |
+### Task 9.7: Admin Profile Page
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+**Route:** `/admin/profile`
+**File:** `apps/web/src/app/(dashboard)/admin/profile/page.tsx`
 
-### Task 9.9: Schedule
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 9.7.1 | **ProfileHeader** — cover banner, round avatar (editable, R2 upload), Ism, Lavozim "School Admin", maktab nomi | 1.5h |
+| 9.7.2 | **PersonalInfoCard** — Ism/Familiya, Email, Telefon, Manzil, Tug'ilgan sana — edit mode toggle | 2h |
+| 9.7.3 | **SecurityCard** — Parol o'zgartirish: Eski parol / Yangi parol / Tasdiqlash, [Save] | 1.5h |
+| 9.7.4 | **SessionsCard** — Aktiv sessiyalar: device, IP, browser, sana, [Disconnect] | 1.5h |
+| 9.7.5 | **ActivityLogCard** — Oxirgi 10 ta harakat: action, vaqt | 1h |
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 9.8 completed
-- **Task Estimate**: 9h
+**Exit:** Profile page to'liq ishlaydi.
 
-| Subtask ID | Work item                                       | Owner         | Estimate | Dependency | Acceptance                                                                                                                |
-| ---------- | ----------------------------------------------- | ------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------- |
-| 9.9.1      | Schedule management page (weekly calendar view) | Frontend Lead | 4h       | 9.8.3      | Target outcome: Schedule management page (weekly calendar view); verification: lint/typecheck pass; tests when applicable |
-| 9.9.2      | Schedule form (add/edit schedule entry)         | Frontend Lead | 3h       | 9.9.1      | Target outcome: Schedule form (add/edit schedule entry); verification: lint/typecheck pass; tests when applicable         |
-| 9.9.3      | Conflict detection UI                           | Frontend Lead | 2h       | 9.9.2      | Target outcome: Conflict detection UI; verification: lint/typecheck pass; tests when applicable                           |
+---
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+### Task 9.8: Admin Settings Page
 
-### Task 9.10: Notices & Calendar
+**Route:** `/admin/settings`
+**File:** `apps/web/src/app/(dashboard)/admin/settings/page.tsx`
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 9.9 completed
-- **Task Estimate**: 12h
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 9.8.1 | **SettingsTabs** — left sidebar nav: Maktab Ma'lumotlari / Sinflar / Fanlar / Modullar / Rollar / To'lov Kategoriyalari / Bildirishnomalar | 1h |
+| 9.8.2 | **SchoolInfoTab** — Maktab nomi, logo upload, manzil, telefon, email, gender policy (Boys/Girls/All). API: `GET /api/tenants/me`, `PATCH /api/tenants/me` | 2h |
+| 9.8.3 | **ClassesTab** — table: Sinf nomi, Grade, Section, O'quvchilar soni, O'qituvchi; CRUD (add/edit/delete modal). API: `GET /api/classes`, `POST /api/classes`, `PATCH /api/classes/:id` | 3h |
+| 9.8.4 | **SubjectsTab** — table: Fan nomi, Kod, Aktiv toggle; CRUD. API: `GET /api/subjects`, `POST /api/subjects` | 2h |
+| 9.8.5 | **ModulesTab** — toggle switches: Dormitory / Meals / Residence / Contract / Departments. API: `PATCH /api/tenants/me/modules` | 1.5h |
+| 9.8.6 | **FeeStructureTab** — to'lov kategoriyalari (Tuition/Books/Activities/Misc + custom), summa, aktiv toggle. API: `GET /api/finance/fee-structures`, `POST /api/finance/fee-structures` | 2h |
+| 9.8.7 | **NotificationSettingsTab** — Bildirishnoma turlari toggle: Email/SMS/Push, trigger turlari | 1.5h |
 
-| Subtask ID | Work item                                                      | Owner         | Estimate | Dependency | Acceptance                                                                                                                               |
-| ---------- | -------------------------------------------------------------- | ------------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| 9.10.1     | Notices list page (cards: title, priority badge, date, target) | Frontend Lead | 3h       | 9.9.3      | Target outcome: Notices list page (cards: title, priority badge, date, target); verification: lint/typecheck pass; tests when applicable |
-| 9.10.2     | Create notice page (form with rich text)                       | Frontend Lead | 3h       | 9.10.1     | Target outcome: Create notice page (form with rich text); verification: lint/typecheck pass; tests when applicable                       |
-| 9.10.3     | Events calendar page (monthly/weekly view, drag-drop)          | Frontend Lead | 3h       | 9.10.2     | Target outcome: Events calendar page (monthly/weekly view, drag-drop); verification: lint/typecheck pass; tests when applicable          |
-| 9.10.4     | Event form                                                     | Frontend Lead | 3h       | 9.10.3     | Target outcome: Event form; verification: lint/typecheck pass; tests when applicable                                                     |
+**Exit:** Settings barcha tablar ishlaydi.
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 9.11: Admin Profile & Settings
-
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 9.10 completed
-- **Task Estimate**: 13h
-
-| Subtask ID | Work item                                                     | Owner         | Estimate | Dependency | Acceptance                                                                                                                              |
-| ---------- | ------------------------------------------------------------- | ------------- | -------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------- |
-| 9.11.1     | Profile page (avatar, info, password change)                  | Frontend Lead | 3h       | 9.10.4     | Target outcome: Profile page (avatar, info, password change); verification: lint/typecheck pass; tests when applicable                  |
-| 9.11.2     | School settings (general, academic year, terms, grade scales) | Frontend Lead | 2h       | 9.11.1     | Target outcome: School settings (general, academic year, terms, grade scales); verification: lint/typecheck pass; tests when applicable |
-| 9.11.3     | Academic settings page (years, terms management)              | Frontend Lead | 4h       | 9.11.2     | Target outcome: Academic settings page (years, terms management); verification: lint/typecheck pass; tests when applicable              |
-| 9.11.4     | Grading settings page (grade scales CRUD)                     | Frontend Lead | 4h       | 9.11.3     | Target outcome: Grading settings page (grade scales CRUD); verification: lint/typecheck pass; tests when applicable                     |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
 ### FAZA 9 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+1. Barcha admin sahifalar (Attendance, Finance×2, Notices, Exams, Calendar, Profile, Settings) to'liq ishlaydi.
+2. Barcha API endpointlar real data bilan ishlaydi.
 
 ---
 
-## FAZA 10: O'QITUVCHI PANELI
+## FAZA 10 — Student Dashboard + All Student Pages
 
-**Maqsad**: [school].talimy.space/teacher
-**Phase Owner (default)**: Frontend Lead
-**Entry Dependency**: FAZA 9 exit gate
+> Route group: `apps/web/src/app/(dashboard)/student/`
+> Dizayn ref: Figma Image 13 (Student Dashboard)
 
-### Task 10.1: Teacher Layout & Dashboard
+### Task 10.1: Student Layout
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: FAZA 10 entry gate
-- **Task Estimate**: 12h
+**File:** `apps/web/src/app/(dashboard)/student/layout.tsx`
 
-| Subtask ID | Work item                                                          | Owner         | Estimate | Dependency         | Acceptance                                                                                                                                   |
-| ---------- | ------------------------------------------------------------------ | ------------- | -------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| 10.1.1     | Teacher sidebar layout                                             | Frontend Lead | 4h       | FAZA 10 entry gate | Target outcome: Teacher sidebar layout; verification: lint/typecheck pass; tests when applicable                                             |
-| 10.1.2     | Dashboard (Stat cards: my students, today's classes, pending assignments) | Frontend Lead | 4h       | 10.1.1             | Target outcome: Dashboard (Stat cards: my students, today's classes, pending assignments); verification: lint/typecheck pass; tests when applicable |
-| 10.1.3     | Today's schedule card                                              | Frontend Lead | 2h       | 10.1.2             | Target outcome: Today's schedule card; verification: lint/typecheck pass; tests when applicable                                              |
-| 10.1.4     | Pending tasks card (ungraded assignments, unmarked attendance)     | Frontend Lead | 2h       | 10.1.3             | Target outcome: Pending tasks card (ungraded assignments, unmarked attendance); verification: lint/typecheck pass; tests when applicable     |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 10.1.1 | **StudentSidebar** — Logo (Talimy), nav items: Dashboard, Teachers (faqat o'qish), Students (emas), Attendance, Finance (ko'rish), Notice, Calendar, Library (ixtiyoriy), Message, Profile, Setting, Log out. Brand rang: primary colors (Navy/Pink/Sky) | 2h |
+| 10.1.2 | **StudentHeader** — Search, Notification bell, avatar, "Student" subtitle | 1h |
+| 10.1.3 | Auth guard: `student` rol tekshiruvi | 0.5h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
-### Task 10.2: Teacher - Students
+### Task 10.2: Student Dashboard Page
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 10.1 completed
-- **Task Estimate**: 6h
+**Route:** `/student/dashboard`
+**File:** `apps/web/src/app/(dashboard)/student/dashboard/page.tsx`
+**Dizayn ref:** Figma Image 13
 
-| Subtask ID | Work item                                                | Owner         | Estimate | Dependency | Acceptance                                                                                                                         |
-| ---------- | -------------------------------------------------------- | ------------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| 10.2.1     | My students page (students in my classes)                | Frontend Lead | 3h       | 10.1.4     | Target outcome: My students page (students in my classes); verification: lint/typecheck pass; tests when applicable                |
-| 10.2.2     | Student detail page (grades, attendance for my subjects) | Frontend Lead | 3h       | 10.2.1     | Target outcome: Student detail page (grades, attendance for my subjects); verification: lint/typecheck pass; tests when applicable |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 10.2.1 | **WelcomeCard** (top) — Round avatar, "Welcome, [Ism]" (bold), AI maslahat matni (motivatsiya, 1-2 jumlali), Grade, DOB, email, phone. AI: `GET /api/students/me/ai-advice` (24h cache) | 3h |
+| 10.2.2 | **StatsRow** (4 karta) — Attendance 97% (↑), Task Completed 258+ (↑), Task In Progress 64% (↓), Reward Points 245 | 1.5h |
+| 10.2.3 | **PerformanceGauge** (chap, half-donut) — "3.4 / 4.0 max GPA", "1st Semester – 6th Semester", Recharts semi-circle gauge. API: `GET /api/students/me/performance-summary` | 2h |
+| 10.2.4 | **ScoreActivityChart** (markaz, line) — "Score Activity", filter: "Weekly ▼", Recharts `<LineChart>`, X-axis: Apr 10–16, Y-axis: 0–100, hover: "70%". API: `GET /api/students/me/score-activity?period=weekly` | 2h |
+| 10.2.5 | **RecentActivity** (chap) — "TODAY" va "YESTERDAY" sections, timeline: icon + bold action + normal tavsif + vaqt. API: `GET /api/students/me/activity?limit=10` | 1.5h |
+| 10.2.6 | **GradeBySubjectChart** (markaz, horizontal bar) — Recharts `<BarChart>` horizontal, subjects: Biology/Chemistry/Geography/History/Literature/Art, filter: "Weekly ▼" + "Grade 3 ▼". API: `GET /api/students/me/grades-by-subject` | 2h |
+| 10.2.7 | **AssignmentsTable** (pastki full-width) — "Assignments", search. Columns: No / Task / Subject / Due Date / Time / Status (In Progress sky / Not Started grey / Submitted green) / Action (✏️ 🗑️). API: `GET /api/students/me/assignments?page=1&limit=5` | 2.5h |
+| 10.2.8 | **MiniCalendar** (o'ng) — Bugun highlight, prev/next | 1.5h |
+| 10.2.9 | **AgendaList** (o'ng) — "View All", 4 ta kelgusi event: kun rangi badge, sinf, fan, vaqt, mavzu. API: `GET /api/events/me?dateFrom=today&limit=4` | 1.5h |
+| 10.2.10 | **MessagesPreview** (o'ng) — 3 ta preview: avatar, ism, vaqt, matn snippet, unread badge. API: `GET /api/messages/me?limit=3` | 1.5h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
-### Task 10.3: Teacher - Attendance
+### Task 10.3: Student — Schedule Page
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 10.2 completed
-- **Task Estimate**: 6h
+**Route:** `/student/schedule`
 
-| Subtask ID | Work item                                              | Owner         | Estimate | Dependency | Acceptance                                                                                                                       |
-| ---------- | ------------------------------------------------------ | ------------- | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| 10.3.1     | Mark attendance page (select class -> attendance grid) | Frontend Lead | 3h       | 10.2.2     | Target outcome: Mark attendance page (select class -> attendance grid); verification: lint/typecheck pass; tests when applicable |
-| 10.3.2     | Attendance history page                                | Frontend Lead | 3h       | 10.3.1     | Target outcome: Attendance history page; verification: lint/typecheck pass; tests when applicable                                |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 10.3.1 | **WeeklyTimetableGrid** — Y-axis: vaqt (08:00–17:00), X-axis: Mon–Fri, cell: Fan nomi, Xona, O'qituvchi ism. Rangi fanga qarab. API: `GET /api/students/me/schedule?week=current` | 3h |
+| 10.3.2 | Week filter: prev/next week navigation | 0.5h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
-### Task 10.4: Teacher - Assignments
+### Task 10.4: Student — Assignments Page
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 10.3 completed
-- **Task Estimate**: 9h
+**Route:** `/student/assignments`
 
-| Subtask ID | Work item                                          | Owner         | Estimate | Dependency | Acceptance                                                                                                                   |
-| ---------- | -------------------------------------------------- | ------------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| 10.4.1     | Assignments list page                              | Frontend Lead | 3h       | 10.3.2     | Target outcome: Assignments list page; verification: lint/typecheck pass; tests when applicable                              |
-| 10.4.2     | Create assignment page (form + file upload)        | Frontend Lead | 3h       | 10.4.1     | Target outcome: Create assignment page (form + file upload); verification: lint/typecheck pass; tests when applicable        |
-| 10.4.3     | Assignment detail page (submissions list, grading) | Frontend Lead | 3h       | 10.4.2     | Target outcome: Assignment detail page (submissions list, grading); verification: lint/typecheck pass; tests when applicable |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 10.4.1 | **AssignmentsHeader** — "Search by Subject", filter buttons: All / In Progress / Not Started / Submitted | 1h |
+| 10.4.2 | **AssignmentsFullTable** — expanded table (barcha sahifalar), pagination. API: `GET /api/students/me/assignments?page=1&limit=10&status=...` | 2h |
+| 10.4.3 | **AssignmentDetailModal** — click row → modal: sarlavha, fan, tavsif, deadline, fayl upload (topshirish). API: `POST /api/assignments/:id/submit` | 2h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
-### Task 10.5: Teacher - Grades
+### Task 10.5: Student — Grades Page
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 10.4 completed
-- **Task Estimate**: 5h
+**Route:** `/student/grades`
 
-| Subtask ID | Work item                                                           | Owner         | Estimate | Dependency | Acceptance                                                                                                                                    |
-| ---------- | ------------------------------------------------------------------- | ------------- | -------- | ---------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| 10.5.1     | Grade entry page (class/subject -> students table with grade input) | Frontend Lead | 3h       | 10.4.3     | Target outcome: Grade entry page (class/subject -> students table with grade input); verification: lint/typecheck pass; tests when applicable |
-| 10.5.2     | Grade overview (my subjects/classes statistics)                     | Frontend Lead | 2h       | 10.5.1     | Target outcome: Grade overview (my subjects/classes statistics); verification: lint/typecheck pass; tests when applicable                     |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 10.5.1 | **GradesSummaryRow** — GPA gauge, semestr select | 1h |
+| 10.5.2 | **GradesBySubjectTable** — table: Fan / O'qituvchi / Ball / Baho (A/B/C) / Trend icon. API: `GET /api/students/me/grades?semester=current` | 2h |
+| 10.5.3 | **GPAHistoryChart** — line chart, semestr bo'yicha GPA dinamikasi | 1.5h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
-### Task 10.6: Teacher - Exams
+### Task 10.6: Student — Attendance Page
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 10.5 completed
-- **Task Estimate**: 6h
+**Route:** `/student/attendance`
 
-| Subtask ID | Work item               | Owner         | Estimate | Dependency | Acceptance                                                                                        |
-| ---------- | ----------------------- | ------------- | -------- | ---------- | ------------------------------------------------------------------------------------------------- |
-| 10.6.1     | Exams list page         | Frontend Lead | 3h       | 10.5.2     | Target outcome: Exams list page; verification: lint/typecheck pass; tests when applicable         |
-| 10.6.2     | Exam results entry page | Frontend Lead | 3h       | 10.6.1     | Target outcome: Exam results entry page; verification: lint/typecheck pass; tests when applicable |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 10.6.1 | **AttendanceStatsRow** — Present %, Late %, Absent %, Sick % | 1h |
+| 10.6.2 | **AttendanceCalendarView** — oylik grid, ranglar, month filter. API: `GET /api/students/me/attendance?month=current` | 2h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
-### Task 10.7: Teacher - Other
+### Task 10.7: Student — Other Pages (Exams, Notices, Calendar, Profile)
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 10.6 completed
-- **Task Estimate**: 15h
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 10.7.1 | **Exams page** — jadval ko'rish (faqat o'z sinfi), natijalar (faqat ko'rish). API: `GET /api/exams/me` | 2h |
+| 10.7.2 | **Notices page** — faqat o'ziga mo'ljallangan e'lonlar, read-only. API: `GET /api/notices/me` | 1.5h |
+| 10.7.3 | **Calendar page** — Academic + Events (faqat o'z sinfi), Month view default. API: `GET /api/events/me` | 2h |
+| 10.7.4 | **Profile page** — Shaxsiy ma'lumotlar (read-only uchun), ota-ona kontakti, hujjatlar. API: `GET /api/students/me/profile` | 2h |
 
-| Subtask ID | Work item                                         | Owner         | Estimate | Dependency | Acceptance                                                                                                                  |
-| ---------- | ------------------------------------------------- | ------------- | -------- | ---------- | --------------------------------------------------------------------------------------------------------------------------- |
-| 10.7.1     | Schedule page (my weekly schedule, calendar view) | Frontend Lead | 3h       | 10.6.2     | Target outcome: Schedule page (my weekly schedule, calendar view); verification: lint/typecheck pass; tests when applicable |
-| 10.7.2     | Notices page (view notices)                       | Frontend Lead | 3h       | 10.7.1     | Target outcome: Notices page (view notices); verification: lint/typecheck pass; tests when applicable                       |
-| 10.7.3     | Calendar page (events)                            | Frontend Lead | 3h       | 10.7.2     | Target outcome: Calendar page (events); verification: lint/typecheck pass; tests when applicable                            |
-| 10.7.4     | Profile page                                      | Frontend Lead | 3h       | 10.7.3     | Target outcome: Profile page; verification: lint/typecheck pass; tests when applicable                                      |
-| 10.7.5     | Settings page                                     | Frontend Lead | 3h       | 10.7.4     | Target outcome: Settings page; verification: lint/typecheck pass; tests when applicable                                     |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
 ### FAZA 10 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+1. Student dashboard (AI advice, barcha widgetlar) ishlaydi.
+2. Barcha student sahifalari ishlaydi.
 
 ---
 
-## FAZA 11: O'QUVCHI PANELI
+## FAZA 11 — Teacher Dashboard + All Teacher Pages
 
-**Maqsad**: [school].talimy.space/student
-**Phase Owner (default)**: Frontend Lead
-**Entry Dependency**: FAZA 10 exit gate
+> Route group: `apps/web/src/app/(dashboard)/teacher/`
+> Dizayn ref: Figma Image 12 (Teacher Dashboard)
 
-### Task 11.1: Student Layout & Dashboard
+### Task 11.1: Teacher Layout
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: FAZA 11 entry gate
-- **Task Estimate**: 14h
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 11.1.1 | **TeacherSidebar** — Nav: Dashboard, Teachers (o'z guruhlari), Students, Attendance, Finance (yo'q), Notice, Calendar, Library, Message, Profile, Settings, Logout | 2h |
+| 11.1.2 | **TeacherHeader** — Search, Notification, Avatar, "Teacher" subtitle | 1h |
+| 11.1.3 | Auth guard: `teacher` rol | 0.5h |
 
-| Subtask ID | Work item                                               | Owner         | Estimate | Dependency         | Acceptance                                                                                                                        |
-| ---------- | ------------------------------------------------------- | ------------- | -------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
-| 11.1.1     | Student sidebar layout                                  | Frontend Lead | 4h       | FAZA 11 entry gate | Target outcome: Student sidebar layout; verification: lint/typecheck pass; tests when applicable                                  |
-| 11.1.2     | Dashboard (Stat cards: GPA, attendance %, pending assignments) | Frontend Lead | 4h       | 11.1.1             | Target outcome: Dashboard (Stat cards: GPA, attendance %, pending assignments); verification: lint/typecheck pass; tests when applicable |
-| 11.1.3     | AI insight card (motivational advice, study tips)       | Frontend Lead | 2h       | 11.1.2             | Target outcome: AI insight card (motivational advice, study tips); verification: lint/typecheck pass; tests when applicable       |
-| 11.1.4     | Today's schedule card                                   | Frontend Lead | 2h       | 11.1.3             | Target outcome: Today's schedule card; verification: lint/typecheck pass; tests when applicable                                   |
-| 11.1.5     | Upcoming exams card                                     | Frontend Lead | 2h       | 11.1.4             | Target outcome: Upcoming exams card; verification: lint/typecheck pass; tests when applicable                                     |
+---
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+### Task 11.2: Teacher Dashboard Page
 
-### Task 11.2: Student Pages
+**Route:** `/teacher/dashboard`
+**Dizayn ref:** Figma Image 12
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: Task 11.1 completed
-- **Task Estimate**: 30h
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 11.2.1 | **StatsRow** (4 karta) — Total Classes ↑15% / Total Students ↓5% / Total Hours ↓10% / Total Income ↑23%. API: `GET /api/teachers/me/dashboard/stats` | 1.5h |
+| 11.2.2 | **ClassEfficiencyTop3** (chap) — "Sinf Samaradorligi Top 3": har bir sinf nomi + o'rtacha GPA progress bar. API: `GET /api/teachers/me/class-performance` | 2h |
+| 11.2.3 | **StudentAttendanceDonut** (chap) — 80% Present, Recharts donut, sana filter, guruh filter. API: `GET /api/teachers/me/attendance-summary?classId=...&date=...` | 1.5h |
+| 11.2.4 | **StudentPerformanceChart** (markaz, grouped bar) — Mon–Fri, Class10/11/12 legend. API: `GET /api/teachers/me/student-performance?period=weekly` | 2h |
+| 11.2.5 | **RecentActivityTimeline** (markaz) — Curriculum Update Submitted / Student Grade Posted / Department Meeting Reminder. API: `GET /api/teachers/me/activity` | 1.5h |
+| 11.2.6 | **TeachingActivityChart** (markaz, line) — "Teaching Activity", filter: "Monthly ▼", Jan–Dec, Working Hours tooltip. API: `GET /api/teachers/me/teaching-activity?period=monthly` | 2h |
+| 11.2.7 | **HomeworkTable** (pastki full-width) — "Student Tasks": Student / Topic / Task Name / Due Date / Status (Active/Not Viewed/Reviewing) / Action. API: `GET /api/teachers/me/assignments?page=1&limit=6` | 2.5h |
+| 11.2.8 | **MiniCalendar + Agenda + Messages** (o'ng) — (Teacher Dashboard image asosida) | 2h |
 
-| Subtask ID | Work item                                                 | Owner         | Estimate | Dependency | Acceptance                                                                                                                          |
-| ---------- | --------------------------------------------------------- | ------------- | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| 11.2.1     | Schedule page (weekly timetable, calendar view)           | Frontend Lead | 3h       | 11.1.5     | Target outcome: Schedule page (weekly timetable, calendar view); verification: lint/typecheck pass; tests when applicable           |
-| 11.2.2     | Assignments page (list: title, subject, due date, status) | Frontend Lead | 3h       | 11.2.1     | Target outcome: Assignments page (list: title, subject, due date, status); verification: lint/typecheck pass; tests when applicable |
-| 11.2.3     | Assignment detail page (description + file submission)    | Frontend Lead | 3h       | 11.2.2     | Target outcome: Assignment detail page (description + file submission); verification: lint/typecheck pass; tests when applicable    |
-| 11.2.4     | Grades page (by subject, by term, trend chart)            | Frontend Lead | 3h       | 11.2.3     | Target outcome: Grades page (by subject, by term, trend chart); verification: lint/typecheck pass; tests when applicable            |
-| 11.2.5     | Exams page (upcoming + results)                           | Frontend Lead | 3h       | 11.2.4     | Target outcome: Exams page (upcoming + results); verification: lint/typecheck pass; tests when applicable                           |
-| 11.2.6     | Exam detail page (result, rank)                           | Frontend Lead | 3h       | 11.2.5     | Target outcome: Exam detail page (result, rank); verification: lint/typecheck pass; tests when applicable                           |
-| 11.2.7     | Attendance page (monthly calendar view, statistics)       | Frontend Lead | 3h       | 11.2.6     | Target outcome: Attendance page (monthly calendar view, statistics); verification: lint/typecheck pass; tests when applicable       |
-| 11.2.8     | Notices page (announcements)                              | Frontend Lead | 3h       | 11.2.7     | Target outcome: Notices page (announcements); verification: lint/typecheck pass; tests when applicable                              |
-| 11.2.9     | Calendar page (events)                                    | Frontend Lead | 3h       | 11.2.8     | Target outcome: Calendar page (events); verification: lint/typecheck pass; tests when applicable                                    |
-| 11.2.10    | Profile page                                              | Frontend Lead | 3h       | 11.2.9     | Target outcome: Profile page; verification: lint/typecheck pass; tests when applicable                                              |
+---
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+### Task 11.3: Teacher — My Students Page
+
+**Route:** `/teacher/students`
+
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 11.3.1 | Faqat o'z guruhlari → o'quvchilar table (StudentsTable shared component, limitlangan). Gender scope qo'llaniladi. API: `GET /api/teachers/me/students?classId=...` | 2h |
+| 11.3.2 | Student karta click → `/admin/students/[id]` (read-only mode teacher uchun) | 0.5h |
+
+---
+
+### Task 11.4: Teacher — Attendance Page
+
+**Route:** `/teacher/attendance`
+
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 11.4.1 | **AttendanceMarkingGrid** — Faqat o'z sinflari, class filter, date filter, real-time marking: click cell → 3 holat popup (On Time / Late / Absent + sabab kiritish). WebSocket: belgilash → barcha ko'radi | 4h |
+| 11.4.2 | WebSocket room: `attendance:classId:date` — teacher mark → broadcast | 2h |
+
+---
+
+### Task 11.5: Teacher — Assignments Page
+
+**Route:** `/teacher/assignments`
+
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 11.5.1 | **AssignmentsTeacherView** — table: Vazifa / Guruh / Berilgan sana / Status. Click → detail. API: `GET /api/teachers/me/assignments` | 2h |
+| 11.5.2 | **AddAssignmentModal** — Fan, Guruh, Sarlavha, Tavsif, Due Date, Fayl (ixtiyoriy). API: `POST /api/assignments` | 2h |
+| 11.5.3 | **SubmissionsView** — topshirilgan ish: o'quvchi, sana, fayl link, "Bajarildi/Bajarilmadi" toggle. API: `PATCH /api/assignments/:id/submissions/:studentId` | 2h |
+
+---
+
+### Task 11.6: Teacher — Grades, Exams, Schedule, Notices, Calendar, Profile, Settings
+
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 11.6.1 | **Grades page** — baho kiritish table: o'quvchi / exam / ball / baho. API: `POST /api/grades` | 2.5h |
+| 11.6.2 | **Exams page** — o'z fani imtihonlari, natija kiritish. API: `GET /api/exams?teacherId=me`, `POST /api/exams/:id/results` | 2h |
+| 11.6.3 | **Schedule page** — Haftalik timetable (o'qituvchi faqat o'ziniki ko'radi). API: `GET /api/teachers/me/schedule` | 1.5h |
+| 11.6.4 | **Notices page** — ko'rish + o'quvchilarga yozish (AddNoticeModal shared). API: `GET /api/notices/me`, `POST /api/notices` | 1.5h |
+| 11.6.5 | **Calendar page** — Academic + Events kategoriyalar. API: `GET /api/events/me?role=teacher` | 1.5h |
+| 11.6.6 | **Teacher Profile page** — o'z profili (shared `TeacherDetail` components, teacher mode): Profil ma'lumotlari edit + yangi leave so'rov yuborish. API: `GET /api/teachers/me`, `POST /api/teachers/me/leave-requests` | 2h |
+| 11.6.7 | **Settings page** — Bildirishnomalar toggle (Email/SMS/Telegram), til, parol o'zgartirish | 1.5h |
+
+---
 
 ### FAZA 11 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+1. Teacher layout ishlaydi.
+2. Teacher dashboard (barcha widgetlar) ishlaydi.
+3. Attendance real-time marking (WebSocket bilan) ishlaydi.
+4. Barcha teacher sahifalari ishlaydi.
 
 ---
 
-## FAZA 12: OTA-ONA PANELI
+## FAZA 12 — Parent Dashboard + Profile
 
-**Maqsad**: [school].talimy.space/parent
-**Phase Owner (default)**: Frontend Lead
-**Entry Dependency**: FAZA 11 exit gate
+> Route group: `apps/web/src/app/(dashboard)/parent/`
 
-### Task 12.1: Parent Layout & Pages
+### Task 12.1: Parent Layout + Dashboard + Profile
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: FAZA 12 entry gate
-- **Task Estimate**: 19h
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 12.1.1 | **ParentSidebar** — faqat 3 item: Dashboard, Profile, Logout. Minimal | 1h |
+| 12.1.2 | **ParentDashboard page** — Route: `/parent/dashboard`. Farzand statistikasi (faqat ko'rish): StatsRow (Attendance/Task/InProgress/Reward), PerformanceGauge, ScoreActivity line chart, GradeBySubject bar chart, RecentActivity, Assignments (read-only), MiniCalendar+Agenda. Shared student dashboard components reuse qiladi. API: `GET /api/parents/me/child-summary` | 3h |
+| 12.1.3 | **ParentProfile page** — Route: `/parent/profile`. Ota-ona shaxsiy ma'lumotlari (ism, telefon, email, manzil, Telegram username). API: `GET /api/parents/me`, `PATCH /api/parents/me` | 1.5h |
+| 12.1.4 | Auth guard: `parent` rol | 0.5h |
 
-| Subtask ID | Work item                                             | Owner         | Estimate | Dependency         | Acceptance                                                                                                                      |
-| ---------- | ----------------------------------------------------- | ------------- | -------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| 12.1.1     | Parent sidebar layout (minimal: dashboard, profile)   | Frontend Lead | 4h       | FAZA 12 entry gate | Target outcome: Parent sidebar layout (minimal: dashboard, profile); verification: lint/typecheck pass; tests when applicable   |
-| 12.1.2     | Dashboard page (child selector if multiple children)  | Frontend Lead | 4h       | 12.1.1             | Target outcome: Dashboard page (child selector if multiple children); verification: lint/typecheck pass; tests when applicable  |
-| 12.1.3     | Child overview card (grades, attendance, assignments) | Frontend Lead | 2h       | 12.1.2             | Target outcome: Child overview card (grades, attendance, assignments); verification: lint/typecheck pass; tests when applicable |
-| 12.1.4     | Child grades card (recent grades, trend)              | Frontend Lead | 2h       | 12.1.3             | Target outcome: Child grades card (recent grades, trend); verification: lint/typecheck pass; tests when applicable              |
-| 12.1.5     | Child attendance card (monthly stats)                 | Frontend Lead | 2h       | 12.1.4             | Target outcome: Child attendance card (monthly stats); verification: lint/typecheck pass; tests when applicable                 |
-| 12.1.6     | Child assignments card (pending, completed)           | Frontend Lead | 2h       | 12.1.5             | Target outcome: Child assignments card (pending, completed); verification: lint/typecheck pass; tests when applicable           |
-| 12.1.7     | Profile page                                          | Frontend Lead | 3h       | 12.1.6             | Target outcome: Profile page; verification: lint/typecheck pass; tests when applicable                                          |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
 ### FAZA 12 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+1. Parent dashboard (farzand ma'lumotlari, read-only) ishlaydi.
+2. Parent profile edit ishlaydi.
 
 ---
 
-## FAZA 13: REAL-TIME VA NOTIFICATIONS
+## FAZA 13 — Platform Admin: Layout + Dashboard + Maktablar + Settings
 
-**Maqsad**: Socket.IO + push notifications
-**Phase Owner (default)**: Backend Lead
-**Entry Dependency**: FAZA 12 exit gate
+> Subdomain: `platform.talimy.space`
+> Route group: `apps/web/src/app/(platform)/`
 
-### Task 13.1: Real-time Infrastructure
+### Task 13.1: Platform Admin Layout
 
-- **Task Owner**: Backend Lead
-- **Task Dependency**: FAZA 13 entry gate
-- **Task Estimate**: 14h
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 13.1.1 | **PlatformSidebar** — Logo (Talimy Platform), Nav: Dashboard, Maktablar, Billinglar, Analytics, Sozlamalar, Profil, Logout. Dark navy theme | 2h |
+| 13.1.2 | **PlatformHeader** — Search, Notification, Avatar, "Platform Admin" subtitle | 1h |
+| 13.1.3 | Auth guard: `platform_admin` rol, subdomain `platform.talimy.space` tekshiruvi | 1h |
 
-| Subtask ID | Work item                                          | Owner         | Estimate | Dependency         | Acceptance                                                                                                                   |
-| ---------- | -------------------------------------------------- | ------------- | -------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| 13.1.1     | Socket.IO server setup (NestJS gateway)            | Backend Lead  | 4h       | FAZA 13 entry gate | Target outcome: Socket.IO server setup (NestJS gateway); verification: lint/typecheck pass; tests when applicable            |
-| 13.1.2     | Socket.IO client setup (Next.js)                   | Frontend Lead | 4h       | 13.1.1             | Target outcome: Socket.IO client setup (Next.js); verification: client connection/reconnect test in browser logs             |
-| 13.1.3     | Room-based architecture (tenant rooms, user rooms) | Backend Lead  | 6h       | 13.1.2             | Target outcome: Room-based architecture (tenant rooms, user rooms); verification: lint/typecheck pass; tests when applicable |
+---
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+### Task 13.2: Platform Dashboard Page
 
-### Task 13.2: Notification System
+**Route:** `platform.talimy.space/dashboard`
 
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 13.1 completed
-- **Task Estimate**: 12h
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 13.2.1 | **PlatformStatsRow** (4 karta) — Maktablar (24), O'quvchilar (8,432), MRR ($48,200), Aktiv (21) | 1.5h |
+| 13.2.2 | **MRR Growth Chart** (line) — 12 oylik daromad dinamikasi. API: `GET /api/platform/mrr?months=12` | 2h |
+| 13.2.3 | **SchoolStatusDonut** — Trial/Active/Suspended/Cancelled. API: `GET /api/platform/schools/status-breakdown` | 1.5h |
+| 13.2.4 | **StudentsGrowthChart** (area) — 5 yillik o'sish grafigi. API: `GET /api/platform/students/growth?years=5` | 1.5h |
+| 13.2.5 | **RecentActivityTimeline** — Yangi maktab, to'lov, admin o'zgarish. API: `GET /api/platform/activity?limit=10` | 1.5h |
+| 13.2.6 | **QuickActionsBar** — [+ Yangi Maktab] / [📢 Xabar] / [📊 Hisobot] / [⏰ Eslatma] tugmalar | 1h |
 
-| Subtask ID | Work item                                                | Owner         | Estimate | Dependency | Acceptance                                                                                                                                            |
-| ---------- | -------------------------------------------------------- | ------------- | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 13.2.1     | In-app notifications (bell icon, dropdown, unread count) | Frontend Lead | 2h       | 13.1.3     | Target outcome: In-app notifications (bell icon, dropdown, unread count); verification: unread counter + dropdown rendering check with seeded events  |
-| 13.2.2     | Real-time notification delivery (Socket.IO)              | Backend Lead  | 4h       | 13.2.1     | Target outcome: Real-time notification delivery (Socket.IO); verification: lint/typecheck pass; tests when applicable                                 |
-| 13.2.3     | Email notifications (Resend via BullMQ)                  | Backend Lead  | 2h       | 13.2.2     | Target outcome: Email notifications (Resend via BullMQ); verification: lint/typecheck pass; tests when applicable                                     |
-| 13.2.4     | SMS notifications (Twilio via BullMQ)                    | Backend Lead  | 2h       | 13.2.3     | Target outcome: SMS notifications (Twilio via BullMQ); verification: lint/typecheck pass; tests when applicable                                       |
-| 13.2.5     | Notification preferences (user settings)                 | Frontend Lead | 2h       | 13.2.4     | Target outcome: Notification preferences (user settings) with backend API support; verification: preference save/load UI flow + API persistence check |
+---
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+### Task 13.3: Schools Management Page
 
-### Task 13.3: Real-time Events
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 13.3.1 | **SchoolsTable** — Logo / Maktab nomi + subdomain / Tarif badge / Holat badge / O'quvchilar / MRR / [👁 Ko'rish] [✏️ Edit] [⋯] actions. API: `GET /api/platform/schools?page=1&limit=10` | 2.5h |
+| 13.3.2 | **School Detail Page** — `/platform/schools/[id]`: Maktab ma'lumotlari + Statistika + To'lovlar tarixi + Audit Log + Adminlar ro'yxati + Modullar toggles. API: `GET /api/platform/schools/:id` | 4h |
+| 13.3.3 | **Add New School Modal/Page** — Asosiy ma'lumotlar (ism, email, tel) + Subdomain + Tarif select + Trial muddati + Modullar + Gender ajratish + Birinchi admin (ism+email+parol). API: `POST /api/platform/schools` | 3h |
 
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 13.2 completed
-- **Task Estimate**: 10h
+---
 
-| Subtask ID | Work item                                 | Owner        | Estimate | Dependency | Acceptance                                                                                                          |
-| ---------- | ----------------------------------------- | ------------ | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------- |
-| 13.3.1     | Attendance marked -> notify parent        | Backend Lead | 2h       | 13.2.5     | Target outcome: Attendance marked -> notify parent; verification: lint/typecheck pass; tests when applicable        |
-| 13.3.2     | New grade -> notify student + parent      | Backend Lead | 2h       | 13.3.1     | Target outcome: New grade -> notify student + parent; verification: lint/typecheck pass; tests when applicable      |
-| 13.3.3     | New assignment -> notify students         | Backend Lead | 2h       | 13.3.2     | Target outcome: New assignment -> notify students; verification: lint/typecheck pass; tests when applicable         |
-| 13.3.4     | New notice -> notify target role          | Backend Lead | 2h       | 13.3.3     | Target outcome: New notice -> notify target role; verification: lint/typecheck pass; tests when applicable          |
-| 13.3.5     | Payment received -> notify admin + parent | Backend Lead | 2h       | 13.3.4     | Target outcome: Payment received -> notify admin + parent; verification: lint/typecheck pass; tests when applicable |
+### Task 13.4: Platform Settings Page
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 13.4.1 | **Settings tabs** — Profil / Billing / Email Templates / Bildirishnomalar / Domain / API Keys / Tariflar / Xavfsizlik | 1h |
+| 13.4.2 | **PricingPlansTab** — 4 tarif jadvali: Free ($0) / Basic ($50/m) / Premium ($150/m) / Enterprise ($400/m) — narx, limit, feature list, edit. API: `GET /api/platform/plans`, `PATCH /api/platform/plans/:id` | 2.5h |
+| 13.4.3 | **APIKeysTab** — aktif API kalitlar ro'yxati, yangi kalit yaratish, eskilarini o'chirish | 1.5h |
+
+---
 
 ### FAZA 13 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+1. Platform admin layout + auth ishlaydi.
+2. Dashboard widgetlar ishlaydi.
+3. Schools CRUD ishlaydi.
 
 ---
 
-## FAZA 14: AI INTEGRATION
+## FAZA 14 — talimy.space Landing Page
 
-**Maqsad**: Claude API bilan AI xususiyatlar
-**Phase Owner (default)**: Backend Lead
-**Entry Dependency**: FAZA 13 exit gate
+> Route: `talimy.space/`
+> File: `apps/web/src/app/(marketing)/page.tsx`
+> Dizayn: zamonaviy SaaS landing (Navy/Pink/Sky brand colors)
 
-### Task 14.1: AI Service
+### Task 14.1: Marketing Layout
 
-- **Task Owner**: Backend Lead
-- **Task Dependency**: FAZA 14 entry gate
-- **Task Estimate**: 7h
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 14.1.1 | **MarketingLayout** — transparent nav header, footer, no sidebar. `apps/web/src/app/(marketing)/layout.tsx` | 1h |
+| 14.1.2 | **Navbar** — Logo (Talimy), nav links (Features, Pricing, About, Contact), [Kirish] + [Bepul boshlash] CTA buttons | 1.5h |
+| 14.1.3 | **Footer** — Logo, links (Privacy Policy, Terms), social icons, copyright | 1h |
 
-| Subtask ID | Work item                                            | Owner        | Estimate | Dependency         | Acceptance                                                                                                                     |
-| ---------- | ---------------------------------------------------- | ------------ | -------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
-| 14.1.1     | Claude API client setup (Anthropic SDK)              | Backend Lead | 2h       | FAZA 14 entry gate | Target outcome: Claude API client setup (Anthropic SDK); verification: lint/typecheck pass; tests when applicable              |
-| 14.1.2     | Prompt templates (student advice, report generation) | Backend Lead | 3h       | 14.1.1             | Target outcome: Prompt templates (student advice, report generation); verification: lint/typecheck pass; tests when applicable |
-| 14.1.3     | Token usage tracking & limits                        | Backend Lead | 2h       | 14.1.2             | Target outcome: Token usage tracking & limits; verification: lint/typecheck pass; tests when applicable                        |
+---
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+### Task 14.2: Landing Page Sections
 
-### Task 14.2: Student AI Insights
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 14.2.1 | **HeroSection** — sarlavha (bold, large: "O'zbek Maktablari Uchun Zamonaviy Boshqaruv Tizimi"), tavsif, [Bepul Boshlash] (pink) + [Demo Ko'rish] (ghost) CTA, hero illustration/mockup | 3h |
+| 14.2.2 | **StatsSection** — 4 ta katta son: Maktablar / O'quvchilar / O'qituvchilar / Shaharlar | 1h |
+| 14.2.3 | **FeaturesGrid** — 6 feature card: Admin Dashboard, O'qituvchi Boshqaruvi, O'quvchi Profili, Davomat (Real-time), Moliya, AI Maslahat — icon, sarlavha, tavsif | 2.5h |
+| 14.2.4 | **DashboardPreviewSection** — browser mockup ichida dashboard screenshot/animation, features list (✅ checkmarks) | 2h |
+| 14.2.5 | **RolesSection** — 4 tab: Admin / O'qituvchi / O'quvchi / Ota-ona — har birining dashboard preview card + feature bullets | 3h |
+| 14.2.6 | **PricingSection** — 4 tarif card: Free / Basic / Premium / Enterprise — narx, feature list, [Boshlash] CTA, "Eng Mashhur" badge (Premium). Dynamic pricing from API: `GET /api/platform/plans/public` | 3h |
+| 14.2.7 | **TestimonialsSection** — 3 ta maktab direktoridan iqtibos, avatar, maktab nomi | 1.5h |
+| 14.2.8 | **CTASection** — "Bugun Boshlang" banner, email input + [Bepul Sinab Ko'ring] tugma, "Kredit karta talab qilinmaydi" | 1.5h |
+| 14.2.9 | SEO metadata: `<title>`, `<description>`, OpenGraph, JSON-LD schema | 1h |
+| 14.2.10 | Responsive: mobile (1 ustun), tablet (2 ustun), desktop (3 ustun). Animatsiyalar: scroll-based fade-in (CSS/Framer Motion) | 2h |
 
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 14.1 completed
-- **Task Estimate**: 8h
+---
 
-| Subtask ID | Work item                                             | Owner        | Estimate | Dependency | Acceptance                                                                                                                      |
-| ---------- | ----------------------------------------------------- | ------------ | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| 14.2.1     | AI insight generation based on grades/attendance data | Backend Lead | 2h       | 14.1.3     | Target outcome: AI insight generation based on grades/attendance data; verification: lint/typecheck pass; tests when applicable |
-| 14.2.2     | AI insight card on student dashboard                  | Backend Lead | 4h       | 14.2.1     | Target outcome: AI insight card on student dashboard; verification: lint/typecheck pass; tests when applicable                  |
-| 14.2.3     | Chat interface for students (motivational Q&A)        | Backend Lead | 2h       | 14.2.2     | Target outcome: Chat interface for students (motivational Q&A); verification: lint/typecheck pass; tests when applicable        |
+### Task 14.3: Other Public Pages
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 14.3.1 | **About page** `/about` — Talimy haqida, jamoa, vazifa | 1.5h |
+| 14.3.2 | **Contact page** `/contact` — Forma: ism, email, xabar, [Yuborish]. API: `POST /api/contact` | 1.5h |
+| 14.3.3 | **Privacy Policy + Terms** `/privacy`, `/terms` — statik matn sahifalari | 1h |
 
-### Task 14.3: Admin AI Reports
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 14.2 completed
-- **Task Estimate**: 9h
-
-| Subtask ID | Work item                                                 | Owner        | Estimate | Dependency | Acceptance                                                                                                                          |
-| ---------- | --------------------------------------------------------- | ------------ | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| 14.3.1     | AI-powered report generation (school performance, trends) | Backend Lead | 6h       | 14.2.3     | Target outcome: AI-powered report generation (school performance, trends); verification: lint/typecheck pass; tests when applicable |
-| 14.3.2     | Report templates (attendance, grades, finance)            | Backend Lead | 3h       | 14.3.1     | Target outcome: Report templates (attendance, grades, finance); verification: lint/typecheck pass; tests when applicable            |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 14.4: Parent Telegram Bot (Optional)
-
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 14.3 completed
-- **Task Estimate**: 9h
-
-| Subtask ID | Work item                 | Owner        | Estimate | Dependency | Acceptance                                                                                          |
-| ---------- | ------------------------- | ------------ | -------- | ---------- | --------------------------------------------------------------------------------------------------- |
-| 14.4.1     | Telegram bot setup        | Backend Lead | 2h       | 14.3.2     | Target outcome: Telegram bot setup; verification: lint/typecheck pass; tests when applicable        |
-| 14.4.2     | Grade alert (< 50%)       | Backend Lead | 2h       | 14.4.1     | Target outcome: Grade alert (< 50%); verification: lint/typecheck pass; tests when applicable       |
-| 14.4.3     | Attendance alert (absent) | Backend Lead | 2h       | 14.4.2     | Target outcome: Attendance alert (absent); verification: lint/typecheck pass; tests when applicable |
-| 14.4.4     | Webhook handler           | Backend Lead | 3h       | 14.4.3     | Target outcome: Webhook handler; verification: lint/typecheck pass; tests when applicable           |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
 ### FAZA 14 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+1. Landing page barcha seksiyalar ishlaydi.
+2. SEO metadata to'g'ri.
+3. Responsive (mobile, tablet, desktop).
 
 ---
 
-## FAZA 15: SEO, PERFORMANCE, SECURITY
+## FAZA 15 — Real-time Infrastructure (WebSocket Integration in Pages)
 
-**Maqsad**: Production-ready optimization
-**Phase Owner (default)**: Backend Lead
-**Entry Dependency**: FAZA 14 exit gate
+### Task 15.1: Real-time Infrastructure Setup
 
-### Task 15.1: SEO
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 15.1.1 | Socket.IO `SocketProvider` (`apps/web/src/providers/socket-provider.tsx`) — client connection, reconnect logic, auth token forwarding | 2h |
+| 15.1.2 | `useSocket` hook — event subscribe/unsubscribe, room join/leave | 1.5h |
 
-- **Task Owner**: Frontend Lead
-- **Task Dependency**: FAZA 15 entry gate
-- **Task Estimate**: 11h
+### Task 15.2: Notification System
 
-| Subtask ID | Work item                                              | Owner         | Estimate | Dependency         | Acceptance                                                                                                                       |
-| ---------- | ------------------------------------------------------ | ------------- | -------- | ------------------ | -------------------------------------------------------------------------------------------------------------------------------- |
-| 15.1.1     | Dynamic meta tags (generateMetadata for each page)     | Frontend Lead | 3h       | FAZA 15 entry gate | Target outcome: Dynamic meta tags (generateMetadata for each page); verification: lint/typecheck pass; tests when applicable     |
-| 15.1.2     | JSON-LD structured data (Organization, WebApplication) | Backend Lead  | 2h       | 15.1.1             | Target outcome: JSON-LD structured data (Organization, WebApplication); verification: lint/typecheck pass; tests when applicable |
-| 15.1.3     | sitemap.xml (dynamic generation)                       | Frontend Lead | 2h       | 15.1.2             | Target outcome: sitemap.xml (dynamic generation); verification: lint/typecheck pass; tests when applicable                       |
-| 15.1.4     | robots.txt                                             | Frontend Lead | 2h       | 15.1.3             | Target outcome: robots.txt; verification: lint/typecheck pass; tests when applicable                                             |
-| 15.1.5     | Open Graph images                                      | Frontend Lead | 2h       | 15.1.4             | Target outcome: Open Graph images; verification: lint/typecheck pass; tests when applicable                                      |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 15.2.1 | **NotificationBell** — real-time unread badge update, dropdown list (type icon + matn + vaqt + o'qilmagan indicator), "Barchasini o'qildi" tugma. Socket event: `notification:new` | 3h |
+| 15.2.2 | **Toast notifications** — real-time toastlar (sonner), har xil tur: info/success/warning/error | 1h |
+| 15.2.3 | **Notification store** (Zustand) — notifications[], unreadCount, addNotification, markAllRead | 1h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+### Task 15.3: Real-time Events in Pages
 
-### Task 15.2: Performance
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 15.3.1 | Teacher attendance marking → WebSocket broadcast → admin attendance grid real-time yangilanishi. Room: `attendance:classId:date` | 3h |
+| 15.3.2 | New notice posted → target audience real-time notification | 1.5h |
+| 15.3.3 | Messages real-time: `message:new` event → MessagesPreview yangilanishi | 2h |
 
-- **Task Owner**: Backend Lead
-- **Task Dependency**: Task 15.1 completed
-- **Task Estimate**: 24h
-
-| Subtask ID | Work item                                           | Owner        | Estimate | Dependency | Acceptance                                                                                                                    |
-| ---------- | --------------------------------------------------- | ------------ | -------- | ---------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| 15.2.1     | Partial Prerendering (Next.js 16)                   | Backend Lead | 2h       | 15.1.5     | Target outcome: Partial Prerendering (Next.js 16); verification: lint/typecheck pass; tests when applicable                   |
-| 15.2.2     | Image optimization (next/image, WebP, lazy loading) | Backend Lead | 6h       | 15.2.1     | Target outcome: Image optimization (next/image, WebP, lazy loading); verification: lint/typecheck pass; tests when applicable |
-| 15.2.3     | Code splitting (dynamic imports)                    | Backend Lead | 2h       | 15.2.2     | Target outcome: Code splitting (dynamic imports); verification: lint/typecheck pass; tests when applicable                    |
-| 15.2.4     | Redis caching strategy                              | Backend Lead | 2h       | 15.2.3     | Target outcome: Redis caching strategy; verification: lint/typecheck pass; tests when applicable                              |
-| 15.2.5     | Database query optimization (indexes, pagination)   | Backend Lead | 6h       | 15.2.4     | Target outcome: Database query optimization (indexes, pagination); verification: lint/typecheck pass; tests when applicable   |
-| 15.2.6     | Bundle analysis + optimization                      | Backend Lead | 6h       | 15.2.5     | Target outcome: Bundle analysis + optimization; verification: lint/typecheck pass; tests when applicable                      |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 15.3: Security
-
-- **Task Owner**: Security Lead
-- **Task Dependency**: Task 15.2 completed
-- **Task Estimate**: 17h
-
-| Subtask ID | Work item                                                | Owner         | Estimate | Dependency | Acceptance                                                                                                                         |
-| ---------- | -------------------------------------------------------- | ------------- | -------- | ---------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| 15.3.1     | CORS configuration                                       | Security Lead | 3h       | 15.2.6     | Target outcome: CORS configuration; verification: lint/typecheck pass; tests when applicable                                       |
-| 15.3.2     | CSP headers                                              | Security Lead | 2h       | 15.3.1     | Target outcome: CSP headers; verification: lint/typecheck pass; tests when applicable                                              |
-| 15.3.3     | Rate limiting (auth endpoints: 5/min, API: 100/min)      | Security Lead | 4h       | 15.3.2     | Target outcome: Rate limiting (auth endpoints: 5/min, API: 100/min); verification: lint/typecheck pass; tests when applicable      |
-| 15.3.4     | Input sanitization (Zod on all inputs)                   | Security Lead | 2h       | 15.3.3     | Target outcome: Input sanitization (Zod on all inputs); verification: lint/typecheck pass; tests when applicable                   |
-| 15.3.5     | SQL injection prevention (Drizzle parameterized queries) | Security Lead | 2h       | 15.3.4     | Target outcome: SQL injection prevention (Drizzle parameterized queries); verification: lint/typecheck pass; tests when applicable |
-| 15.3.6     | XSS prevention                                           | Security Lead | 2h       | 15.3.5     | Target outcome: XSS prevention; verification: lint/typecheck pass; tests when applicable                                           |
-| 15.3.7     | Secure HTTP headers (Helmet)                             | Security Lead | 2h       | 15.3.6     | Target outcome: Secure HTTP headers (Helmet); verification: lint/typecheck pass; tests when applicable                             |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
 ### FAZA 15 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+1. WebSocket connection ishlaydi.
+2. Notification bell real-time ishlaydi.
+3. Attendance real-time belgilash ishlaydi.
 
 ---
 
-## FAZA 16: TESTING
+## FAZA 16 — AI Integration
 
-**Maqsad**: Test coverage
-**Phase Owner (default)**: QA Lead
-**Entry Dependency**: FAZA 15 exit gate
+### Task 16.1: Student Dashboard AI Advice
 
-### Task 16.1: Backend Tests
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 16.1.1 | Backend: `GET /api/students/me/ai-advice` → Claude API (Sonnet) → motivatsiya generatsiya → 24h Redis cache | 3h |
+| 16.1.2 | Frontend: WelcomeCard'da AI advice matn loading skeleton → matn ko'rinishi | 1h |
 
-- **Task Owner**: QA Lead
-- **Task Dependency**: FAZA 16 entry gate
-- **Task Estimate**: 16h
+### Task 16.2: Admin AI Reports
 
-| Subtask ID | Work item                                                           | Owner   | Estimate | Dependency         | Acceptance                                                                                                                                    |
-| ---------- | ------------------------------------------------------------------- | ------- | -------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| 16.1.1     | Unit tests (services: auth, teachers, students, attendance, grades) | QA Lead | 4h       | FAZA 16 entry gate | Target outcome: Unit tests (services: auth, teachers, students, attendance, grades); verification: lint/typecheck pass; tests when applicable |
-| 16.1.2     | Integration tests (controllers + database)                          | QA Lead | 6h       | 16.1.1             | Target outcome: Integration tests (controllers + database); verification: lint/typecheck pass; tests when applicable                          |
-| 16.1.3     | E2E tests (full API flow)                                           | QA Lead | 6h       | 16.1.2             | Target outcome: E2E tests (full API flow); verification: lint/typecheck pass; tests when applicable                                           |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 16.2.1 | **AIReportModal** (admin dashboard) — "AI Hisobot Generatsiya" button, modal: hisobot turi select (Attendance/Grades/Finance), [Generatsiya qilish] → loading → markdown taqdimot. API: `POST /api/admin/ai-reports` | 3h |
+| 16.2.2 | Backend: BullMQ job → Claude API → report saqlash → notify admin | 3h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+### Task 16.3: Parent Telegram Bot
 
-### Task 16.2: Frontend Tests
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 16.3.1 | Backend Telegram bot setup (Telegraf library), webhook, `/start` command | 3h |
+| 16.3.2 | BullMQ trigger: o'quvchi haftalik bahosi 50% < → parent telegram username → xabar yuborish. API: `POST /api/parents/:id/telegram-subscribe` | 3h |
 
-- **Task Owner**: QA Lead
-- **Task Dependency**: Task 16.1 completed
-- **Task Estimate**: 11h
-
-| Subtask ID | Work item                                  | Owner   | Estimate | Dependency | Acceptance                                                                                                           |
-| ---------- | ------------------------------------------ | ------- | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------- |
-| 16.2.1     | Component tests (Vitest + Testing Library) | QA Lead | 2h       | 16.1.3     | Target outcome: Component tests (Vitest + Testing Library); verification: lint/typecheck pass; tests when applicable |
-| 16.2.2     | Hook tests                                 | QA Lead | 3h       | 16.2.1     | Target outcome: Hook tests; verification: lint/typecheck pass; tests when applicable                                 |
-| 16.2.3     | E2E tests (Playwright - login, CRUD flows) | QA Lead | 6h       | 16.2.2     | Target outcome: E2E tests (Playwright - login, CRUD flows); verification: lint/typecheck pass; tests when applicable |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
 ### FAZA 16 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+1. Student AI advice ishlaydi (24h cache).
+2. Admin AI report generatsiya ishlaydi.
+3. Parent Telegram bot alert ishlaydi.
 
 ---
 
-## FAZA 17: CI/CD VA DEPLOYMENT
+## FAZA 17 — Testing
 
-**Maqsad**: Production deployment pipeline
-**Phase Owner (default)**: DevOps Lead
-**Entry Dependency**: FAZA 16 exit gate
+### Task 17.1: Unit Tests
 
-### Task 17.1: GitHub Actions
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 17.1.1 | UI komponentlar unit testlari (Vitest + Testing Library): StatsCard, ChartWrapper, DataTable, NoticeCard, TeacherCard | 4h |
+| 17.1.2 | Zustand stores testlari: auth-store, dashboard-store, notification-store | 2h |
+| 17.1.3 | Utility functions testlari | 2h |
 
-- **Task Owner**: DevOps Lead
-- **Task Dependency**: FAZA 17 entry gate
-- **Task Estimate**: 6h
+### Task 17.2: Integration Tests
 
-| Subtask ID | Work item                                                          | Owner       | Estimate | Dependency         | Acceptance                                                                                                                      |
-| ---------- | ------------------------------------------------------------------ | ----------- | -------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| 17.1.1     | CI pipeline (lint, typecheck, test on PR)                          | DevOps Lead | 2h       | FAZA 17 entry gate | Target outcome: CI pipeline (lint, typecheck, test on PR); verification: workflow yaml + successful GitHub Actions run link     |
-| 17.1.2     | CD web (GHCR image build/push + Dokploy deploy hook on main merge) | DevOps Lead | 2h       | 17.1.1             | Target outcome: GHCR `web` image push + Dokploy web deploy trigger; verification: workflow yaml + GHCR tag + Dokploy deploy log |
-| 17.1.3     | CD api (GHCR image build/push + Dokploy deploy hook on main merge) | DevOps Lead | 2h       | 17.1.2             | Target outcome: GHCR `api` image push + Dokploy api deploy trigger; verification: workflow yaml + GHCR tag + Dokploy deploy log |
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 17.2.1 | Auth flow: login → session → redirect | 3h |
+| 17.2.2 | Admin dashboard data fetch (mocked API) | 2h |
+| 17.2.3 | Student form submission (add student) | 2h |
 
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+### Task 17.3: E2E Tests (Playwright)
 
-### Task 17.2: Deployment Config
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 17.3.1 | Login + redirect flow | 2h |
+| 17.3.2 | Admin dashboard ko'rish | 2h |
+| 17.3.3 | Teacher attendance marking | 3h |
+| 17.3.4 | Student assignment topshirish | 2h |
 
-- **Task Owner**: DevOps Lead
-- **Task Dependency**: Task 17.1 completed
-- **Task Estimate**: 12h
-
-| Subtask ID | Work item                                                                                                    | Owner       | Estimate | Dependency | Acceptance                                                                                                                                                                                                                                   |
-| ---------- | ------------------------------------------------------------------------------------------------------------ | ----------- | -------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 17.2.1     | Dokploy web/platform services config (Docker Provider, GHCR images, domains, env, deploy hooks)              | DevOps Lead | 3h       | 17.1.3     | Target outcome: Dokploy web/platform services pull GHCR images and deploy via hooks; verification: service config screenshot/export + domain resolve check                                                                                   |
-| 17.2.2     | Dokploy api/worker services config (Docker Provider, GHCR images, SSL/proxy, health/logging)                 | DevOps Lead | 3h       | 17.2.1     | Target outcome: Dokploy api/worker services pull GHCR images with correct env/commands and health checks; verification: Dokploy service config + `/health` curl output + worker logs                                                         |
-| 17.2.3     | Cloudflare DNS setup (talimy.space, \*.talimy.space wildcard)                                                | DevOps Lead | 2h       | 17.2.2     | Target outcome: Cloudflare DNS setup (talimy.space, \*.talimy.space wildcard); verification: DNS record list + `dig/nslookup` result                                                                                                         |
-| 17.2.4     | Supabase self-hosted PostgreSQL production setup                                                             | DevOps Lead | 2h       | 17.2.3     | Target outcome: Supabase self-hosted PostgreSQL production setup; verification: connection test output + backup/restore runbook entry                                                                                                        |
-| 17.2.5     | Self-hosted Redis production setup (rediss:// + WireGuard ACL)                                               | DevOps Lead | 2h       | 17.2.4     | Target outcome: Self-hosted Redis production setup (rediss:// + WireGuard ACL); verification: `rediss://` connectivity check + ACL policy snapshot                                                                                           |
-| 17.2.6     | Dedicated queue worker deployment config (separate service/process from API, scaling policy, health/logging) | DevOps Lead | 3h       | 17.2.5     | Target outcome: BullMQ workers run as separate service/process (not bundled with every API replica), with restart policy and logs; verification: worker service config + job processing smoke + no duplicate consumer behavior in scale test |
-
-#### Task 17.2 Implementation Runbook: Dokploy (talimy.space)
-
-1. Dokploy'da yangi `Project` oching: `talimy`.
-2. GitHub Actions + GHCR + Dokploy deploy hook modelini sozlang: `cd-web.yml`, `cd-platform.yml`, `cd-api.yml` workflow'lari GHCR'ga image push qiladi va Dokploy deploy hook'larini trigger qiladi (Dokploy service'lar Docker Provider orqali image pull qiladi).
-3. Dokploy registry credential qo'shing: `ghcr.io` (`username`: GitHub username, `password`: GitHub PAT with package read scope).
-4. `Service 1` yarating: `talimy-web` (Dokploy `Application` + `Docker Provider`).
-5. `talimy-web` image: `ghcr.io/<owner>/<repo>/web:<sha-tag|latest>`; `Run Command` bo'sh qoldiring (image `CMD` to'g'ri bo'lsa).
-6. `talimy-web` domain mapping qo'shing: `talimy.space`, `www.talimy.space`, `*.talimy.space` (school subdomainlar uchun wildcard).
-7. `talimy-web` env kiriting (exact file scope bo'yicha): `apps/web/.env.local` dagi `NEXT_PUBLIC_*` qiymatlari (`NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_API_URL`) + `NODE_ENV=production`, `PORT=3000`.
-8. `Service 2` yarating (split deployment bo'lsa): `talimy-platform` (Dokploy `Application` + `Docker Provider`).
-9. `talimy-platform` image: `ghcr.io/<owner>/<repo>/platform:<sha-tag|latest>`; domain: `platform.talimy.space`; env: `apps/web/.env.local` dagi `NEXT_PUBLIC_*` qiymatlari + `NODE_ENV=production`, `PORT=3000`. Eslatma: bu image hozir `apps/web` Next.js app'ini ishga tushiradi va `(platform)` route group'larni domain/proxy orqali serve qiladi.
-10. `Service 3` yarating: `talimy-api` (NestJS, Dokploy `Application` + `Docker Provider`).
-11. `talimy-api` image: `ghcr.io/<owner>/<repo>/api:<sha-tag|latest>`; domain mapping: `api.talimy.space`.
-12. `talimy-api` env kiriting (exact file scope bo'yicha): `apps/api/.env` dagi backend envlar (`DATABASE_URL`, `REDIS_URL`, `JWT_*`, `R2_*`, `RESEND_*`, `TWILIO_*`, `ANTHROPIC_API_KEY`/`OPENROUTER_*`, `SENTRY_DSN`, `AXIOM_TOKEN`, `PERMIFY_*`) + `QUEUE_WORKERS_ENABLED=false`.
-13. `Service 4` yarating: `talimy-worker` (BullMQ worker, Dokploy `Application` + `Docker Provider`, odatda `api` image reuse).
-14. `talimy-worker` image: `ghcr.io/<owner>/<repo>/api:<sha-tag|latest>`; domain kerak emas; `Run Command`: `bun run --cwd apps/api start:worker:prod`; env: `apps/api/.env` dagi backend envlar + `QUEUE_WORKERS_ENABLED=true`.
-15. Dokploy reverse-proxy/SSL ni yoqing (Let's Encrypt), wildcard/API/platform domain sertifikatlari aktivligini tekshiring.
-16. Health check sozlang: web (`/`), platform (`/platform` yoki `/platform/dashboard`), api (`/health`), worker (log-based smoke + queue processing).
-17. Deploy qiling va smoke-test bajaring:
-    `https://talimy.space`, `https://www.talimy.space`, `https://platform.talimy.space`, `https://[school-slug].talimy.space/admin`, `https://api.talimy.space/health`.
-18. Post-deploy verification:
-    `proxy.ts` subdomain routing, login redirect, API connectivity, Supabase/Redis/Permify ulanish loglari, worker job processing.
-19. Rollback qoidasini yozing:
-    Dokploy previous successful release ga qaytish + DNS/cert holatini qayta tekshirish.
-
-#### Task 17.2.1 Production Stability Guardrails (2026-02-21 lessons)
-
-1. GHCR image reference har doim lowercase bo'lsin (`${IMAGE_REF,,}`), aks holda `invalid reference format` xatosi chiqadi.
-2. `type=sha,prefix=sha-` ishlatilganda verify/pull uchun short SHA (`${GITHUB_SHA::7}`) bilan tag ishlating.
-3. Dockerfile runtime command va workflow verify check bir xil sintaksisda bo'lsin:
-   - Web: `bun run --cwd apps/web start`
-   - Platform: `bun run --cwd apps/web start`
-   - API: `bun run --cwd apps/api start:prod`
-   - Worker (API image reuse bo'lsa): `bun run --cwd apps/api start:worker:prod`
-4. Build stage artifact check majburiy:
-   - Web: `.next/BUILD_ID`
-   - API: `dist/main(.js)`
-5. Dokploy service'da image `CMD` to'g'ri bo'lsa `Run Command` bo'sh qoldiriladi; noto'g'ri override (`bun run`) restart loop beradi. Istisno: `talimy-worker` kabi `api` image'ni boshqa entry command bilan ishlatadigan service'da faqat kerakli aniq command override kiriting.
-6. API global `ValidationPipe` ishlatilsa `class-validator` va `class-transformer` runtime dependencies bo'lishi shart.
-7. Sentry test endpoint (`/api/debug-sentry`) faqat verification uchun; event tushganidan keyin production'dan olib tashlanadi.
-8. Post-deploy smoke-check minimal ro'yxati:
-   - `https://talimy.space`
-   - `https://platform.talimy.space`
-   - `https://api.talimy.space/api/health`
-9. Domain UX guardrail: `platform.talimy.space` va `talimy.space` landing matni ajralib turishi kerak.
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
-
-### Task 17.3: Monitoring
-
-- **Task Owner**: DevOps Lead
-- **Task Dependency**: Task 17.2 completed
-- **Task Estimate**: 12h
-
-| Subtask ID | Work item                                        | Owner       | Estimate | Dependency | Acceptance                                                                                                                      |
-| ---------- | ------------------------------------------------ | ----------- | -------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| 17.3.1     | Sentry setup (frontend + backend error tracking) | DevOps Lead | 2h       | 17.2.5     | Target outcome: Sentry setup (frontend + backend error tracking); verification: DSN wiring paths + test event visible in Sentry |
-| 17.3.2     | Axiom setup (structured logging)                 | DevOps Lead | 2h       | 17.3.1     | Target outcome: Axiom setup (structured logging); verification: sample structured log arrives in Axiom dataset                  |
-| 17.3.3     | Health check endpoints                           | DevOps Lead | 2h       | 17.3.2     | Target outcome: Health check endpoints; verification: `/health` and dependency checks return expected JSON                      |
-| 17.3.4     | Uptime monitoring                                | DevOps Lead | 6h       | 17.3.3     | Target outcome: Uptime monitoring; verification: monitor config + alert channel test notification                               |
-
-- **Task Exit Criteria**: all subtasks done + Global DoD satisfied.
+---
 
 ### FAZA 17 Exit Gate
-
-1. All task exit criteria in this phase are passed.
-2. No blocker/high-severity defect remains open for this phase scope.
-3. Artifacts (code/tests/docs/config) are committed and review-ready.
+1. Unit/integration testlar pass.
+2. E2E critical paths pass.
 
 ---
 
-## 5. Weekly reporting template
+## FAZA 18 — SEO + Performance
 
-1. Completed subtasks (by ID)
-2. Blocked subtasks + blocker reason + owner
-3. Risks discovered and mitigation updates
-4. Next-week commitment (IDs)
+### Task 18.1: SEO
 
-Total subtasks preserved from source: 436
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 18.1.1 | `generateMetadata` barcha public sahifalarda: title, description, OpenGraph, canonical URL | 2h |
+| 18.1.2 | `sitemap.xml` generatsiya (Next.js `sitemap.ts`) | 1h |
+| 18.1.3 | `robots.txt` — public/private routes | 0.5h |
 
-This is the canonical detailed 0->100 execution plan.
+### Task 18.2: Performance
+
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 18.2.1 | Next.js Image optimization — barcha avatar/rasm Next.js `<Image>` ga o'tkazish, `blur` placeholder | 2h |
+| 18.2.2 | Code splitting — heavy componentlar (`dynamic(() => import(...), { ssr: false })`): chart componentlar, modal | 2h |
+| 18.2.3 | Bundle analysis (`@next/bundle-analyzer`), >100KB importlar optimallashtirish | 2h |
+| 18.2.4 | Lighthouse audit ≥ 90 (Performance, Accessibility, SEO, Best Practices) | 3h |
+
+---
+
+### FAZA 18 Exit Gate
+1. Core Web Vitals: LCP < 2.5s, FID < 100ms, CLS < 0.1.
+2. Lighthouse performance ≥ 90.
+
+---
+
+## FAZA 19 — CI/CD + Production Deploy
+
+### Task 19.1: GitHub Actions CI
+
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 19.1.1 | `ci.yml` — lint, typecheck, unit tests, build (web + api) | 3h |
+| 19.1.2 | `deploy.yml` — Docker build (web/api/worker), GHCR push (lowercase tag), Dokploy deploy hook | 3h |
+| 19.1.3 | Build artifact check: web `.next/BUILD_ID`, api `dist/main.js` | 1h |
+
+### Task 19.2: Dokploy Production Setup
+
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 19.2.1 | 4 servis yaratish: `talimy-web`, `talimy-api`, `talimy-worker`, ixtiyoriy `talimy-platform` | 3h |
+| 19.2.2 | Domain mapping: `talimy.space`, `www.talimy.space`, `*.talimy.space`, `api.talimy.space`, `platform.talimy.space` | 1.5h |
+| 19.2.3 | SSL/TLS (Let's Encrypt), wildcard + API + platform sertifikatlari | 1h |
+| 19.2.4 | Env vars kiritish: web (`NEXT_PUBLIC_*`), api (DATABASE_URL, REDIS_URL, JWT, R2, RESEND, TWILIO, OPENROUTER, SENTRY, AXIOM, PERMIFY) | 1h |
+
+### Task 19.3: Monitoring
+
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 19.3.1 | Sentry frontend + backend (DSN wiring, test event) | 2h |
+| 19.3.2 | Axiom structured logging (sample log → Axiom dataset) | 2h |
+| 19.3.3 | Health check endpoints: `/health` (api), `/` (web) | 1h |
+| 19.3.4 | Uptime monitoring (BetterUptime yoki Dokploy built-in) | 2h |
+
+### Task 19.4: Production Smoke Tests + Rollback
+
+| Subtask | Work Item | Estimate |
+|---------|-----------|----------|
+| 19.4.1 | Smoke test script: `https://talimy.space`, `https://platform.talimy.space`, `https://api.talimy.space/health`, `https://[school].talimy.space/login` | 2h |
+| 19.4.2 | Rollback runbook: previous release → GHCR sha-tag re-deploy + DNS/SSL re-check | 1h |
+
+---
+
+### FAZA 19 Exit Gate
+1. CI/CD pipeline ishlaydi.
+2. Production deploy + smoke tests pass.
+3. Monitoring aktiv (Sentry + Axiom).
+4. Rollback runbook tekshirildi.
+
+---
+
+## 6. Implementation Notes (muhim qoidalar)
+
+### UI/UX
+- **Brand colors:** Navy `#0F1B2D`, Pink `#E879A0`, Sky `#7DD3FC`, White `#FFFFFF`.
+- Har bir sahifada `<Skeleton>` loading state bo'lishi shart — API response kelmaguncha.
+- Mobile responsive: `sm:` → `md:` → `lg:` → `xl:` breakpointlar.
+- Sidebar: `lg:` da visible, kichikda hamburger menu.
+- `<Image>` next/image component bilan, blur placeholder.
+
+### Kod Sifati
+- Komponent faqat bitta sahifada ishlatiladigan bo'lsa → shu sahifa papkasida (`components/` subfolder).
+- 2+ sahifada ishlatiladigan komponent → `apps/web/src/components/shared/` yoki `packages/ui/`.
+- Har bir page component server component (SSR) yoki client component aniq belgilansin (`"use client"` directive).
+- TanStack Query `queryKey` konvensiyasi: `["entity", "action", params]` — masalan: `["admin", "dashboard", "stats"]`.
+
+### API Wiring
+- Barcha API call'lar `apps/web/src/lib/api.ts` orqali.
+- tRPC routers mavjud bo'lsa — tRPC, aks holda REST `fetch`.
+- Error boundary har bir page uchun.
+
+### Permify / Gender Scope
+- Har bir API request'da `genderScope` session'dan o'qiladi va query parameter sifatida yuboriladi.
+- Backend Permify PDP external check — local filter emas.
+
+### Performance
+- `dynamic(() => import(...))` barcha chart komponentlar uchun (Recharts heavy).
+- `refetchInterval: 60000` dashboard widgetlar uchun.
+
+---
+
+## 7. Weekly Reporting Template
+
+1. Yakunlangan subtasklar (ID bo'yicha)
+2. Bloklangan subtasklar + sabab + owner
+3. Yangi xatarlar va mitigation
+4. Keyingi hafta committment (ID'lar)
+
+---
+
+*Total fazalar: 19 | Taxminiy umumiy effort: ~500h*
+*Canonical execution plan v4 — talimy.space*
+
+
+## 8. Merge Notes (v5)
+
+1. `docReja/old_Reja.md` was used as the detailed governance/tracking baseline.
+2. Current `docReja/Reja.md` page-first execution structure was retained for later frontend phases.
+3. FAZA 4 contextual component work is no longer described as `SKIPPED`; it is explicitly deferred into page implementation.
+4. This file is now the canonical execution plan.

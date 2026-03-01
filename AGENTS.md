@@ -704,6 +704,9 @@ bun run test:e2e               # Playwright E2E tests
 ### Before Writing Code
 
 1. **Read** `AGENTS.md` + `docReja/Documentation.html` + `docReja/Reja.md`
+   - Frontend page implementationda `docReja/Reja.md` primary execution/order source hisoblanadi.
+   - Agar joriy `docReja/Reja.md` sahifa ichidagi component/detail ma'lumotni yetarli bermasa, `docReja/old_Reja.md` dan component-level layout/content/detail reference sifatida foydalaniladi.
+   - Qoidasi: `Reja.md` = current execution order, `old_Reja.md` = legacy detailed component/page reference.
 2. **Search** existing codebase for similar patterns before creating new code
 3. **Plan** with a task list (max 5 subtasks per batch)
 
