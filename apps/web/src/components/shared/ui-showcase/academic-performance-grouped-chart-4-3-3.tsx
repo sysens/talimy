@@ -1,7 +1,10 @@
 "use client"
 
 import * as React from "react"
-import { MiniChart, MultipleBarChart, type MiniChartLegendItem, type MultipleBarChartSeries } from "@talimy/ui"
+import {
+  GroupedCappedProgressChart,
+  type GroupedCappedProgressChartSeries,
+} from "@talimy/ui"
 
 type GradeScore = 2 | 3 | 4 | 5
 type GradeDistribution = Record<GradeScore, number>
@@ -17,16 +20,25 @@ type StudentPerformancePeriod = "lastSemester" | "thisSemester"
 
 const MAX_GRADE_VALUE = 5
 
-const STUDENT_PERFORMANCE_SERIES: MultipleBarChartSeries[] = [
-  { barSize: 16, color: "var(--talimy-color-sky)", key: "grade7", label: "Grade 7" },
-  { barSize: 16, color: "var(--talimy-color-pink)", key: "grade8", label: "Grade 8" },
-  { barSize: 16, color: "var(--talimy-color-navy)", key: "grade9", label: "Grade 9" },
-]
-
-const STUDENT_PERFORMANCE_LEGEND: MiniChartLegendItem[] = [
-  { color: "var(--talimy-color-sky)", id: "grade7", label: "Grade 7" },
-  { color: "var(--talimy-color-pink)", id: "grade8", label: "Grade 8" },
-  { color: "var(--talimy-color-navy)", id: "grade9", label: "Grade 9" },
+const SERIES: GroupedCappedProgressChartSeries[] = [
+  {
+    accentColor: "#b3b3b3",
+    color: "#e7e7e7",
+    key: "grade7",
+    label: "Grade 7",
+  },
+  {
+    accentColor: "var(--talimy-color-navy)",
+    color: "var(--talimy-color-sky)",
+    key: "grade8",
+    label: "Grade 8",
+  },
+  {
+    accentColor: "#f4b7f1",
+    color: "#f8dcf7",
+    key: "grade9",
+    label: "Grade 9",
+  },
 ]
 
 const LAST_SEMESTER_SOURCE: StudentPerformanceSource[] = [
@@ -124,7 +136,7 @@ function calculateNormalizedPerformance(distribution: GradeDistribution) {
   return Number(((weightedScore / (totalStudents * MAX_GRADE_VALUE)) * 100).toFixed(1))
 }
 
-function buildPerformanceRows(data: StudentPerformanceSource[]) {
+function buildRows(data: StudentPerformanceSource[]) {
   return data.map((entry) => ({
     grade7: calculateNormalizedPerformance(entry.grade7),
     grade8: calculateNormalizedPerformance(entry.grade8),
@@ -133,23 +145,23 @@ function buildPerformanceRows(data: StudentPerformanceSource[]) {
   }))
 }
 
-export function MiniChartShowcase433() {
+export function AcademicPerformanceGroupedChartShowcase433() {
   const [period, setPeriod] = React.useState<StudentPerformancePeriod>("lastSemester")
 
-  const rows = React.useMemo(() => {
+  const data = React.useMemo(() => {
     const source = period === "lastSemester" ? LAST_SEMESTER_SOURCE : THIS_SEMESTER_SOURCE
-    return buildPerformanceRows(source)
+    return buildRows(source)
   }, [period])
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-muted-foreground">/admin/dashboard</h3>
+      <h3 className="text-sm font-semibold text-muted-foreground">/admin/students</h3>
 
       <div className="max-w-xl">
-        <MiniChart
-          chartClassName="min-h-[236px]"
+        <GroupedCappedProgressChart
+          data={data}
           filter={{
-            ariaLabel: "Student performance period",
+            ariaLabel: "Academic performance period",
             onValueChange: (value) => setPeriod(value as StudentPerformancePeriod),
             options: [
               { label: "Last Semester", value: "lastSemester" },
@@ -157,33 +169,13 @@ export function MiniChartShowcase433() {
             ],
             value: period,
           }}
-          legend={STUDENT_PERFORMANCE_LEGEND}
-          title="Student Performance"
-          yScale={{
-            values: ["100%", "75%", "50%", "25%", "0%"],
-          }}
-        >
-          <MultipleBarChart
-            barCategoryGap={0}
-            barGap={0}
-            chartClassName="h-[236px]"
-            data={rows}
-            hideFooter
-            hideHeader
-            hideTooltipLabel
-            margin={{ left: 0, right: 0, top: 4, bottom: 0 }}
-            series={STUDENT_PERFORMANCE_SERIES}
-            tooltipClassName="text-sm [&_.text-muted-foreground]:font-medium [&_.text-foreground]:text-sm [&_.text-foreground]:font-semibold"
-            valueFormatter={(value) => `${value.toFixed(1)}%`}
-            xAxisPadding={{ left: 10, right: 10 }}
-            xKey="month"
-          />
-        </MiniChart>
+          maxValue={100}
+          series={SERIES}
+          title="Academic Performance"
+          valueFormatter={(value) => `${value.toFixed(1)}%`}
+          xKey="month"
+        />
       </div>
-
-      <p className="text-xs text-muted-foreground">
-        Formula: normalized quality = weighted grade score / (student count x 5) x 100.
-      </p>
     </div>
   )
 }

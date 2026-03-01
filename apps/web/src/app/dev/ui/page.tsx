@@ -1,6 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@talimy/ui"
 
+import { AttendanceOverviewChartShowcase433 } from "@/components/shared/ui-showcase/attendance-overview-chart-4-3-3"
+import { AttendanceProgressChartShowcase433 } from "@/components/shared/ui-showcase/attendance-progress-chart-4-3-3"
 import { DataTableShowcase42 } from "@/components/shared/ui-showcase/data-table-4-2"
+import { EarningsExpensesChartShowcase433 } from "@/components/shared/ui-showcase/earnings-expenses-chart-4-3-3"
+import { FeesCollectionTrendChartShowcase433 } from "@/components/shared/ui-showcase/area-gradient"
+import { FullStackedRadialChartShowcase433 } from "@/components/shared/ui-showcase/full-stacked-radial-4-3-3"
+import { GenderDistributionChartShowcase433 } from "@/components/shared/ui-showcase/gender-distribution-chart-4-3-3"
+import { AcademicPerformanceGroupedChartShowcase433 } from "@/components/shared/ui-showcase/academic-performance-grouped-chart-4-3-3"
 import { PrimitivesShowcase411 } from "@/components/shared/ui-showcase/primitives-4-1-1"
 import { PrimitivesShowcase412 } from "@/components/shared/ui-showcase/primitives-4-1-2"
 import { PrimitivesShowcase413 } from "@/components/shared/ui-showcase/primitives-4-1-3"
@@ -9,6 +16,11 @@ import { PrimitivesShowcase415 } from "@/components/shared/ui-showcase/primitive
 import { PrimitivesShowcase416 } from "@/components/shared/ui-showcase/primitives-4-1-6"
 import { MiniChartShowcase433 } from "@/components/shared/ui-showcase/mini-chart-4-3-3"
 import { StatCardShowcase431 } from "@/components/shared/ui-showcase/stat-card-4-3-1"
+import { StudentAcademicPerformanceChartShowcase433 } from "@/components/shared/ui-showcase/student-academic-performance-chart-4-3-3"
+import { TeacherAttendanceChartShowcase433 } from "@/components/shared/ui-showcase/teacher-attendance-chart-4-3-3"
+import { TeacherDepartmentChartShowcase433 } from "@/components/shared/ui-showcase/teacher-department-chart-4-3-3"
+import { TeacherProfileWorkloadChartShowcase433 } from "@/components/shared/ui-showcase/teacher-profile-workload-chart-4-3-3"
+import { TeacherWorkloadChartShowcase433 } from "@/components/shared/ui-showcase/teacher-workload-chart-4-3-3"
 import { ThemePreviewToggle } from "@/components/shared/ui-showcase/theme-preview-toggle"
 
 export default function UiShowcasePage() {
@@ -101,7 +113,21 @@ export default function UiShowcasePage() {
           <CardTitle>Task 4.3.3 - Mini Chart</CardTitle>
         </CardHeader>
         <CardContent>
-          <MiniChartShowcase433 />
+          <div className="grid gap-6 xl:grid-cols-2">
+            <MiniChartShowcase433 />
+            <EarningsExpensesChartShowcase433 />
+            <GenderDistributionChartShowcase433 />
+            <AttendanceOverviewChartShowcase433 />
+            <AttendanceProgressChartShowcase433 />
+            <FeesCollectionTrendChartShowcase433 />
+            <FullStackedRadialChartShowcase433 />
+            <TeacherAttendanceChartShowcase433 />
+            <StudentAcademicPerformanceChartShowcase433 />
+            <TeacherWorkloadChartShowcase433 />
+            <TeacherDepartmentChartShowcase433 />
+            <TeacherProfileWorkloadChartShowcase433 />
+            <AcademicPerformanceGroupedChartShowcase433 />
+          </div>
         </CardContent>
       </Card>
     </main>

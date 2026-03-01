@@ -3,6 +3,7 @@
 import * as React from "react"
 import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import type { Margin } from "recharts/types/util/types"
 
 import { cn } from "../../lib/utils"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
@@ -27,6 +28,7 @@ export type MultipleBarChartSeries = {
 export type MultipleBarChartProps<TData extends MultipleBarChartDataPoint = MultipleBarChartDataPoint> = {
   barCategoryGap?: number | string
   barGap?: number | string
+  chartClassName?: string
   className?: string
   data: TData[]
   description?: React.ReactNode
@@ -35,17 +37,20 @@ export type MultipleBarChartProps<TData extends MultipleBarChartDataPoint = Mult
   hideFooter?: boolean
   hideHeader?: boolean
   hideTooltipLabel?: boolean
+  margin?: Margin
   series: MultipleBarChartSeries[]
   title?: React.ReactNode
   tooltipClassName?: string
   valueFormatter?: (value: number, seriesKey: string) => string
   xAxisTickFormatter?: (value: string) => string
+  xAxisPadding?: { left?: number; right?: number }
   xKey: keyof TData & string
 }
 
 export function MultipleBarChart<TData extends MultipleBarChartDataPoint = MultipleBarChartDataPoint>({
   barCategoryGap = "12%",
   barGap = 3,
+  chartClassName,
   className,
   data,
   description,
@@ -54,11 +59,13 @@ export function MultipleBarChart<TData extends MultipleBarChartDataPoint = Multi
   hideFooter = false,
   hideHeader = false,
   hideTooltipLabel = false,
+  margin,
   series,
   title,
   tooltipClassName,
   valueFormatter,
   xAxisTickFormatter,
+  xAxisPadding,
   xKey,
 }: MultipleBarChartProps<TData>) {
   const chartConfig = React.useMemo<ChartConfig>(
@@ -96,7 +103,7 @@ export function MultipleBarChart<TData extends MultipleBarChartDataPoint = Multi
   }, [chartConfig, valueFormatter])
 
   return (
-    <Card className={cn("rounded-3xl border-0 bg-transparent p-0 shadow-none", className)}>
+    <Card className={cn("h-full rounded-3xl border-0 bg-transparent p-0 shadow-none", className)}>
       {!hideHeader ? (
         <CardHeader className="px-0 pb-3">
           {title ? (
@@ -109,12 +116,13 @@ export function MultipleBarChart<TData extends MultipleBarChartDataPoint = Multi
       ) : null}
 
       <CardContent className="p-0">
-        <ChartContainer className="min-h-56 w-full !aspect-auto" config={chartConfig}>
-          <BarChart accessibilityLayer barCategoryGap={barCategoryGap} barGap={barGap} data={data}>
+        <ChartContainer className={cn("h-56 w-full !aspect-auto", chartClassName)} config={chartConfig}>
+          <BarChart accessibilityLayer barCategoryGap={barCategoryGap} barGap={barGap} data={data} margin={margin}>
             <CartesianGrid strokeDasharray="0" vertical={false} />
             <XAxis
               axisLine={false}
               dataKey={xKey}
+              padding={xAxisPadding}
               tickFormatter={xAxisTickFormatter}
               tickLine={false}
               tickMargin={10}

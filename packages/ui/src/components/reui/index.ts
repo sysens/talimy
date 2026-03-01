@@ -1,6 +1,7 @@
 export * from "./alert"
 export * from "./autocomplete"
 export * from "./badge"
+export * from "./circular-distribution-chart"
 export * from "./date-selector"
 export * from "./filters"
 export * from "./frame"

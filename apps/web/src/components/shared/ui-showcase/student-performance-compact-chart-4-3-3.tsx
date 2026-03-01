@@ -1,7 +1,10 @@
 "use client"
 
 import * as React from "react"
-import { MiniChart, MultipleBarChart, type MiniChartLegendItem, type MultipleBarChartSeries } from "@talimy/ui"
+import {
+  CompactGroupedBarChart,
+  type CompactGroupedBarChartSeries,
+} from "@talimy/ui"
 
 type GradeScore = 2 | 3 | 4 | 5
 type GradeDistribution = Record<GradeScore, number>
@@ -17,16 +20,10 @@ type StudentPerformancePeriod = "lastSemester" | "thisSemester"
 
 const MAX_GRADE_VALUE = 5
 
-const STUDENT_PERFORMANCE_SERIES: MultipleBarChartSeries[] = [
-  { barSize: 16, color: "var(--talimy-color-sky)", key: "grade7", label: "Grade 7" },
-  { barSize: 16, color: "var(--talimy-color-pink)", key: "grade8", label: "Grade 8" },
-  { barSize: 16, color: "var(--talimy-color-navy)", key: "grade9", label: "Grade 9" },
-]
-
-const STUDENT_PERFORMANCE_LEGEND: MiniChartLegendItem[] = [
-  { color: "var(--talimy-color-sky)", id: "grade7", label: "Grade 7" },
-  { color: "var(--talimy-color-pink)", id: "grade8", label: "Grade 8" },
-  { color: "var(--talimy-color-navy)", id: "grade9", label: "Grade 9" },
+const STUDENT_PERFORMANCE_SERIES: CompactGroupedBarChartSeries[] = [
+  { color: "var(--talimy-color-sky)", key: "grade7", label: "Grade 7" },
+  { color: "var(--talimy-color-navy)", key: "grade8", label: "Grade 8" },
+  { color: "var(--talimy-color-pink)", key: "grade9", label: "Grade 9" },
 ]
 
 const LAST_SEMESTER_SOURCE: StudentPerformanceSource[] = [
@@ -133,7 +130,7 @@ function buildPerformanceRows(data: StudentPerformanceSource[]) {
   }))
 }
 
-export function MiniChartShowcase433() {
+export function StudentPerformanceCompactChartShowcase433() {
   const [period, setPeriod] = React.useState<StudentPerformancePeriod>("lastSemester")
 
   const rows = React.useMemo(() => {
@@ -143,11 +140,12 @@ export function MiniChartShowcase433() {
 
   return (
     <div className="space-y-3">
-      <h3 className="text-sm font-semibold text-muted-foreground">/admin/dashboard</h3>
+      <h3 className="text-sm font-semibold text-muted-foreground">/admin/students</h3>
 
-      <div className="max-w-xl">
-        <MiniChart
-          chartClassName="min-h-[236px]"
+      <div className="max-w-sm">
+        <CompactGroupedBarChart
+          chartHeight={124}
+          data={rows}
           filter={{
             ariaLabel: "Student performance period",
             onValueChange: (value) => setPeriod(value as StudentPerformancePeriod),
@@ -157,33 +155,15 @@ export function MiniChartShowcase433() {
             ],
             value: period,
           }}
-          legend={STUDENT_PERFORMANCE_LEGEND}
-          title="Student Performance"
-          yScale={{
-            values: ["100%", "75%", "50%", "25%", "0%"],
-          }}
-        >
-          <MultipleBarChart
-            barCategoryGap={0}
-            barGap={0}
-            chartClassName="h-[236px]"
-            data={rows}
-            hideFooter
-            hideHeader
-            hideTooltipLabel
-            margin={{ left: 0, right: 0, top: 4, bottom: 0 }}
-            series={STUDENT_PERFORMANCE_SERIES}
-            tooltipClassName="text-sm [&_.text-muted-foreground]:font-medium [&_.text-foreground]:text-sm [&_.text-foreground]:font-semibold"
-            valueFormatter={(value) => `${value.toFixed(1)}%`}
-            xAxisPadding={{ left: 10, right: 10 }}
-            xKey="month"
-          />
-        </MiniChart>
+          filterClassName="[&_[data-slot='select-trigger']]:h-7 [&_[data-slot='select-trigger']]:min-w-[108px] [&_[data-slot='select-trigger']]:rounded-lg [&_[data-slot='select-trigger']]:px-2.5 [&_[data-slot='select-trigger']]:text-[10px]"
+          frameClassName="rounded-[16px] px-1.5 pb-1 pt-2"
+          series={STUDENT_PERFORMANCE_SERIES}
+          title="Academic Performance"
+          titleClassName="text-[12px]"
+          valueFormatter={(value) => `${value.toFixed(1)}%`}
+          xKey="month"
+        />
       </div>
-
-      <p className="text-xs text-muted-foreground">
-        Formula: normalized quality = weighted grade score / (student count x 5) x 100.
-      </p>
     </div>
   )
 }
