@@ -79,8 +79,8 @@ Status: In execution
 | FAZA 2  | In Progress    | 2026-02-26 | `apps/api/src/app.module.ts`, `apps/api/src/modules/*`, shared validators, smoke scripts |
 | FAZA 3  | In Progress    | 2026-02-26 | `apps/web/proxy.ts`, `apps/web/src/app/layout.tsx`, providers, stores, hooks, i18n, API route wiring |
 | FAZA 4  | In Progress    | 2026-03-01 | `packages/ui/*`, `apps/web/src/components/shared/ui-showcase/*`, chart/stat/data-table work through 4.3.3 |
-| FAZA 5  | Not Started    | -          | Auth pages pending |
-| FAZA 6  | Not Started    | -          | School Admin layout + dashboard pending |
+| FAZA 5  | Completed      | 2026-03-01 | `apps/web/src/app/(auth)/*`, `apps/web/src/lib/nextauth-config.ts`, `apps/web/src/lib/server/api-proxy.ts`, `apps/api/src/modules/auth/*` |
+| FAZA 6  | In Progress    | 2026-03-02 | School Admin layout accepted scope done; dashboard content pending |
 | FAZA 7  | Not Started    | -          | School Admin teachers pages pending |
 | FAZA 8  | Not Started    | -          | School Admin students pages pending |
 | FAZA 9  | Not Started    | -          | School Admin attendance/finance/notices/exams/calendar/profile/settings pending |
@@ -99,11 +99,11 @@ Status: In execution
 
 | Task | Name | Status | Updated At | Evidence |
 | ---- | ---- | ------ | ---------- | -------- |
-| 5.1 | Auth Layout | Not Started | - | - |
-| 5.2 | Login Page | Not Started | - | - |
-| 5.3 | Forgot Password + Reset Password Pages | Not Started | - | - |
-| 5.4 | NextAuth API Route Wiring | Not Started | - | - |
-| 6.1 | Admin Layout (Sidebar + Header + Shell) | Not Started | - | - |
+| 5.1 | Auth Layout | Completed | 2026-03-01 | `apps/web/src/app/(auth)/layout.tsx`, `apps/web/src/components/auth/auth-shell.tsx` |
+| 5.2 | Login Page | Completed | 2026-03-01 | `apps/web/src/app/(auth)/login/page.tsx`, `apps/web/src/components/auth/login-form.tsx` |
+| 5.3 | Forgot Password + Reset Password Pages | Completed | 2026-03-01 | `apps/web/src/app/(auth)/forgot-password/page.tsx`, `apps/web/src/app/(auth)/reset-password/page.tsx`, `apps/web/src/app/(auth)/verify-email/page.tsx`, `apps/web/src/components/auth/forgot-password-form.tsx`, `apps/web/src/components/auth/reset-password-form.tsx` |
+| 5.4 | NextAuth API Route Wiring | Completed | 2026-03-01 | `apps/web/src/app/api/auth/[...nextauth]/route.ts`, `apps/web/src/lib/nextauth.ts`, `apps/web/src/lib/nextauth-config.ts`, `apps/web/src/lib/server/api-proxy.ts`, `apps/api/src/modules/auth/*` |
+| 6.1 | Admin Layout (Sidebar + Header + Shell) | Completed | 2026-03-02 | `apps/web/src/app/(school)/admin/layout.tsx`, `apps/web/src/components/layouts/admin-shell-data.ts`, `packages/ui/src/components/appShell.tsx`, `packages/ui/src/components/app-shell/*` |
 | 6.2 | Admin Dashboard Page | Not Started | - | - |
 | 7.1 | Teachers List Page | Not Started | - | - |
 | 7.2 | Teacher Detail Page | Not Started | - | - |
@@ -218,7 +218,11 @@ Status: In execution
 ## FAZA 5 — Auth Pages
 
 > Route group: `apps/web/src/app/(auth)/`
-> Barcha auth sahifalari — maktab subdomainida `[school].talimy.space/login`.
+> Public self-register yo'q.
+> Platform auth: `platform.talimy.space/login`
+> School auth: `[school].talimy.space/login`
+> Password reset magic link: platform yoki school workspace ichida.
+> Invite acceptance magic link: faqat school subdomain ichida.
 
 ### Task 5.1: Auth Layout
 
@@ -240,7 +244,7 @@ Status: In execution
 
 | Subtask | Work Item | Estimate |
 |---------|-----------|----------|
-| 5.2.1 | Login form: Email/Telefon input, Parol input (ko'rish toggle), "Eslab qolish" checkbox, [Kirish] tugmasi | 2h |
+| 5.2.1 | Login form: Email input, Parol input (ko'rish toggle), [Kirish] tugmasi, workspace-aware copy | 2h |
 | 5.2.2 | Form validation: React Hook Form + Zod (`loginSchema`), real-time xato xabarlari | 1h |
 | 5.2.3 | NextAuth `signIn("credentials", {...})` integratsiyasi, server-side error mapping (noto'g'ri parol, foydalanuvchi topilmadi, tenant noto'g'ri) | 2h |
 | 5.2.4 | Loading state (Skeleton yoki spinner), submit disabled holat | 0.5h |
@@ -290,28 +294,30 @@ Status: In execution
 ## FAZA 6 — School Admin: Layout + Dashboard
 
 > Subdomain: `[school].talimy.space/admin`
-> Route group: `apps/web/src/app/(dashboard)/admin/`
+> Route group: `apps/web/src/app/(school)/admin/`
 > UI dizayn: Figma Image 1 (Dashboard sahifasi) asosida.
 
 ### Task 6.1: Admin Layout (Sidebar + Header + Shell)
 
 **Files:**
-- `apps/web/src/app/(dashboard)/admin/layout.tsx`
-- `apps/web/src/components/admin/layout/AdminSidebar.tsx`
-- `apps/web/src/components/admin/layout/AdminHeader.tsx`
-- `apps/web/src/components/admin/layout/AdminShell.tsx`
+- `apps/web/src/app/(school)/admin/layout.tsx`
+- `apps/web/src/components/layouts/admin-shell-data.ts`
+- `packages/ui/src/components/appShell.tsx`
+- `packages/ui/src/components/app-shell/sidebar.tsx`
+- `packages/ui/src/components/app-shell/header.tsx`
+- `packages/ui/src/components/app-shell/nav.tsx`
 
 | Subtask | Work Item | Estimate |
 |---------|-----------|----------|
-| 6.1.1 | **AdminSidebar** — Fixed left sidebar (w-52), logo (Talimy + "S" icon, navy/pink), nav items ro'yxati, active highlight (pink background), hover state, Moliya collapse/expand submenu (To'lovlar, Xarajatlar), "New Tools Available" promo banner (bottom), Logout tugmasi | 4h |
+| 6.1.1 | **AdminSidebar** — Shadcn sidebar-based global shell sidebar, left fixed panel, nav items ro'yxati, active highlight, hover state, icon-collapse holati, Moliya collapse/expand submenu (To'lovlar, Xarajatlar). Promo banner talab qilinmaydi. Logout alohida tugma emas, user dropdown ichida qoladi. | 4h |
 | 6.1.2 | **Sidebar nav items (admin):** Dashboard, Inbox, Calendar, Teachers, Students, Attendance, Finance (submenyu: Fees Collection, Expenses), Notice Board | 1h |
-| 6.1.3 | **AdminHeader** — "Search anything" input (icon + placeholder), Filter icon, Settings icon (circle), Notification bell icon (circle), User avatar + nomi + "Admin" subtitle (top-right) | 2h |
+| 6.1.3 | **AdminHeader** — "Search anything" input (icon + placeholder), Settings icon, Notification bell icon, til switcher, user avatar + nomi + rol subtitle (top-right). Breadcrumb bu scope uchun talab qilinmaydi. | 2h |
 | 6.1.4 | **AdminShell** — Main layout wrapper: sidebar (fixed, left) + main content area (ml-52, flex-1), responsive breakpoints (sidebar collapse < lg) | 1.5h |
-| 6.1.5 | **Breadcrumb component** — "Dashboard / Teachers" ko'rinishida, dynamic route asosida | 1h |
+| 6.1.5 | **Breadcrumb component** — Current accepted scope'dan chiqarildi. Dashboard shell uchun alohida breadcrumb talab qilinmaydi. | - |
 | 6.1.6 | Auth guard: `admin` rol tekshiruvi (NextAuth session + Permify role check), unauthorized → `/login` | 1h |
 | 6.1.7 | i18n layout wrapper (`next-intl`), til switching support | 0.5h |
 
-**Exit:** Admin layout render qiladi, sidebar va header ishlaydi, auth guard ishlaydi.
+**Exit:** Admin layout render qiladi, sidebar va header ishlaydi, auth guard ishlaydi, i18n ishlaydi. Breadcrumb/promo/standalone logout bu task scope'iga kirmaydi.
 
 ---
 

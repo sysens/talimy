@@ -51,7 +51,7 @@ talimy.space                        → Public marketing site
 | React Hook Form       | 7.54    | Form management                                     |
 | Zod                   | 3.24    | Validation (shared with backend)                    |
 | Recharts              | 2.15    | Charts and graphs                                   |
-| next-intl             | 3.26    | i18n (uz, tr, en, ru)                               |
+| next-intl             | 3.26    | i18n (uz, tr, en, ar)                               |
 | Lucide React          | latest  | Icons                                               |
 | Siloe (bun add sileo) | latest  | Toast notifications                                 |
 
@@ -467,17 +467,17 @@ principal          → Full access regardless of gender
 
 ### Supported Languages
 
-| Code | Language    | Status   |
-| ---- | ----------- | -------- |
-| `uz` | O'zbek tili | Default  |
-| `tr` | Turk tili   | Default  |
-| `en` | English     | Optional |
-| `ru` | Русский     | Optional |
+| Code | Language      | Status   |
+| ---- | ------------- | -------- |
+| `uz` | O'zbek tili   | Default  |
+| `tr` | Turk tili     | Default  |
+| `en` | English       | Optional |
+| `ar` | العربية       | Optional |
 
 ### Implementation
 
 - Library: `next-intl` v3.26
-- Translation files: `apps/web/src/messages/{uz,tr,en,ru}.json`
+- Translation files: `apps/web/src/messages/{uz,tr,en,ar}.json`
 - 200+ translation keys covering all UI text
 - Language switcher in header
 - User preference saved in profile
