@@ -20,11 +20,11 @@ export function resolveHostScopeFromHeaders(headers: HeaderReader): RequestHostS
   const rawHost = resolveRequestHost(headers)
   const hostname = rawHost.toLowerCase().split(":")[0] ?? ""
 
-  if (hostname === "api.talimy.space") {
+  if (hostname === "api.talimy.space" || hostname === "api.localhost") {
     return { kind: "api" }
   }
 
-  if (hostname === "platform.talimy.space") {
+  if (hostname === "platform.talimy.space" || hostname === "platform.localhost") {
     return { kind: "platform" }
   }
 
@@ -63,14 +63,20 @@ export function hasAuthContext(headers: HeaderReader, cookies: CookieReader): bo
   return AUTH_COOKIE_NAMES.some((cookieName) => Boolean(cookies.get(cookieName)?.value))
 }
 
-function resolveRequestHost(headers: HeaderReader): string {
+export function resolveRequestHostFromHeaders(headers: HeaderReader): string {
   const candidates = [
     ...splitHostHeaderValues(headers.get("x-forwarded-host")),
     ...extractForwardedHeaderHosts(headers.get("forwarded")),
+    ...extractOriginLikeHosts(headers.get("origin")),
+    ...extractOriginLikeHosts(headers.get("referer")),
     ...splitHostHeaderValues(headers.get("host")),
   ]
 
   return candidates.find((candidate) => isRecognizedTenantHost(candidate)) ?? candidates[0] ?? ""
+}
+
+function resolveRequestHost(headers: HeaderReader): string {
+  return resolveRequestHostFromHeaders(headers)
 }
 
 function splitHostHeaderValues(rawHeader: string | null): string[] {
@@ -96,6 +102,19 @@ function extractForwardedHeaderHosts(rawHeader: string | null): string[] {
       return match?.[1]?.trim() ?? ""
     })
     .filter(Boolean)
+}
+
+function extractOriginLikeHosts(rawHeader: string | null): string[] {
+  if (!rawHeader) {
+    return []
+  }
+
+  try {
+    const url = new URL(rawHeader)
+    return url.host ? [url.host] : []
+  } catch {
+    return []
+  }
 }
 
 function isRecognizedTenantHost(rawHost: string): boolean {

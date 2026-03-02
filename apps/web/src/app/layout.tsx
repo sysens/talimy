@@ -11,9 +11,9 @@ import { ThemeProvider } from "@/providers/theme-provider"
 import { auth } from "@/lib/nextauth"
 
 const inter = Inter({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   display: "swap",
-  variable: "--font-sans",
+  variable: "--font-inter",
 })
 
 export const metadata: Metadata = {
@@ -30,8 +30,8 @@ export default async function RootLayout({ children }: RootLayoutProps) {
   const [locale, messages, session] = await Promise.all([getLocale(), getMessages(), auth()])
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body className={inter.variable} suppressHydrationWarning>
+    <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>
+      <body className={`${inter.className} ${inter.variable}`} suppressHydrationWarning>
         <ThemeProvider>
           <AuthProvider session={session}>
             <IntlProvider locale={locale} messages={messages}>

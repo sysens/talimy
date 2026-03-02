@@ -7,19 +7,28 @@ export class CacheService implements OnModuleDestroy {
   private readonly memory = new Map<string, { value: string; expiresAt: number | null }>()
   private client: Redis | null = null
   private clientInitAttempted = false
+  private clientReady = false
 
   async onModuleDestroy(): Promise<void> {
     if (this.client) {
       await this.client.quit().catch(() => undefined)
       this.client = null
+      this.clientReady = false
     }
   }
 
   async getJson<T>(key: string): Promise<T | null> {
     const client = this.getClient()
     if (client) {
-      const raw = await client.get(key)
-      return raw ? (JSON.parse(raw) as T) : null
+      try {
+        const raw = await client.get(key)
+        return raw ? (JSON.parse(raw) as T) : null
+      } catch (error) {
+        this.logger.error(
+          `Redis cache read failed for key "${key}": ${error instanceof Error ? error.message : "unknown error"}`
+        )
+        this.clientReady = false
+      }
     }
 
     const record = this.memory.get(key)
@@ -35,12 +44,19 @@ export class CacheService implements OnModuleDestroy {
     const raw = JSON.stringify(value)
     const client = this.getClient()
     if (client) {
-      if (ttlSeconds && ttlSeconds > 0) {
-        await client.set(key, raw, "EX", ttlSeconds)
-      } else {
-        await client.set(key, raw)
+      try {
+        if (ttlSeconds && ttlSeconds > 0) {
+          await client.set(key, raw, "EX", ttlSeconds)
+        } else {
+          await client.set(key, raw)
+        }
+        return
+      } catch (error) {
+        this.logger.error(
+          `Redis cache write failed for key "${key}": ${error instanceof Error ? error.message : "unknown error"}`
+        )
+        this.clientReady = false
       }
-      return
     }
 
     const expiresAt = ttlSeconds && ttlSeconds > 0 ? Date.now() + ttlSeconds * 1000 : null
@@ -50,8 +66,15 @@ export class CacheService implements OnModuleDestroy {
   async del(key: string): Promise<void> {
     const client = this.getClient()
     if (client) {
-      await client.del(key)
-      return
+      try {
+        await client.del(key)
+        return
+      } catch (error) {
+        this.logger.error(
+          `Redis cache delete failed for key "${key}": ${error instanceof Error ? error.message : "unknown error"}`
+        )
+        this.clientReady = false
+      }
     }
     this.memory.delete(key)
   }
@@ -91,7 +114,7 @@ export class CacheService implements OnModuleDestroy {
   }
 
   private getClient(): Redis | null {
-    if (this.client) return this.client
+    if (this.client && this.clientReady) return this.client
     if (this.clientInitAttempted) return null
     this.clientInitAttempted = true
 
@@ -103,14 +126,25 @@ export class CacheService implements OnModuleDestroy {
 
     try {
       const client = new Redis(redisUrl, { lazyConnect: true, maxRetriesPerRequest: 1 })
+      client.on("ready", () => {
+        this.clientReady = true
+      })
+      client.on("close", () => {
+        this.clientReady = false
+      })
+      client.on("end", () => {
+        this.clientReady = false
+      })
       client.on("error", (error) => {
+        this.clientReady = false
         this.logger.error(`Redis cache client error: ${error.message}`)
       })
       void client.connect().catch((error) => {
+        this.clientReady = false
         this.logger.error(`Redis cache connect failed: ${error.message}`)
       })
       this.client = client
-      return client
+      return null
     } catch (error) {
       this.logger.error(
         `Failed to initialize Redis cache client: ${error instanceof Error ? error.message : "unknown error"}`

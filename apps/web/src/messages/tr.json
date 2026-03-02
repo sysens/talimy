@@ -33,10 +33,10 @@
   },
   "locale": {
     "label": "Dil",
-    "uz": "O'zbekcha",
-    "tr": "T?rk?e",
+    "uz": "Özbekçe",
+    "tr": "Türkçe",
     "en": "English",
-    "ru": "???????"
+    "ar": "Arapça"
   },
   "nav": {
     "platform": {
@@ -45,16 +45,19 @@
       "settings": "Ayarlar"
     },
     "admin": {
-      "dashboard": "G?sterge paneli",
-      "teachers": "??retmenler",
-      "students": "??renciler",
-      "classes": "S?n?flar",
+      "dashboard": "Gösterge paneli",
+      "teachers": "Öğretmenler",
+      "students": "Öğrenciler",
+      "classes": "Sınıflar",
       "attendance": "Yoklama",
-      "exams": "S?navlar",
+      "exams": "Sınavlar",
       "finance": "Finans",
       "notices": "Duyurular",
       "calendar": "Takvim",
-      "settings": "Ayarlar"
+      "settings": "Ayarlar",
+      "inbox": "Gelen kutusu",
+      "feesCollection": "Ücret tahsilatı",
+      "expenses": "Giderler"
     },
     "teacher": {
       "dashboard": "G?sterge paneli",
@@ -86,35 +89,74 @@
     }
   },
   "auth": {
-    "loginTitle": "Giri? yap",
-    "loginSubtitle": "Access your school workspace",
-    "registerTitle": "Register school",
-    "forgotPasswordTitle": "Forgot password",
-    "resetPasswordTitle": "Reset password",
-    "verifyEmailTitle": "Verify email",
-    "email": "Email",
-    "phone": "Phone",
-    "password": "Password",
-    "confirmPassword": "Confirm password",
-    "rememberMe": "Remember me",
+    "loginTitle": "Giriş yap",
+    "loginSubtitle": "Okul çalışma alanınıza erişin",
+    "registerTitle": "Okul kayd?",
+    "forgotPasswordTitle": "Şifremi unuttum",
+    "resetPasswordTitle": "?ifreyi s?f?rla",
+    "verifyEmailTitle": "E-postay? do?rula",
+    "email": "E-posta",
+    "phone": "Telefon",
+    "password": "Şifre",
+    "confirmPassword": "?ifreyi do?rula",
+    "rememberMe": "Beni hatırla",
     "signIn": "Giri? yap",
-    "signOut": "Sign out",
-    "signUp": "Create account",
-    "forgotPassword": "Forgot password?",
-    "sendResetLink": "Send reset link",
+    "signOut": "??k?? yap",
+    "signUp": "Hesap olu?tur",
+    "forgotPassword": "Şifremi unuttum?",
+    "sendResetLink": "S?f?rlama ba?lant?s? g?nder",
     "resetPassword": "Reset password",
-    "verificationCode": "Verification code",
-    "newPassword": "New password",
-    "tenantSlug": "School slug",
-    "schoolName": "School name",
-    "agreeTerms": "I agree to the terms",
-    "invalidCredentials": "Invalid credentials",
-    "sessionExpired": "Session expired, please sign in again",
-    "unauthorized": "Unauthorized",
-    "accessDenied": "Access denied",
-    "mfaCode": "MFA code",
-    "continue": "Continue",
-    "backToLogin": "Back to login"
+    "verificationCode": "Do?rulama kodu",
+    "newPassword": "Yeni ?ifre",
+    "tenantSlug": "Okul slug?",
+    "schoolName": "Okul ad?",
+    "agreeTerms": "Ko?ullar? kabul ediyorum",
+    "invalidCredentials": "Ge?ersiz bilgiler",
+    "sessionExpired": "Oturum s?resi doldu, l?tfen tekrar giri? yap?n",
+    "unauthorized": "Yetkisiz",
+    "accessDenied": "Eri?im reddedildi",
+    "mfaCode": "MFA kodu",
+    "continue": "Devam et",
+    "backToLogin": "Giri?e d?n"
+  },
+  "authPage": {
+    "brandSubtitle": "Okul yönetim platformu",
+    "emailLabel": "E-posta adresi",
+    "emailPlaceholderPlatform": "platform.admin@talimy.space",
+    "emailPlaceholderSchool": "admin@mezana.talimy.space",
+    "passwordLabel": "Şifre",
+    "passwordPlaceholder": "?ifrenizi girin",
+    "rememberMe": "Beni hatırla",
+    "forgotPassword": "Şifrenizi mi unuttunuz?",
+    "signInButton": "Talimy’ye giriş yap",
+    "invalidCredentials": "E-posta veya ?ifre hatal?.",
+    "invalidCredentialsDescription": "Bilgilerinizi kontrol edip birka? dakika sonra tekrar deneyin.",
+    "locales": {
+      "uz": "O'z",
+      "en": "En",
+      "tr": "Tr",
+      "ar": "عر"
+    },
+    "platform": {
+      "badge": "Platform çalışma alanı",
+      "title": "Platform çalışma alanına giriş yapın",
+      "description": "Okul kurulumu, faturalama ve tenant operasyonları bu alandan yönetilir.",
+      "footer": "Okul yöneticileri platform panelinden e-posta magic link ile davet edilir.",
+      "marketingTitle": "Tüm okulları tek platform çalışma alanından yönetin.",
+      "marketingDescription": "Alt alan adını bağlayın ve ilk yönetici davetini tek akışta gönderin.",
+      "marketingCardTitle": "Magic link kurulumu tenant hostuna bağlıdır.",
+      "marketingCardDescription": "Her davet doğru çalışma alanı alan adında açılır."
+    },
+    "school": {
+      "badge": "Okul çalışma alanı",
+      "title": "Okul hesabınıza giriş yapın",
+      "description": "Yönetici, öğretmen, öğrenci ve veli bu okul alt alan adından giriş yapar.",
+      "footer": "Kullanıcılar okul yöneticisinin gönderdiği e-posta magic link ile kurulum yapar.",
+      "marketingTitle": "Okul operasyonlarını tek çalışma alanından yönetin.",
+      "marketingDescription": "Yoklama, ödevler, notlar ve duyurular tenant alanında kalır.",
+      "marketingCardTitle": "Şifre kurulumu e-posta magic link ile yapılır.",
+      "marketingCardDescription": "Yönetici, öğretmen ve öğrenci erişimi bu alan adına bağlı kalır."
+    }
   },
   "dashboard": {
     "title": "Kontrol paneli",
@@ -681,5 +723,17 @@
     "notes": "Enter notes",
     "description": "Enter description",
     "message": "Enter message"
+  },
+  "shell": {
+    "mainMenu": "Ana men?",
+    "updates": "Ayarlar ve haberler",
+    "account": "Hesap",
+    "logout": "??k?? yap",
+    "breadcrumbSchoolAdmin": "Okul y?neticisi",
+    "workspace": "{schoolName} ?al??ma alan?",
+    "searchPlaceholder": "Her ?eyi ara",
+    "settings": "Ayarlar",
+    "notifications": "Bildirimler",
+    "theme": "Karanl?k mod"
   }
 }

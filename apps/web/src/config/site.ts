@@ -11,7 +11,7 @@ export const AUTH_COOKIE_NAMES = [
 
 export const RESERVED_SUBDOMAINS = ["www", "api", "platform", "localhost"] as const
 
-export const SUPPORTED_LOCALES = ["uz", "tr", "en", "ru"] as const
+export const SUPPORTED_LOCALES = ["uz", "tr", "en", "ar"] as const
 export type AppLocale = (typeof SUPPORTED_LOCALES)[number]
 
 export const DEFAULT_LOCALE: AppLocale = "uz"

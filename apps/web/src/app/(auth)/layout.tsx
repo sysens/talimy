@@ -10,6 +10,7 @@ import {
 import { AuthShell } from "@/components/auth/auth-shell"
 import { auth } from "@/lib/nextauth"
 import { resolveHostScopeFromHeaders } from "@/lib/server/request-host"
+import { ToastProvider } from "@/providers/toast-provider"
 
 type LayoutProps = {
   children: ReactNode
@@ -31,7 +32,12 @@ export default async function Layout({ children }: LayoutProps) {
 
   const workspaceKind = currentScope.kind === "platform" ? "platform" : "school"
 
-  return <AuthShell workspaceKind={workspaceKind}>{children}</AuthShell>
+  return (
+    <>
+      <AuthShell workspaceKind={workspaceKind}>{children}</AuthShell>
+      <ToastProvider />
+    </>
+  )
 }
 
 function resolveDashboardDestination(

@@ -1,0 +1,108 @@
+{
+  "auth": {
+    "loginTitle": "تسجيل الدخول",
+    "loginSubtitle": "ادخل إلى مساحة عمل المدرسة",
+    "registerTitle": "تسجيل المدرسة",
+    "forgotPasswordTitle": "نسيت كلمة المرور",
+    "resetPasswordTitle": "إعادة تعيين كلمة المرور",
+    "verifyEmailTitle": "تأكيد البريد الإلكتروني",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "rememberMe": "تذكرني",
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "signUp": "إنشاء حساب",
+    "forgotPassword": "هل نسيت كلمة المرور؟",
+    "sendResetLink": "إرسال رابط إعادة التعيين",
+    "resetPassword": "إعادة تعيين كلمة المرور",
+    "verificationCode": "رمز التحقق",
+    "newPassword": "كلمة مرور جديدة",
+    "tenantSlug": "معرّف المدرسة",
+    "schoolName": "اسم المدرسة",
+    "agreeTerms": "أوافق على الشروط",
+    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+    "sessionExpired": "انتهت الجلسة، يرجى تسجيل الدخول مرة أخرى",
+    "unauthorized": "غير مصرح",
+    "accessDenied": "تم رفض الوصول",
+    "mfaCode": "رمز التحقق الثنائي",
+    "continue": "متابعة",
+    "backToLogin": "العودة إلى تسجيل الدخول"
+  },
+  "authPage": {
+    "brandSubtitle": "منصة إدارة المدارس",
+    "emailLabel": "البريد الإلكتروني",
+    "emailPlaceholderPlatform": "platform.admin@talimy.space",
+    "emailPlaceholderSchool": "admin@mezana.talimy.space",
+    "passwordLabel": "كلمة المرور",
+    "passwordPlaceholder": "أدخل كلمة المرور",
+    "rememberMe": "تذكرني",
+    "forgotPassword": "هل نسيت كلمة المرور؟",
+    "signInButton": "تسجيل الدخول إلى Talimy",
+    "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+    "invalidCredentialsDescription": "تحقق من بياناتك ثم حاول مرة أخرى بعد بضع دقائق.",
+    "locales": {
+      "uz": "O'z",
+      "en": "En",
+      "tr": "Tr",
+      "ar": "عر"
+    },
+    "platform": {
+      "badge": "مساحة عمل المنصة",
+      "title": "سجل الدخول إلى مساحة المنصة",
+      "description": "تُدار من هنا عمليات إضافة المدارس والفوترة والمستأجرين.",
+      "footer": "يتم دعوة مديري المدارس من لوحة المنصة عبر رابط سحري بالبريد الإلكتروني.",
+      "marketingTitle": "أدر جميع المدارس من مساحة منصة واحدة.",
+      "marketingDescription": "اربط النطاق الفرعي وأرسل دعوة أول مدير في مسار واحد.",
+      "marketingCardTitle": "إعداد الرابط السحري مرتبط بمضيف المستأجر.",
+      "marketingCardDescription": "كل دعوة تُفتح دائماً على نطاق مساحة العمل الصحيح."
+    },
+    "school": {
+      "badge": "مساحة عمل المدرسة",
+      "title": "سجل الدخول إلى حساب المدرسة",
+      "description": "يدخل المدير والمعلم والطالب وولي الأمر عبر هذا النطاق الفرعي.",
+      "footer": "يتم إنشاء المستخدمين عبر رابط سحري يرسله مدير المدرسة بالبريد الإلكتروني.",
+      "marketingTitle": "أدر عمليات المدرسة من مساحة عمل واحدة.",
+      "marketingDescription": "يبقى الحضور والواجبات والدرجات والإعلانات داخل نطاق المستأجر.",
+      "marketingCardTitle": "يتم إعداد كلمة المرور عبر رابط سحري بالبريد الإلكتروني.",
+      "marketingCardDescription": "يبقى وصول المدير والمعلم والطالب مرتبطاً بهذا النطاق."
+    }
+  },
+  "locale": {
+    "label": "اللغة",
+    "uz": "الأوزبكية",
+    "tr": "التركية",
+    "en": "الإنجليزية",
+    "ar": "العربية"
+  },
+  "nav": {
+    "admin": {
+      "dashboard": "لوحة التحكم",
+      "teachers": "المعلمون",
+      "students": "الطلاب",
+      "attendance": "الحضور",
+      "finance": "المالية",
+      "calendar": "التقويم",
+      "notices": "الإعلانات",
+      "inbox": "الوارد",
+      "feesCollection": "تحصيل الرسوم",
+      "expenses": "المصروفات",
+      "classes": "الصفوف",
+      "exams": "الامتحانات",
+      "settings": "الإعدادات"
+    }
+  },
+  "shell": {
+    "mainMenu": "??????? ????????",
+    "updates": "????????? ????????",
+    "account": "??????",
+    "logout": "????? ??????",
+    "breadcrumbSchoolAdmin": "????? ???????",
+    "workspace": "????? ??? {schoolName}",
+    "searchPlaceholder": "???? ?? ?? ???",
+    "settings": "?????????",
+    "notifications": "?????????",
+    "theme": "????? ??????"
+  }
+}

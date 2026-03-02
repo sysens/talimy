@@ -1,4 +1,7 @@
+"use client"
+
 import { cn } from "@talimy/ui"
+import { useTranslations } from "next-intl"
 
 type AuthBrandProps = {
   className?: string
@@ -6,6 +9,8 @@ type AuthBrandProps = {
 }
 
 export function AuthBrand({ className, compact = false }: AuthBrandProps) {
+  const t = useTranslations("authPage")
+
   return (
     <div className={cn("flex items-center gap-3", className)}>
       <div className="flex size-11 items-center justify-center rounded-2xl bg-[color:var(--talimy-color-pink)] text-[color:var(--talimy-color-navy)] shadow-[0_16px_36px_rgba(21,68,110,0.15)]">
@@ -25,10 +30,15 @@ export function AuthBrand({ className, compact = false }: AuthBrandProps) {
         </svg>
       </div>
       <div className="space-y-0.5">
-        <p className={cn("font-semibold tracking-tight text-[color:var(--talimy-color-navy)]", compact ? "text-lg" : "text-xl")}>
+        <p
+          className={cn(
+            "font-semibold tracking-tight text-[color:var(--talimy-color-navy)]",
+            compact ? "text-lg" : "text-xl"
+          )}
+        >
           Talimy
         </p>
-        <p className="text-sm text-slate-500">School Management Platform</p>
+        <p className="text-sm text-slate-500">{t("brandSubtitle")}</p>
       </div>
     </div>
   )

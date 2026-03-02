@@ -12,6 +12,7 @@ import { mountTrpcHttpAdapter } from "./trpc/trpc-http-adapter"
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
+  const httpAdapter = app.getHttpAdapter().getInstance()
 
   app.setGlobalPrefix("api")
   app.enableCors({
@@ -32,6 +33,23 @@ async function bootstrap(): Promise<void> {
   )
   app.useGlobalFilters(new AllExceptionsFilter())
   mountTrpcHttpAdapter(app)
+
+  httpAdapter.get("/", (_request: unknown, response: { status: (code: number) => { json: (body: object) => void } }) => {
+    response.status(200).json({
+      success: true,
+      data: {
+        name: "Talimy API",
+        status: "ok",
+      },
+    })
+  })
+
+  httpAdapter.get(
+    "/.well-known/appspecific/com.chrome.devtools.json",
+    (_request: unknown, response: { status: (code: number) => { end: () => void } }) => {
+      response.status(204).end()
+    }
+  )
 
   const port = Number(process.env.PORT ?? 4000)
   await app.listen(port)

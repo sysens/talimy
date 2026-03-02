@@ -58,8 +58,25 @@ export async function proxy(request: NextRequest) {
     }
   }
 
-  const requiresAuth = !isApiOrAssetPath && requiresAuthGate(scope, pathname)
+  const isSchoolDashboardAlias = scope.kind === "school" && pathname === "/dashboard"
+  const requiresAuth = !isApiOrAssetPath && (requiresAuthGate(scope, pathname) || isSchoolDashboardAlias)
   const sessionToken = requiresAuth ? await resolveSessionToken(request) : null
+
+  if (isSchoolDashboardAlias) {
+    if (!sessionToken) {
+      const loginUrl = request.nextUrl.clone()
+      loginUrl.pathname = "/login"
+      loginUrl.searchParams.set("next", "/dashboard")
+      return finalizeResponse(request, scope, locale, NextResponse.redirect(loginUrl))
+    }
+
+    return finalizeResponse(
+      request,
+      scope,
+      locale,
+      redirect(request, resolveSchoolDashboardPath(sessionToken))
+    )
+  }
 
   if (requiresAuth && !sessionToken) {
     const loginUrl = request.nextUrl.clone()
@@ -217,12 +234,17 @@ function shouldBypassLocaleHandling(pathname: string): boolean {
 
 function resolveRequestLocale(request: NextRequest): string {
   const fromQuery = request.nextUrl.searchParams.get("lang")?.trim().toLowerCase()
-  if (fromQuery === "uz" || fromQuery === "tr" || fromQuery === "en" || fromQuery === "ru") {
+  if (fromQuery === "uz" || fromQuery === "tr" || fromQuery === "en" || fromQuery === "ar") {
     return fromQuery
   }
 
   const fromCookie = request.cookies.get(APP_LOCALE_COOKIE)?.value?.trim().toLowerCase()
-  if (fromCookie === "uz" || fromCookie === "tr" || fromCookie === "en" || fromCookie === "ru") {
+  if (
+    fromCookie === "uz" ||
+    fromCookie === "tr" ||
+    fromCookie === "en" ||
+    fromCookie === "ar"
+  ) {
     return fromCookie
   }
 
@@ -284,6 +306,30 @@ async function resolveSessionToken(request: NextRequest): Promise<ProxyToken | n
   } catch {
     return null
   }
+}
+
+function resolveSchoolDashboardPath(token: ProxyToken): string {
+  const roles = Array.isArray(token.roles)
+    ? token.roles.filter((role): role is string => typeof role === "string")
+    : []
+
+  if (roles.includes("school_admin")) {
+    return "/admin/dashboard"
+  }
+
+  if (roles.includes("teacher")) {
+    return "/teacher/dashboard"
+  }
+
+  if (roles.includes("student")) {
+    return "/student/dashboard"
+  }
+
+  if (roles.includes("parent")) {
+    return "/parent/dashboard"
+  }
+
+  return "/login"
 }
 
 export const config = {

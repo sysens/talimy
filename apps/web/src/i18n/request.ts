@@ -9,6 +9,7 @@ import {
   normalizeLocale,
   resolveLocaleFromAcceptLanguage,
 } from "@/config/site"
+import { normalizeMessages } from "@/i18n/normalize-messages"
 
 type MessageModule = { default: AbstractIntlMessages }
 
@@ -16,7 +17,7 @@ const messageLoaders: Record<AppLocale, () => Promise<MessageModule>> = {
   uz: () => import("@/messages/uz.json"),
   tr: () => import("@/messages/tr.json"),
   en: () => import("@/messages/en.json"),
-  ru: () => import("@/messages/ru.json"),
+  ar: () => import("@/messages/ar.json"),
 }
 
 export default getRequestConfig(async ({ requestLocale }) => {
@@ -35,7 +36,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     localeFromAcceptLanguage ??
     DEFAULT_LOCALE
 
-  const messages = (await messageLoaders[locale]()).default
+  const messages = normalizeMessages(locale, (await messageLoaders[locale]()).default)
 
   return {
     locale,

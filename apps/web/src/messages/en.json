@@ -34,9 +34,9 @@
   "locale": {
     "label": "Language",
     "uz": "O'zbekcha",
-    "tr": "T?rk?e",
+    "tr": "Türkçe",
     "en": "English",
-    "ru": "???????"
+    "ar": "العربية"
   },
   "nav": {
     "platform": {
@@ -54,7 +54,10 @@
       "finance": "Finance",
       "notices": "Notices",
       "calendar": "Calendar",
-      "settings": "Settings"
+      "settings": "Settings",
+      "inbox": "Inbox",
+      "feesCollection": "Fees Collection",
+      "expenses": "Expenses"
     },
     "teacher": {
       "dashboard": "Dashboard",
@@ -115,6 +118,45 @@
     "mfaCode": "MFA code",
     "continue": "Continue",
     "backToLogin": "Back to login"
+  },
+  "authPage": {
+    "brandSubtitle": "School management platform",
+    "emailLabel": "Email address",
+    "emailPlaceholderPlatform": "platform.admin@talimy.space",
+    "emailPlaceholderSchool": "admin@mezana.talimy.space",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "signInButton": "Sign in to Talimy",
+    "invalidCredentials": "Incorrect email or password.",
+    "invalidCredentialsDescription": "Check your details and try again in a few minutes.",
+    "locales": {
+      "uz": "O'z",
+      "en": "En",
+      "tr": "Tr",
+      "ar": "عر"
+    },
+    "platform": {
+      "badge": "Platform workspace",
+      "title": "Sign in to the platform workspace",
+      "description": "School onboarding, billing, and tenant operations are managed here.",
+      "footer": "School admins are invited from the platform panel with email magic links.",
+      "marketingTitle": "Manage every school from one platform workspace.",
+      "marketingDescription": "Assign subdomains and send the first admin invite with one flow.",
+      "marketingCardTitle": "Magic-link onboarding is host-bound.",
+      "marketingCardDescription": "Every invite opens on the correct workspace domain."
+    },
+    "school": {
+      "badge": "School workspace",
+      "title": "Sign in to your school account",
+      "description": "Admins, teachers, students, and parents sign in through this school subdomain.",
+      "footer": "Users are created by the school admin and complete setup through email magic links.",
+      "marketingTitle": "Run school operations from one workspace.",
+      "marketingDescription": "Attendance, assignments, grades, and notices stay in one tenant-bound domain.",
+      "marketingCardTitle": "Password setup uses email magic links.",
+      "marketingCardDescription": "Admin, teacher, and student access stays tied to this domain."
+    }
   },
   "dashboard": {
     "title": "Dashboard",
@@ -681,5 +723,17 @@
     "notes": "Enter notes",
     "description": "Enter description",
     "message": "Enter message"
+  },
+  "shell": {
+    "mainMenu": "Main menu",
+    "updates": "Updates",
+    "account": "Account",
+    "logout": "Log out",
+    "breadcrumbSchoolAdmin": "School Admin",
+    "workspace": "{schoolName} workspace",
+    "searchPlaceholder": "Search anything",
+    "settings": "Settings",
+    "notifications": "Notifications",
+    "theme": "Dark mode"
   }
 }

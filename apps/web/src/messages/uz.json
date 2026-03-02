@@ -34,9 +34,9 @@
   "locale": {
     "label": "Til",
     "uz": "O'zbekcha",
-    "tr": "T?rk?e",
+    "tr": "Türkçe",
     "en": "English",
-    "ru": "???????"
+    "ar": "Arabcha"
   },
   "nav": {
     "platform": {
@@ -54,7 +54,10 @@
       "finance": "Moliya",
       "notices": "E'lonlar",
       "calendar": "Kalendar",
-      "settings": "Sozlamalar"
+      "settings": "Sozlamalar",
+      "inbox": "Inbox",
+      "feesCollection": "To'lovlar",
+      "expenses": "Xarajatlar"
     },
     "teacher": {
       "dashboard": "Boshqaruv paneli",
@@ -115,6 +118,45 @@
     "mfaCode": "MFA code",
     "continue": "Continue",
     "backToLogin": "Back to login"
+  },
+  "authPage": {
+    "brandSubtitle": "Maktab boshqaruv platformasi",
+    "emailLabel": "Email manzil",
+    "emailPlaceholderPlatform": "platform.admin@talimy.space",
+    "emailPlaceholderSchool": "admin@mezana.talimy.space",
+    "passwordLabel": "Parol",
+    "passwordPlaceholder": "Parolingizni kiriting",
+    "rememberMe": "Eslab qolish",
+    "forgotPassword": "Parolni unutdingizmi?",
+    "signInButton": "Talimy ga kirish",
+    "invalidCredentials": "Email yoki parol noto'g'ri.",
+    "invalidCredentialsDescription": "Ma'lumotlarni tekshirib, bir necha daqiqadan keyin qayta urinib ko'ring.",
+    "locales": {
+      "uz": "O'z",
+      "en": "En",
+      "tr": "Tr",
+      "ar": "عر"
+    },
+    "platform": {
+      "badge": "Platform ish maydoni",
+      "title": "Platform boshqaruviga xush kelibsiz",
+      "description": "Platform adminlar maktab qo'shish, billing va tenant operatsiyalarini aynan shu ish maydonidan boshqaradi.",
+      "footer": "Platform admin akkauntlari ichki tartibda yaratiladi. Yangi school admin foydalanuvchilari platform paneldan magic link orqali taklif qilinadi.",
+      "marketingTitle": "Barcha maktablarni bitta platform ish maydonidan boshqaring.",
+      "marketingDescription": "Yangi maktab yarating, subdomenni biriktiring va birinchi school adminga tenantga bog'langan magic link yuboring.",
+      "marketingCardTitle": "Magic link onboarding tenant hostiga bog'langan.",
+      "marketingCardDescription": "Taklif havolasi doim kerakli workspace domenida ochiladi. Platform va school autentifikatsiyasi qat'iy ajratilgan."
+    },
+    "school": {
+      "badge": "Maktab ish maydoni",
+      "title": "Maktab akkauntingizga kiring",
+      "description": "Admin, o'qituvchi, o'quvchi va ota-ona aynan shu maktab subdomeni orqali tizimga kiradi.",
+      "footer": "Foydalanuvchilar maktab admini yuborgan email magic link orqali yaratiladi va faollashtiriladi.",
+      "marketingTitle": "Maktab operatsiyalarini bitta workspace ichida boshqaring.",
+      "marketingDescription": "Davomat, topshiriq, baho va bildirishnomalar tenantga bog'langan domen ichida yuritiladi.",
+      "marketingCardTitle": "Parol o'rnatish email magic link orqali bajariladi.",
+      "marketingCardDescription": "Admin, o'qituvchi va o'quvchi kirishlari aynan shu domen bilan bog'langan bo'ladi."
+    }
   },
   "dashboard": {
     "title": "Boshqaruv paneli",
@@ -681,5 +723,17 @@
     "notes": "Enter notes",
     "description": "Enter description",
     "message": "Enter message"
+  },
+  "shell": {
+    "mainMenu": "Asosiy menyu",
+    "updates": "Yangilanishlar",
+    "account": "Akkaunt",
+    "logout": "Chiqish",
+    "breadcrumbSchoolAdmin": "Maktab admini",
+    "workspace": "{schoolName} workspace",
+    "searchPlaceholder": "Istalgan narsani qidiring",
+    "settings": "Sozlamalar",
+    "notifications": "Bildirishnomalar",
+    "theme": "Tungi rejim"
   }
 }

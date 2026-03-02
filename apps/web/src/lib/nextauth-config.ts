@@ -1,3 +1,5 @@
+import { request as httpRequest } from "node:http"
+import { request as httpsRequest } from "node:https"
 import { headers } from "next/headers"
 import { loginSchema } from "@talimy/shared"
 import type { NextAuthConfig } from "next-auth"
@@ -5,7 +7,10 @@ import Credentials from "next-auth/providers/credentials"
 
 import { getApiProxyOrigin } from "@/config/site"
 import { AUTH_ROUTE_PATHS } from "@/lib/auth-options"
-import { resolveHostScopeFromHeaders } from "@/lib/server/request-host"
+import {
+  resolveHostScopeFromHeaders,
+  resolveRequestHostFromHeaders,
+} from "@/lib/server/request-host"
 
 type GenderScope = "male" | "female" | "all"
 
@@ -47,6 +52,7 @@ type AuthUser = {
 const ACCESS_TOKEN_REFRESH_SKEW_MS = 30_000
 
 export const nextAuthConfig: NextAuthConfig = {
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   trustHost: true,
   session: {
     strategy: "jwt",
@@ -68,7 +74,7 @@ export const nextAuthConfig: NextAuthConfig = {
         }
 
         const incomingHeaders = await headers()
-        const hostScope = resolveHostScopeFromHeaders(incomingHeaders)
+        const hostScope = resolveLoginAttemptHostScope(incomingHeaders, credentials)
         if (hostScope.kind !== "platform" && hostScope.kind !== "school") {
           return null
         }
@@ -147,6 +153,20 @@ export const nextAuthConfig: NextAuthConfig = {
       delete token.authError
       return token
     },
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) {
+        return `${baseUrl}${url}`
+      }
+
+      try {
+        const targetUrl = new URL(url)
+        if (isAllowedAuthRedirectOrigin(targetUrl.origin)) {
+          return targetUrl.toString()
+        }
+      } catch {}
+
+      return baseUrl
+    },
     async session({ session, token }) {
       const existingUser = session.user ?? { name: null, email: null, image: null }
       const resolvedGenderScope = normalizeGenderScope(token.genderScope) ?? "all"
@@ -197,20 +217,14 @@ async function requestAuthSession(
     }
   }
 
-  const response = await fetch(`${getApiProxyOrigin()}${pathname}`, {
-    method: "POST",
-    headers: requestHeaders,
-    body: JSON.stringify(payload),
-    cache: "no-store",
-  })
-
-  if (!response.ok) {
+  const response = await postJsonToApi(pathname, payload, requestHeaders)
+  if (response.status < 200 || response.status >= 300) {
     return null
   }
 
   let parsed = {}
   try {
-    parsed = (await response.json()) as BackendEnvelope
+    parsed = JSON.parse(response.body) as BackendEnvelope
   } catch {
     return null
   }
@@ -218,11 +232,47 @@ async function requestAuthSession(
   return extractSession(parsed)
 }
 
+function postJsonToApi(
+  pathname: string,
+  payload: Record<string, unknown>,
+  headers: Headers
+): Promise<{ status: number; body: string }> {
+  const targetUrl = new URL(`${getApiProxyOrigin()}${pathname}`)
+  const requestImpl = targetUrl.protocol === "https:" ? httpsRequest : httpRequest
+
+  return new Promise((resolve, reject) => {
+    const request = requestImpl(
+      targetUrl,
+      {
+        method: "POST",
+        headers: Object.fromEntries(headers.entries()),
+      },
+      (response) => {
+        const chunks: Buffer[] = []
+        response.on("data", (chunk) => {
+          chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk))
+        })
+        response.on("end", () => {
+          resolve({
+            status: response.statusCode ?? 500,
+            body: Buffer.concat(chunks).toString("utf8"),
+          })
+        })
+        response.on("error", reject)
+      }
+    )
+
+    request.on("error", reject)
+    request.write(JSON.stringify(payload))
+    request.end()
+  })
+}
+
 async function buildForwardHeaders(): Promise<Headers> {
+
   const incomingHeaders = await headers()
   const forwardedHeaders = new Headers()
-  const forwardedHost =
-    incomingHeaders.get("x-forwarded-host") ?? incomingHeaders.get("host")
+  const forwardedHost = resolveRequestHostFromHeaders(incomingHeaders)
   const forwardedProto = incomingHeaders.get("x-forwarded-proto")
   const forwardedFor = incomingHeaders.get("x-forwarded-for")
 
@@ -322,6 +372,41 @@ function decodeAccessIdentity(accessToken: string): AuthIdentity | null {
   }
 }
 
+function resolveLoginAttemptHostScope(
+  headers: Headers,
+  credentials: Partial<Record<string, unknown>> | undefined
+): ReturnType<typeof resolveHostScopeFromHeaders> {
+  const hostScope = resolveHostScopeFromHeaders(headers)
+  if (hostScope.kind !== "public" && hostScope.kind !== "api") {
+    return hostScope
+  }
+
+  const callbackScope = resolveHostScopeFromCallbackUrl(credentials)
+  if (callbackScope) {
+    return callbackScope
+  }
+
+  return hostScope
+}
+
+function resolveHostScopeFromCallbackUrl(
+  credentials: Partial<Record<string, unknown>> | undefined
+): ReturnType<typeof resolveHostScopeFromHeaders> | null {
+  const rawCallbackUrl = typeof credentials?.callbackUrl === "string" ? credentials.callbackUrl : null
+  if (!rawCallbackUrl) {
+    return null
+  }
+
+  try {
+    const callbackUrl = new URL(rawCallbackUrl)
+    const syntheticHeaders = new Headers({ host: callbackUrl.host })
+    const scope = resolveHostScopeFromHeaders(syntheticHeaders)
+    return scope.kind === "platform" || scope.kind === "school" ? scope : null
+  } catch {
+    return null
+  }
+}
+
 function canIdentityAccessHost(
   identity: AuthIdentity,
   hostScope: ReturnType<typeof resolveHostScopeFromHeaders>
@@ -335,6 +420,22 @@ function canIdentityAccessHost(
   }
 
   return false
+}
+
+function isAllowedAuthRedirectOrigin(origin: string): boolean {
+  try {
+    const { hostname } = new URL(origin)
+    const normalizedHostname = hostname.toLowerCase()
+    return (
+      normalizedHostname === "localhost" ||
+      normalizedHostname === "127.0.0.1" ||
+      normalizedHostname.endsWith(".localhost") ||
+      normalizedHostname === "talimy.space" ||
+      normalizedHostname.endsWith(".talimy.space")
+    )
+  } catch {
+    return false
+  }
 }
 
 function toExpiresAt(expiresInSeconds: number): number {
