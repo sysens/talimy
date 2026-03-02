@@ -38,10 +38,20 @@ export function AppShellSessionUserMenu({
   labels,
 }: AppShellSessionUserMenuProps) {
   const handleLogout = async () => {
-    await signOut({
-      callbackUrl: "/login",
-      redirect: true,
+    const callbackUrl =
+      typeof window === "undefined"
+        ? "/login"
+        : new URL("/login", window.location.origin).toString()
+
+    const result = await signOut({
+      callbackUrl,
+      redirect: false,
     })
+
+    const resolvedUrl =
+      typeof result?.url === "string" && result.url.length > 0 ? result.url : callbackUrl
+
+    window.location.assign(resolvedUrl)
   }
 
   return (

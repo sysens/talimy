@@ -45,6 +45,23 @@ async function bootstrap(): Promise<void> {
   })
 
   httpAdapter.get(
+    "/robots.txt",
+    (
+      _request: unknown,
+      response: {
+        status: (code: number) => {
+          type: (value: string) => { send: (body: string) => void }
+        }
+      }
+    ) => {
+      response
+        .status(200)
+        .type("text/plain")
+        .send("User-agent: *\nDisallow: /\n")
+    }
+  )
+
+  httpAdapter.get(
     "/.well-known/appspecific/com.chrome.devtools.json",
     (_request: unknown, response: { status: (code: number) => { end: () => void } }) => {
       response.status(204).end()
