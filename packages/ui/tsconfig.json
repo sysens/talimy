@@ -5,7 +5,9 @@
     "jsx": "react-jsx",
     "paths": {
       "@/*": ["./src/*"],
-      "@talimy-ui/*": ["./src/*"]
+      "@talimy-ui/*": ["./src/*"],
+      "next": ["../../apps/web/node_modules/next"],
+      "next/*": ["../../apps/web/node_modules/next/*"]
     }
   },
   "include": ["src"]

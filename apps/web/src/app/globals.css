@@ -15,7 +15,7 @@
     --radius-4xl: calc(var(--radius) + 16px);
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-    --font-sans: var(--font-geist-sans);
+    --font-sans: var(--font-inter);
     --font-mono: var(--font-geist-mono);
     --color-card: var(--card);
     --color-card-foreground: var(--card-foreground);
@@ -88,6 +88,18 @@
     --talimy-color-pink: #feccfd;
     --talimy-color-sky: #cdeaf0;
     --talimy-color-gray: #7d8582;
+    --app-shell-surface: #f8f8f8;
+    --app-shell-sidebar-bg: #e4dde5;
+    --app-shell-sidebar-fg: #15446e;
+    --app-shell-sidebar-muted: #677384;
+    --app-shell-control-bg: #ffffff;
+    --app-shell-control-fg: #15446e;
+    --app-shell-control-bg-hover: #feccfd;
+    --app-shell-search-bg: #ffffff;
+    --app-shell-search-placeholder: #7d8582;
+    --app-shell-hover-bg: rgba(254, 204, 253, 0.5);
+    --app-shell-active-bg: #cdeaf0;
+    --app-shell-active-fg: #15446e;
     --radius: 0.625rem;
     --background: oklch(1 0 0);
     --foreground: oklch(0.145 0 0);
@@ -139,6 +151,18 @@
     --talimy-color-pink: #feccfd;
     --talimy-color-sky: #cdeaf0;
     --talimy-color-gray: #7d8582;
+    --app-shell-surface: #111111;
+    --app-shell-sidebar-bg: #111111;
+    --app-shell-sidebar-fg: #e8f0fb;
+    --app-shell-sidebar-muted: #99a7bd;
+    --app-shell-control-bg: #1a1a1a;
+    --app-shell-control-fg: #e8f0fb;
+    --app-shell-control-bg-hover: #252525;
+    --app-shell-search-bg: #1a1a1a;
+    --app-shell-search-placeholder: #99a7bd;
+    --app-shell-hover-bg: rgba(254, 204, 253, 0.5);
+    --app-shell-active-bg: #cdeaf0;
+    --app-shell-active-fg: #15446e;
     --background: oklch(0.145 0 0);
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.205 0 0);
@@ -184,16 +208,65 @@
     --invert-foreground: var(--color-zinc-50);
 }
 
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 520ms;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html[data-theme-transition]::view-transition-old(root) {
+    animation: talimy-theme-switch-old 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+html[data-theme-transition]::view-transition-new(root) {
+    animation: talimy-theme-switch-new 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes talimy-theme-switch-new {
+    0% {
+        clip-path: circle(60% at var(--theme-switch-origin-x, 200%) var(--theme-switch-origin-y, -200%));
+        opacity: 0.7;
+    }
+
+    100% {
+        clip-path: circle(160% at var(--theme-switch-origin-x, 200%) var(--theme-switch-origin-y, -200%));
+        opacity: 1;
+    }
+}
+
+@keyframes talimy-theme-switch-old {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.96;
+    }
+}
+
 @layer base {
     * {
         @apply border-border outline-ring/50;
     }
 
+    button:not(:disabled),
+    [role="button"]:not([aria-disabled="true"]),
+    [data-slot="button"]:not(:disabled),
+    summary,
+    a[href] {
+        cursor: pointer;
+    }
+
+    html {
+        font-family: var(--font-inter), Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+
     body {
+        font-family: inherit;
         @apply bg-background text-foreground;
     }
 }
-`
+
 .recharts-responsive-container{
   height: 180px !important;
 }

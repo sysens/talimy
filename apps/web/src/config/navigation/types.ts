@@ -9,6 +9,7 @@ export type NavigationItem = {
   labelKey?: string
   href: string
   icon: string
+  section?: "main" | "updates"
   children?: NavigationItem[]
   matchPrefixes?: string[]
   disabled?: boolean
