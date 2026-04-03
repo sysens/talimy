@@ -1,6 +1,7 @@
 import { resolve } from "node:path"
 import { config } from "dotenv"
 import { Pool } from "pg"
+import { resolveDatabaseSsl } from "./ssl"
 
 config({ path: resolve(process.cwd(), ".env") })
 config({ path: resolve(process.cwd(), "../../.env"), override: false })
@@ -13,9 +14,5 @@ if (!databaseUrl) {
 
 export const pool = new Pool({
   connectionString: databaseUrl,
-  ssl: databaseUrl.includes("localhost")
-    ? false
-    : {
-        rejectUnauthorized: false,
-      },
+  ssl: resolveDatabaseSsl(databaseUrl),
 })
