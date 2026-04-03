@@ -10,6 +10,7 @@ import { AUTH_ROUTE_PATHS } from "@/lib/auth-options"
 import {
   resolveHostScopeFromHeaders,
   resolveRequestHostFromHeaders,
+  type RequestHostScope,
 } from "@/lib/server/request-host"
 
 type GenderScope = "male" | "female" | "all"
@@ -79,7 +80,7 @@ export const nextAuthConfig: NextAuthConfig = {
           return null
         }
 
-        const requestHeaders = await buildForwardHeaders()
+        const requestHeaders = await buildForwardHeaders(incomingHeaders, hostScope)
         const loginSession = await requestAuthSession(
           "/api/auth/login",
           parsed.data,
@@ -329,8 +330,10 @@ function shouldRetryApiRequest(error: unknown): boolean {
   return false
 }
 
-async function buildForwardHeaders(): Promise<Headers> {
-  const incomingHeaders = await headers()
+async function buildForwardHeaders(
+  incomingHeaders: Awaited<ReturnType<typeof headers>>,
+  hostScope: RequestHostScope
+): Promise<Headers> {
   const forwardedHeaders = new Headers()
   const forwardedHost = resolveRequestHostFromHeaders(incomingHeaders)
   const forwardedProto = incomingHeaders.get("x-forwarded-proto")
@@ -348,9 +351,12 @@ async function buildForwardHeaders(): Promise<Headers> {
     forwardedHeaders.set("x-forwarded-for", forwardedFor)
   }
 
-  const hostScope = resolveHostScopeFromHeaders(incomingHeaders)
   if (hostScope.kind === "school") {
     forwardedHeaders.set("x-tenant-slug", hostScope.tenantSlug)
+  }
+
+  if (hostScope.kind === "platform" || hostScope.kind === "school") {
+    forwardedHeaders.set("x-workspace-kind", hostScope.kind)
   }
 
   return forwardedHeaders

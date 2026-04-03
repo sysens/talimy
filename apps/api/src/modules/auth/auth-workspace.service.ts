@@ -8,6 +8,26 @@ export class AuthWorkspaceService {
     const forwardedHost = this.normalizeForwardedHost(context.forwardedHost)
     const protocol = this.normalizeProtocol(context.forwardedProto)
 
+    if (context.workspaceKind === "platform") {
+      const platformHost = forwardedHost || "platform.talimy.space"
+      return {
+        host: platformHost,
+        kind: "platform",
+        origin: `${protocol}://${platformHost}`,
+      }
+    }
+
+    if (context.workspaceKind === "school" && context.tenantSlug && context.tenantId) {
+      const schoolHost = forwardedHost || `${context.tenantSlug}.talimy.space`
+      return {
+        host: schoolHost,
+        kind: "school",
+        origin: `${protocol}://${schoolHost}`,
+        tenantId: context.tenantId,
+        tenantSlug: context.tenantSlug,
+      }
+    }
+
     if (!forwardedHost) {
       return {
         host: "talimy.space",

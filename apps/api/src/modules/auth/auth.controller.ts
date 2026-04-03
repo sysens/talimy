@@ -104,6 +104,7 @@ export class AuthController {
         this.readHeader(request.headers, "x-forwarded-for")?.split(",")[0]?.trim() ??
         request.ip ??
         null,
+      workspaceKind: this.readWorkspaceKind(request.headers),
       forwardedHost:
         this.readHeader(request.headers, "x-forwarded-host") ??
         this.readHeader(request.headers, "host"),
@@ -121,5 +122,17 @@ export class AuthController {
     }
 
     return rawValue ?? null
+  }
+
+  private readWorkspaceKind(
+    headers: Record<string, string | string[] | undefined>
+  ): "platform" | "school" | "public" | "api" | null {
+    const value = this.readHeader(headers, "x-workspace-kind")?.trim().toLowerCase()
+
+    if (value === "platform" || value === "school" || value === "public" || value === "api") {
+      return value
+    }
+
+    return null
   }
 }

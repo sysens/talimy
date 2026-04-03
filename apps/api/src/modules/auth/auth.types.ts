@@ -10,6 +10,7 @@ export type AuthRequestContext = {
   tenantSlug?: string | null
   forwardedHost?: string | null
   forwardedProto?: string | null
+  workspaceKind?: "platform" | "school" | "public" | "api" | null
 }
 
 export type TokenPayload = {
@@ -36,12 +37,7 @@ export type StoredUser = {
   genderScope: "male" | "female" | "all"
 }
 
-export type StoredRole =
-  | "platform_admin"
-  | "school_admin"
-  | "teacher"
-  | "student"
-  | "parent"
+export type StoredRole = "platform_admin" | "school_admin" | "teacher" | "student" | "parent"
 
 export type AuthIdentity = Omit<TokenPayload, "iat" | "exp" | "jti" | "type">
 
