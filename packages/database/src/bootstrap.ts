@@ -412,6 +412,15 @@ export async function bootstrapProductionData(): Promise<void> {
   await pool.end()
 }
 
-if (import.meta.main) {
-  await bootstrapProductionData()
+async function main(): Promise<void> {
+  try {
+    await bootstrapProductionData()
+  } catch (error) {
+    console.error("Bootstrap failed", error)
+    process.exitCode = 1
+  }
+}
+
+if (process.argv[1]?.endsWith("bootstrap.ts") || process.argv[1]?.endsWith("bootstrap.js")) {
+  void main()
 }
