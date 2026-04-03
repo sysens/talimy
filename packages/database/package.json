@@ -9,11 +9,13 @@
     "build": "tsc -p tsconfig.build.json",
     "db:generate": "bunx drizzle-kit generate --config=drizzle.config.ts",
     "db:migrate": "bun run src/migrate.ts",
+    "db:bootstrap": "bun run src/bootstrap.ts",
     "db:seed": "bun run src/seed/index.ts",
     "db:studio": "bunx drizzle-kit studio --config=drizzle.config.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^16.4.7",
     "drizzle-orm": "0.45.2",
     "pg": "^8.13.1"
