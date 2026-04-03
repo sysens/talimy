@@ -90,10 +90,10 @@
   },
   "auth": {
     "loginTitle": "Sign in",
-    "loginSubtitle": "Access your school workspace",
-    "registerTitle": "Register school",
-    "forgotPasswordTitle": "Forgot password",
-    "resetPasswordTitle": "Reset password",
+    "loginSubtitle": "Enter your details to access your account",
+    "registerTitle": "Register your school",
+    "forgotPasswordTitle": "Recover password",
+    "resetPasswordTitle": "Set a new password",
     "verifyEmailTitle": "Verify email",
     "email": "Email",
     "phone": "Phone",
@@ -108,14 +108,14 @@
     "resetPassword": "Reset password",
     "verificationCode": "Verification code",
     "newPassword": "New password",
-    "tenantSlug": "School slug",
+    "tenantSlug": "School address",
     "schoolName": "School name",
     "agreeTerms": "I agree to the terms",
-    "invalidCredentials": "Invalid credentials",
-    "sessionExpired": "Session expired, please sign in again",
+    "invalidCredentials": "Incorrect email or password",
+    "sessionExpired": "Your session expired. Please sign in again",
     "unauthorized": "Unauthorized",
     "accessDenied": "Access denied",
-    "mfaCode": "MFA code",
+    "mfaCode": "Verification code",
     "continue": "Continue",
     "backToLogin": "Back to login"
   },
@@ -138,24 +138,24 @@
       "ar": "عر"
     },
     "platform": {
-      "badge": "Platform workspace",
-      "title": "Sign in to the platform workspace",
-      "description": "School onboarding, billing, and tenant operations are managed here.",
-      "footer": "School admins are invited from the platform panel with email magic links.",
-      "marketingTitle": "Manage every school from one platform workspace.",
-      "marketingDescription": "Assign subdomains and send the first admin invite with one flow.",
-      "marketingCardTitle": "Magic-link onboarding is host-bound.",
-      "marketingCardDescription": "Every invite opens on the correct workspace domain."
+      "badge": "Platform account",
+      "title": "Sign in to your platform account",
+      "description": "This page is for team members who manage the Talimy platform.",
+      "footer": "If you have a platform account, sign in with your email and password.",
+      "marketingTitle": "Manage every school from one place.",
+      "marketingDescription": "Review schools, plans, and core settings from a single dashboard.",
+      "marketingCardTitle": "Important sections stay within reach.",
+      "marketingCardDescription": "Open schools, payments, and key settings from one clear workspace."
     },
     "school": {
-      "badge": "School workspace",
+      "badge": "School account",
       "title": "Sign in to your school account",
-      "description": "Admins, teachers, students, and parents sign in through this school subdomain.",
-      "footer": "Users are created by the school admin and complete setup through email magic links.",
-      "marketingTitle": "Run school operations from one workspace.",
-      "marketingDescription": "Attendance, assignments, grades, and notices stay in one tenant-bound domain.",
-      "marketingCardTitle": "Password setup uses email magic links.",
-      "marketingCardDescription": "Admin, teacher, and student access stays tied to this domain."
+      "description": "School leaders, teachers, students, and parents sign in here.",
+      "footer": "If your school has given you an account, use your email and password to continue.",
+      "marketingTitle": "Handle everyday school work in one place.",
+      "marketingDescription": "Track attendance, assignments, grades, and announcements from this workspace.",
+      "marketingCardTitle": "The details you need stay close.",
+      "marketingCardDescription": "See lessons, grades, and notifications quickly whenever you sign in."
     }
   },
   "dashboard": {
