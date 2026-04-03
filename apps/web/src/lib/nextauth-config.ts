@@ -80,7 +80,11 @@ export const nextAuthConfig: NextAuthConfig = {
         }
 
         const requestHeaders = await buildForwardHeaders()
-        const loginSession = await requestAuthSession("/api/auth/login", parsed.data, requestHeaders)
+        const loginSession = await requestAuthSession(
+          "/api/auth/login",
+          parsed.data,
+          requestHeaders
+        )
         if (!loginSession) {
           return null
         }
@@ -237,7 +241,21 @@ function postJsonToApi(
   payload: Record<string, unknown>,
   headers: Headers
 ): Promise<{ status: number; body: string }> {
-  const targetUrl = new URL(`${getApiProxyOrigin()}${pathname}`)
+  const targetUrls = buildApiTargetUrls(new URL(`${getApiProxyOrigin()}${pathname}`))
+
+  return attemptPostJson(targetUrls, payload, headers)
+}
+
+function attemptPostJson(
+  targetUrls: URL[],
+  payload: Record<string, unknown>,
+  headers: Headers
+): Promise<{ status: number; body: string }> {
+  const [targetUrl, ...fallbackUrls] = targetUrls
+  if (!targetUrl) {
+    return Promise.reject(new Error("No API target URL configured"))
+  }
+
   const requestImpl = targetUrl.protocol === "https:" ? httpsRequest : httpRequest
 
   return new Promise((resolve, reject) => {
@@ -262,14 +280,56 @@ function postJsonToApi(
       }
     )
 
-    request.on("error", reject)
+    request.on("error", (error) => {
+      if (fallbackUrls.length > 0 && shouldRetryApiRequest(error)) {
+        void attemptPostJson(fallbackUrls, payload, headers).then(resolve).catch(reject)
+        return
+      }
+
+      reject(error)
+    })
     request.write(JSON.stringify(payload))
     request.end()
   })
 }
 
-async function buildForwardHeaders(): Promise<Headers> {
+function buildApiTargetUrls(primaryUrl: URL): URL[] {
+  const targets = [new URL(primaryUrl.toString())]
 
+  if (primaryUrl.hostname === "localhost") {
+    const ipv4LoopbackUrl = new URL(primaryUrl.toString())
+    ipv4LoopbackUrl.hostname = "127.0.0.1"
+    targets.push(ipv4LoopbackUrl)
+  }
+
+  return targets
+}
+
+function shouldRetryApiRequest(error: unknown): boolean {
+  if (!error || typeof error !== "object") {
+    return false
+  }
+
+  const nodeError = error as NodeJS.ErrnoException & { errors?: unknown[] }
+  if (nodeError.code === "ECONNREFUSED" || nodeError.code === "EHOSTUNREACH") {
+    return true
+  }
+
+  if (Array.isArray(nodeError.errors)) {
+    return nodeError.errors.some((entry) => {
+      if (!entry || typeof entry !== "object") {
+        return false
+      }
+
+      const nestedError = entry as NodeJS.ErrnoException
+      return nestedError.code === "ECONNREFUSED" || nestedError.code === "EHOSTUNREACH"
+    })
+  }
+
+  return false
+}
+
+async function buildForwardHeaders(): Promise<Headers> {
   const incomingHeaders = await headers()
   const forwardedHeaders = new Headers()
   const forwardedHost = resolveRequestHostFromHeaders(incomingHeaders)
@@ -392,7 +452,8 @@ function resolveLoginAttemptHostScope(
 function resolveHostScopeFromCallbackUrl(
   credentials: Partial<Record<string, unknown>> | undefined
 ): ReturnType<typeof resolveHostScopeFromHeaders> | null {
-  const rawCallbackUrl = typeof credentials?.callbackUrl === "string" ? credentials.callbackUrl : null
+  const rawCallbackUrl =
+    typeof credentials?.callbackUrl === "string" ? credentials.callbackUrl : null
   if (!rawCallbackUrl) {
     return null
   }
@@ -444,7 +505,9 @@ function toExpiresAt(expiresInSeconds: number): number {
 }
 
 function normalizeStringArray(value: unknown): string[] {
-  return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : []
+  return Array.isArray(value)
+    ? value.filter((item): item is string => typeof item === "string")
+    : []
 }
 
 function normalizeGenderScope(value: unknown): GenderScope | null {

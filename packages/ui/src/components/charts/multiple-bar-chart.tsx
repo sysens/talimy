@@ -7,12 +7,7 @@ import type { Margin } from "recharts/types/util/types"
 
 import { cn } from "../../lib/utils"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "../ui/chart"
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "../ui/chart"
 
 export type MultipleBarChartDataPoint = Record<string, number | string | null | undefined>
 
@@ -25,7 +20,9 @@ export type MultipleBarChartSeries = {
   radius?: number | [number, number, number, number]
 }
 
-export type MultipleBarChartProps<TData extends MultipleBarChartDataPoint = MultipleBarChartDataPoint> = {
+export type MultipleBarChartProps<
+  TData extends MultipleBarChartDataPoint = MultipleBarChartDataPoint,
+> = {
   barCategoryGap?: number | string
   barGap?: number | string
   chartClassName?: string
@@ -47,7 +44,9 @@ export type MultipleBarChartProps<TData extends MultipleBarChartDataPoint = Mult
   xKey: keyof TData & string
 }
 
-export function MultipleBarChart<TData extends MultipleBarChartDataPoint = MultipleBarChartDataPoint>({
+export function MultipleBarChart<
+  TData extends MultipleBarChartDataPoint = MultipleBarChartDataPoint,
+>({
   barCategoryGap = "12%",
   barGap = 3,
   chartClassName,
@@ -82,7 +81,9 @@ export function MultipleBarChart<TData extends MultipleBarChartDataPoint = Multi
     [series]
   )
 
-  const tooltipFormatter = React.useMemo<React.ComponentProps<typeof ChartTooltipContent>["formatter"]>(() => {
+  const tooltipFormatter = React.useMemo<
+    React.ComponentProps<typeof ChartTooltipContent>["formatter"]
+  >(() => {
     if (!valueFormatter) {
       return undefined
     }
@@ -91,7 +92,9 @@ export function MultipleBarChart<TData extends MultipleBarChartDataPoint = Multi
       const key = String(name)
       const label = chartConfig[key]?.label ?? key
       const numericValue = Array.isArray(value) ? Number(value[0]) : Number(value)
-      const formattedValue = Number.isFinite(numericValue) ? valueFormatter(numericValue, key) : String(value)
+      const formattedValue = Number.isFinite(numericValue)
+        ? valueFormatter(numericValue, key)
+        : String(value)
 
       return (
         <div className="flex w-full items-center justify-between gap-3">
@@ -116,8 +119,17 @@ export function MultipleBarChart<TData extends MultipleBarChartDataPoint = Multi
       ) : null}
 
       <CardContent className="p-0">
-        <ChartContainer className={cn("h-56 w-full !aspect-auto", chartClassName)} config={chartConfig}>
-          <BarChart accessibilityLayer barCategoryGap={barCategoryGap} barGap={barGap} data={data} margin={margin}>
+        <ChartContainer
+          className={cn("h-44 w-full !aspect-auto", chartClassName)}
+          config={chartConfig}
+        >
+          <BarChart
+            accessibilityLayer
+            barCategoryGap={barCategoryGap}
+            barGap={barGap}
+            data={data}
+            margin={margin}
+          >
             <CartesianGrid strokeDasharray="0" vertical={false} />
             <XAxis
               axisLine={false}
@@ -162,7 +174,9 @@ export function MultipleBarChart<TData extends MultipleBarChartDataPoint = Multi
               {footerTrend} <TrendingUp className="h-4 w-4" />
             </div>
           ) : null}
-          {footerNote ? <div className="text-muted-foreground leading-none">{footerNote}</div> : null}
+          {footerNote ? (
+            <div className="text-muted-foreground leading-none">{footerNote}</div>
+          ) : null}
         </CardFooter>
       ) : null}
     </Card>

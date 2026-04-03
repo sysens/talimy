@@ -70,7 +70,8 @@ export function StatCard({
         {...props}
       >
         <div className="relative flex min-h-36 flex-col justify-end px-5 py-4">
-          <span className={cn(
+          <span
+            className={cn(
               "absolute right-4 top-4 inline-flex size-11 items-center justify-center rounded-full",
               iconTone
             )}
@@ -81,9 +82,7 @@ export function StatCard({
             {value}
           </p>
           <p className="mt-1 text-[1rem] leading-tight text-muted-foreground">{title}</p>
-          {trend ? (
-            <p className="mt-2 text-xs font-medium text-muted-foreground">{trend}</p>
-          ) : null}
+          {trend ? <p className="mt-2 text-xs font-medium text-muted-foreground">{trend}</p> : null}
         </div>
       </Card>
     )
@@ -101,10 +100,7 @@ export function StatCard({
       >
         <div className="flex items-center gap-3 px-4 py-4">
           <span
-            className={cn(
-              "inline-flex size-9 items-center justify-center rounded-full",
-              iconTone
-            )}
+            className={cn("inline-flex size-9 items-center justify-center rounded-full", iconTone)}
           >
             {renderIcon(icon, "size-4")}
           </span>
@@ -122,10 +118,7 @@ export function StatCard({
       <Card className={cn("rounded-2xl border-0 bg-card p-0 shadow-none", className)} {...props}>
         <div className="flex items-center gap-3 px-4 py-4">
           <span
-            className={cn(
-              "inline-flex size-11 items-center justify-center rounded-xl",
-              iconTone
-            )}
+            className={cn("inline-flex size-11 items-center justify-center rounded-xl", iconTone)}
           >
             {renderIcon(icon, "size-5")}
           </span>
@@ -142,10 +135,15 @@ export function StatCard({
   }
 
   return (
-    <Card className={cn("rounded-3xl border-0 bg-card p-0 shadow-none", className)} {...props}>
+    <Card
+      className={cn("rounded-3xl border-0 ring-0 bg-card p-0 shadow-none", className)}
+      {...props}
+    >
       <div className="flex items-center justify-between gap-4 px-5 py-4">
         <div className="min-w-0">
-          <p className="truncate text-[1rem] leading-tight text-[var(--talimy-color-gray)] dark:text-muted-foreground">{title}</p>
+          <p className="truncate text-[1rem] leading-tight text-[var(--talimy-color-gray)] dark:text-muted-foreground">
+            {title}
+          </p>
           <p className="mt-1 text-2xl leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200">
             {value}
           </p>

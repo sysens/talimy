@@ -30,9 +30,11 @@ export function AppShellHeader({
   }
 
   return (
-    <header className="my-5 flex shrink-0 items-center gap-3 bg-[var(--app-shell-surface)] px-4 text-[var(--app-shell-control-fg)] transitio
-        n-colors duration-300">
-      <SidebarTrigger className="-ml-1" />
+    <header
+      className="my-5 flex shrink-0 items-center gap-3 bg-[var(--app-shell-surface)] px-4 text-[var(--app-shell-control-fg)] transitio
+        n-colors duration-300"
+    >
+      <SidebarTrigger className="-ml-1 w-" />
       <LinkComponent href={data.homeHref ?? "/"} className="flex items-center gap-2 md:hidden">
         <div className="flex aspect-square size-8 items-center justify-center rounded-sm bg-[var(--app-shell-control-fg)]">
           {data.logo.src ? (
@@ -42,7 +44,9 @@ export function AppShellHeader({
               className="size-6 text-primary-foreground invert dark:invert-0"
             />
           ) : (
-            <span className="text-sm font-semibold text-primary-foreground">{data.logo.title.slice(0, 1)}</span>
+            <span className="text-sm font-semibold text-primary-foreground">
+              {data.logo.title.slice(0, 1)}
+            </span>
           )}
         </div>
         <span className="font-semibold text-[var(--app-shell-control-fg)]">{data.logo.title}</span>
