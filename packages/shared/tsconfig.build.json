@@ -4,9 +4,11 @@
   "compilerOptions": {
     "module": "CommonJS",
     "moduleResolution": "Node",
+    "ignoreDeprecations": "6.0",
     "noEmit": false,
     "declaration": true,
     "emitDeclarationOnly": false,
+    "rootDir": "./src",
     "outDir": "./dist",
     "verbatimModuleSyntax": false
   },

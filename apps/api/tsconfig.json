@@ -2,11 +2,11 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "extends": "../../packages/config-typescript/nestjs.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "outDir": "./dist",
+    "rootDir": "../../",
     "verbatimModuleSyntax": false,
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
       "@talimy/shared": ["../../packages/shared/src/index"],
       "@talimy/shared/*": ["../../packages/shared/src/*"],
       "@talimy/database": ["../../packages/database/src/index"],

@@ -6,8 +6,13 @@
     "emitDeclarationOnly": false,
     "declaration": false,
     "outDir": "./dist",
+    "rootDir": "./src",
     "paths": {
-      "@/*": ["src/*"],
+      "@/*": ["./src/*"],
+      "@talimy/shared": ["../../packages/shared/dist/index"],
+      "@talimy/shared/*": ["../../packages/shared/dist/*"],
+      "@talimy/database": ["../../packages/database/dist/index"],
+      "@talimy/database/*": ["../../packages/database/dist/*"],
       "dotenv": ["../../packages/database/node_modules/dotenv/lib/main.d.ts"],
       "pg": ["../../packages/database/node_modules/@types/pg/index.d.ts"]
     }

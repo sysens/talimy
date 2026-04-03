@@ -1,19 +1,15 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
 import { Alert, AlertDescription, Button, Input, Label } from "@talimy/ui"
 import { Eye, EyeOff, LoaderCircle } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useMemo, useState } from "react"
-import { useForm, type Resolver } from "react-hook-form"
+import { useForm, type FieldErrors, type Resolver, type ResolverResult } from "react-hook-form"
 import { z } from "zod"
 
 import { AUTH_ROUTE_PATHS } from "@/lib/auth-options"
-import {
-  acceptInviteWithMagicLink,
-  resetPasswordWithMagicLink,
-} from "@/lib/auth-client"
+import { acceptInviteWithMagicLink, resetPasswordWithMagicLink } from "@/lib/auth-client"
 
 const passwordSetupSchema = z
   .object({
@@ -25,37 +21,40 @@ const passwordSetupSchema = z
     message: "Parollar mos emas.",
   })
 
-type PasswordSetupInput = {
-  confirmPassword: string
-  password: string
-}
+type PasswordSetupInput = z.infer<typeof passwordSetupSchema>
 
-const passwordSetupResolver: Resolver<PasswordSetupInput> = async (values) => {
+const passwordSetupResolver: Resolver<PasswordSetupInput> = async (
+  values
+): Promise<ResolverResult<PasswordSetupInput>> => {
   const result = passwordSetupSchema.safeParse(values)
+
   if (result.success) {
     return {
-      errors: {},
       values: result.data,
+      errors: {},
     }
   }
 
   const fieldErrors = result.error.flatten().fieldErrors
+  const errors: FieldErrors<PasswordSetupInput> = {}
+
+  if (fieldErrors.password?.[0]) {
+    errors.password = {
+      message: fieldErrors.password[0],
+      type: "custom",
+    }
+  }
+
+  if (fieldErrors.confirmPassword?.[0]) {
+    errors.confirmPassword = {
+      message: fieldErrors.confirmPassword[0],
+      type: "custom",
+    }
+  }
+
   return {
     values: {},
-    errors: {
-      confirmPassword: fieldErrors.confirmPassword?.[0]
-        ? {
-            message: fieldErrors.confirmPassword[0],
-            type: "custom",
-          }
-        : undefined,
-      password: fieldErrors.password?.[0]
-        ? {
-            message: fieldErrors.password[0],
-            type: "custom",
-          }
-        : undefined,
-    },
+    errors,
   }
 }
 
@@ -78,10 +77,7 @@ export function ResetPasswordForm({ token, mode }: ResetPasswordFormProps) {
   })
 
   const heading = useMemo(
-    () =>
-      mode === "invite"
-        ? "Admin sahifasi uchun parol o'rnating"
-        : "Yangi parol o'rnating",
+    () => (mode === "invite" ? "Admin sahifasi uchun parol o'rnating" : "Yangi parol o'rnating"),
     [mode]
   )
 

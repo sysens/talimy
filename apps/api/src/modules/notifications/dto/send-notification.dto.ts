@@ -1,12 +1,12 @@
 import { createZodDto } from "nestjs-zod"
 import {
   markNotificationReadSchema,
-  notificationChannelSchema,
   notificationScopeQuerySchema,
   notificationsQuerySchema,
-  notificationTypeSchema,
   sendNotificationSchema,
   type MarkNotificationReadInput,
+  type NotificationChannel,
+  type NotificationType,
   type NotificationScopeQueryInput,
   type NotificationsQueryInput,
   type SendNotificationInput,
@@ -19,11 +19,10 @@ const NotificationsQueryDtoBase = createZodDto(notificationsQuerySchema) as ZodD
 const NotificationScopeQueryDtoBase = createZodDto(notificationScopeQuerySchema) as ZodDtoClass
 const MarkNotificationReadDtoBase = createZodDto(markNotificationReadSchema) as ZodDtoClass
 
-export type NotificationType = (typeof notificationTypeSchema)["_type"]
-export type NotificationChannel = (typeof notificationChannelSchema)["_type"]
-
 export class SendNotificationDto extends SendNotificationDtoBase {}
 export interface SendNotificationDto extends SendNotificationInput {}
+
+export type { NotificationChannel, NotificationType }
 
 export class NotificationsQueryDto extends NotificationsQueryDtoBase {}
 export interface NotificationsQueryDto extends NotificationsQueryInput {}

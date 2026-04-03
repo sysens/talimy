@@ -7,6 +7,7 @@ import {
   Logger,
 } from "@nestjs/common"
 import { ZodError } from "zod"
+import type { ZodIssue } from "zod"
 
 type ErrorBody = {
   code: string
@@ -53,7 +54,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         error: {
           code: "VALIDATION_ERROR",
           message: "Validation failed",
-          details: exception.errors.map((item) => ({
+          details: exception.issues.map((item: ZodIssue) => ({
             field: item.path.join("."),
             message: item.message,
           })),

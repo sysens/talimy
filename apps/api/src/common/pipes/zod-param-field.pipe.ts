@@ -1,16 +1,9 @@
 import { BadRequestException, Injectable, type PipeTransform } from "@nestjs/common"
-
-type ZodLikeSchema = {
-  safeParse: (
-    data: unknown
-  ) =>
-    | { success: true; data: unknown }
-    | { success: false; error: { errors?: { message: string; path?: (string | number)[] }[] } }
-}
+import type { ZodIssue, ZodType } from "zod"
 
 @Injectable()
 export class ZodParamFieldPipe implements PipeTransform {
-  constructor(private readonly schema: ZodLikeSchema) {}
+  constructor(private readonly schema: ZodType) {}
 
   transform(value: unknown): unknown {
     const result = this.schema.safeParse(value)
@@ -22,7 +15,7 @@ export class ZodParamFieldPipe implements PipeTransform {
     throw new BadRequestException({
       code: "VALIDATION_ERROR",
       message: "Validation failed",
-      details: (result.error.errors ?? []).map((item) => ({
+      details: result.error.issues.map((item: ZodIssue) => ({
         field: item.path?.join("."),
         message: item.message,
       })),

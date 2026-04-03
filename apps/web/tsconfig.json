@@ -1,7 +1,6 @@
 {
   "extends": "../../packages/config-typescript/nextjs.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "verbatimModuleSyntax": true,
     "paths": {
       "@/*": ["./src/*"],
