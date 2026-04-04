@@ -10,6 +10,7 @@ export type NoticeView = {
   targetRole: NoticeTargetRole
   priority: NoticePriority
   createdBy: string | null
+  createdByName: string | null
   publishDate: string
   expiryDate: string | null
   createdAt: string
@@ -25,4 +26,3 @@ export type NoticeListResponse = {
     totalPages: number
   }
 }
-

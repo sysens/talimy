@@ -4,6 +4,7 @@ import type { InferInsertModel } from "drizzle-orm"
 import { and, eq, isNull } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/node-postgres"
 
+import { ensureDashboardFixtures } from "./bootstrap-dashboard-fixtures"
 import { pool } from "./client"
 import { academicYears } from "./schema/academic-years"
 import { classes } from "./schema/classes"
@@ -14,7 +15,7 @@ import { teachers } from "./schema/teachers"
 import { tenants } from "./schema/tenants"
 import { users } from "./schema/users"
 
-type DatabaseTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0]
+export type DatabaseTransaction = Parameters<Parameters<typeof db.transaction>[0]>[0]
 type TenantInsert = InferInsertModel<typeof tenants>
 type UserInsert = InferInsertModel<typeof users>
 type AcademicYearInsert = InferInsertModel<typeof academicYears>
@@ -413,6 +414,14 @@ export async function bootstrapProductionData(): Promise<void> {
     })
 
     await ensureParentStudentRelation(tx, schoolTenantId, parentId, studentId)
+    await ensureDashboardFixtures(tx, {
+      academicYearId,
+      schoolAdminUserId,
+      schoolTenantId,
+      studentPasswordHash,
+      teacherPasswordHash,
+      teacherUserId,
+    })
 
     console.log("Bootstrap completed")
     console.log(`Platform tenant: ${platformTenantId}`)

@@ -5,10 +5,10 @@ import { getLocale, getMessages } from "next-intl/server"
 import type { ReactNode } from "react"
 
 import { getWebOrigin, SITE_NAME } from "@/config/site"
-import { AuthProvider } from "@/providers/auth-provider"
+import { getOptionalSession } from "@/lib/server/get-optional-session"
 import { IntlProvider } from "@/providers/intl-provider"
+import { AuthProvider } from "@/providers/auth-provider"
 import { ThemeProvider } from "@/providers/theme-provider"
-import { auth } from "@/lib/nextauth"
 
 const inter = Inter({
   subsets: ["latin", "latin-ext"],
@@ -27,7 +27,11 @@ type RootLayoutProps = {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const [locale, messages, session] = await Promise.all([getLocale(), getMessages(), auth()])
+  const [locale, messages, session] = await Promise.all([
+    getLocale(),
+    getMessages(),
+    getOptionalSession(),
+  ])
 
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"} suppressHydrationWarning>

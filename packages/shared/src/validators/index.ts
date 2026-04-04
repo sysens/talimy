@@ -1,4 +1,5 @@
 export * from "./auth.schema"
+export * from "./admin-dashboard.schema"
 export * from "./common.schema"
 export * from "./class.schema"
 export * from "./attendance.schema"

@@ -4,10 +4,13 @@ import { AttendanceOverviewChartShowcase433 } from "@/components/shared/ui-showc
 import { AttendanceProgressChartShowcase433 } from "@/components/shared/ui-showcase/attendance-progress-chart-4-3-3"
 import { DataTableShowcase42 } from "@/components/shared/ui-showcase/data-table-4-2"
 import { EarningsExpensesChartShowcase433 } from "@/components/shared/ui-showcase/earnings-expenses-chart-4-3-3"
+import { EventsListShowcase } from "@/components/shared/ui-showcase/events-list-showcase"
 import { FeesCollectionTrendChartShowcase433 } from "@/components/shared/ui-showcase/area-gradient"
 import { FullStackedRadialChartShowcase433 } from "@/components/shared/ui-showcase/full-stacked-radial-4-3-3"
 import { GenderDistributionChartShowcase433 } from "@/components/shared/ui-showcase/gender-distribution-chart-4-3-3"
+import { AdminDashboardTodoListSection } from "@/components/dashboard/admin/admin-dashboard-todo-list-section"
 import { AcademicPerformanceGroupedChartShowcase433 } from "@/components/shared/ui-showcase/academic-performance-grouped-chart-4-3-3"
+import { NoticeBoardHerouiTableShowcase } from "@/components/shared/ui-showcase/notice-board-heroui-table"
 import { PrimitivesShowcase411 } from "@/components/shared/ui-showcase/primitives-4-1-1"
 import { PrimitivesShowcase412 } from "@/components/shared/ui-showcase/primitives-4-1-2"
 import { PrimitivesShowcase413 } from "@/components/shared/ui-showcase/primitives-4-1-3"
@@ -15,8 +18,10 @@ import { PrimitivesShowcase414 } from "@/components/shared/ui-showcase/primitive
 import { PrimitivesShowcase415 } from "@/components/shared/ui-showcase/primitives-4-1-5"
 import { PrimitivesShowcase416 } from "@/components/shared/ui-showcase/primitives-4-1-6"
 import { MiniChartShowcase433 } from "@/components/shared/ui-showcase/mini-chart-4-3-3"
+import { RecentActivityShowcase } from "@/components/shared/ui-showcase/recent-activity-showcase"
 import { StatCardShowcase431 } from "@/components/shared/ui-showcase/stat-card-4-3-1"
 import { StudentAcademicPerformanceChartShowcase433 } from "@/components/shared/ui-showcase/student-academic-performance-chart-4-3-3"
+import { CalendarWidgetShowcase } from "@/components/shared/ui-showcase/calendar-widget-showcase"
 import { TeacherAttendanceChartShowcase433 } from "@/components/shared/ui-showcase/teacher-attendance-chart-4-3-3"
 import { TeacherDepartmentChartShowcase433 } from "@/components/shared/ui-showcase/teacher-department-chart-4-3-3"
 import { TeacherProfileWorkloadChartShowcase433 } from "@/components/shared/ui-showcase/teacher-profile-workload-chart-4-3-3"
@@ -127,6 +132,56 @@ export default function UiShowcasePage() {
             <TeacherDepartmentChartShowcase433 />
             <TeacherProfileWorkloadChartShowcase433 />
             <AcademicPerformanceGroupedChartShowcase433 />
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-muted-foreground">/admin/dashboard</h3>
+
+              <div className="max-w-sm">
+                <AdminDashboardTodoListSection />
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 6.2.7 - Notice Board</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <NoticeBoardHerouiTableShowcase />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 6.2.8 - Mini Calendar</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap items-start gap-8">
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-muted-foreground">
+                Admin / Event Calendar
+              </h3>
+              <CalendarWidgetShowcase />
+            </div>
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-muted-foreground">
+                Teacher Detail / Attendance Calendar
+              </h3>
+              <CalendarWidgetShowcase variant="attendance" />
+            </div>
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-muted-foreground">
+                Task 6.2.9 - Events (Agenda)
+              </h3>
+              <EventsListShowcase />
+            </div>
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-muted-foreground">
+                Task 6.2.10 - Recent Activity
+              </h3>
+              <RecentActivityShowcase />
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -14,6 +14,7 @@ import { AuthModule } from "./modules/auth/auth.module"
 import { AssignmentsModule } from "./modules/assignments/assignments.module"
 import { AttendanceModule } from "./modules/attendance/attendance.module"
 import { AiModule } from "./modules/ai/ai.module"
+import { AdminDashboardModule } from "./modules/admin-dashboard/admin-dashboard.module"
 import { AuditModule } from "./modules/audit/audit.module"
 import { ClassesModule } from "./modules/classes/classes.module"
 import { CalendarModule } from "./modules/calendar/calendar.module"
@@ -36,6 +37,7 @@ import { UploadModule } from "./modules/upload/upload.module"
   imports: [
     SentryModule.forRoot(),
     PermifyModule,
+    AdminDashboardModule,
     AuthModule,
     UsersModule,
     TenantsModule,

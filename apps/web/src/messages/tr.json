@@ -770,5 +770,262 @@
     "scopeMaleDescription": "Erişiminizi erkek öğrenciler ve erkek öğretmenlerle sınırlandırın.",
     "scopeFemaleLabel": "Sadece kız öğrenciler ve kadın öğretmenler",
     "scopeFemaleDescription": "Erişiminizi kız öğrenciler ve kadın öğretmenlerle sınırlandırın."
+  },
+  "adminDashboard": {
+    "stats": {
+      "sectionAriaLabel": "Gösterge paneli istatistikleri",
+      "enrolledStudents": "Kayıtlı öğrenciler",
+      "activeTeachers": "Aktif öğretmenler",
+      "supportStaff": "Destek personeli",
+      "totalAwards": "Toplam başarılar"
+    },
+    "studentPerformance": {
+      "title": "Öğrenci performansı",
+      "filterAriaLabel": "Öğrenci performans dönemi",
+      "legend": {
+        "grade7": "7. sınıf",
+        "grade8": "8. sınıf",
+        "grade9": "9. sınıf"
+      },
+      "periods": {
+        "lastSemester": "Geçen dönem",
+        "thisSemester": "Bu dönem"
+      }
+    },
+    "studentsByGender": {
+      "title": "Cinsiyete göre öğrenciler",
+      "filterAriaLabel": "Öğrenci cinsiyet sınıf filtresi",
+      "labels": {
+        "boys": "Erkekler",
+        "girls": "Kızlar"
+      },
+      "grades": {
+        "grade7": "7. sınıf",
+        "grade8": "8. sınıf",
+        "grade9": "9. sınıf"
+      }
+    },
+    "studentAttendance": {
+      "title": "Öğrenci devam durumu",
+      "filterAriaLabel": "Devam dönemi",
+      "periods": {
+        "weekly": "Haftalık",
+        "monthly": "Aylık"
+      },
+      "days": {
+        "mon": "Pzt",
+        "tue": "Sal",
+        "wed": "Çar",
+        "thu": "Per",
+        "fri": "Cum",
+        "sat": "Cts"
+      },
+      "groups": {
+        "a1": "A1 Grubu",
+        "a2": "A2 Grubu",
+        "a3": "A3 Grubu",
+        "a4": "A4 Grubu",
+        "a5": "A5 Grubu",
+        "a6": "A6 Grubu"
+      },
+      "grades": {
+        "grade7": "7. sınıf",
+        "grade8": "8. sınıf",
+        "grade9": "9. sınıf"
+      }
+    },
+    "earnings": {
+      "title": "Gelir",
+      "filterAriaLabel": "Gelir dönemi",
+      "legend": {
+        "earnings": "Gelir",
+        "expenses": "Gider"
+      },
+      "periods": {
+        "lastYear": "Geçen yıl",
+        "thisYear": "Bu yıl"
+      }
+    },
+    "todo": {
+      "title": "Yapılacaklar",
+      "menuAriaLabel": "Yapılacaklar menüsü",
+      "menu": {
+        "addTask": "Görev ekle",
+        "markAllDone": "Hepsini tamamlandı olarak işaretle",
+        "clearCompleted": "Tamamlananları temizle"
+      },
+      "addPlaceholder": "Yeni görev ekleyin",
+      "buttons": {
+        "cancel": "İptal",
+        "save": "Kaydet",
+        "update": "Güncelle"
+      },
+      "emptyState": "Henüz görev yok. İlk görevi menüden ekleyin.",
+      "items": {
+        "reviewTeacherAttendanceRecords": "Öğretmen devam kayıtlarını incele",
+        "prepareScienceFairGuidelines": "Bilim fuarı yönergelerini hazırla",
+        "updateLibraryBookInventory": "Kütüphane kitap envanterini güncelle"
+      },
+      "actions": {
+        "edit": "{title} görevini düzenle",
+        "delete": "{title} görevini sil"
+      }
+    },
+    "noticeBoard": {
+      "title": "Duyuru Panosu",
+      "sortLabel": "Sırala:",
+      "emptyState": "Henüz duyuru bulunmuyor.",
+      "createdByFallback": "Sistem",
+      "sortOptions": {
+        "popular": "Popüler",
+        "latest": "En yeni",
+        "oldest": "En eski"
+      },
+      "audiences": {
+        "all": "Herkes",
+        "teachers": "Öğretmenler",
+        "students": "Öğrenciler",
+        "parents": "Veliler"
+      },
+      "priority": {
+        "low": "Düşük",
+        "medium": "Orta",
+        "high": "Yüksek",
+        "urgent": "Acil"
+      },
+      "meta": {
+        "audience": "Kitle",
+        "date": "Tarih",
+        "createdBy": "Oluşturan"
+      },
+      "badges": {
+        "academic": "Akademik",
+        "event": "Etkinlik",
+        "training": "Eğitim",
+        "resources": "Kaynaklar",
+        "announcement": "Duyuru"
+      },
+      "items": {
+        "scienceFairRegistrationOpens": {
+          "title": "Bilim fuarı kaydı açıldı",
+          "audience": "Tüm öğrenciler",
+          "createdBy": "Akademik koordinatör"
+        },
+        "teacherDevelopmentWorkshop": {
+          "title": "Öğretmen gelişim atölyesi",
+          "audience": "Tüm öğretmenler",
+          "createdBy": "Müdürlük ofisi"
+        },
+        "newLibraryBooksArrived": {
+          "title": "Yeni kütüphane kitapları geldi",
+          "audience": "Öğrenciler ve öğretmenler",
+          "createdBy": "Kütüphaneci"
+        },
+        "fieldTripConsentFormsDue": {
+          "title": "Gezi izin formları son gün",
+          "audience": "7. ve 8. sınıf öğrencileri",
+          "createdBy": "Sınıf danışmanı"
+        }
+      },
+      "actionsAriaLabel": "{title} için işlemler"
+    },
+    "sidebar": {
+      "title": "Takvim ve hareketler",
+      "description": "Yan panelden tarihleri, etkinlikleri ve son hareketleri izleyin.",
+      "openPanel": "Takvim ve etkinlikleri aç",
+      "calendar": {
+        "eventsCount": "{count} etkinlik",
+        "types": {
+          "academic": "Akademik",
+          "exam": "Sınav",
+          "holiday": "Tatil",
+          "sports": "Spor",
+          "other": "Diğer"
+        },
+        "items": {
+          "parentMeeting": {
+            "title": "Veli toplantısı",
+            "meta": "09:00 · Ana salon"
+          },
+          "teachingWorkshop": {
+            "title": "Öğretim atölyesi",
+            "meta": "11:30 · Öğretmenler odası"
+          },
+          "noticeBoardReview": {
+            "title": "Duyuru panosu incelemesi",
+            "meta": "08:30 · Yönetim ofisi"
+          },
+          "parentAdvisoryMeeting": {
+            "title": "Veli danışma toplantısı",
+            "meta": "10:00 · Veli salonu"
+          },
+          "academicReviewSession": {
+            "title": "Akademik değerlendirme oturumu",
+            "meta": "13:00 · 9A sınıfı"
+          },
+          "readingClubGathering": {
+            "title": "Okuma kulübü buluşması",
+            "meta": "15:30 · Kütüphane"
+          },
+          "teacherPlanningMeeting": {
+            "title": "Öğretmen planlama toplantısı",
+            "meta": "09:30 · Toplantı odası"
+          },
+          "libraryResourceUpdate": {
+            "title": "Kütüphane kaynak güncellemesi",
+            "meta": "12:00 · Kaynak merkezi"
+          },
+          "scienceFairWorkshop": {
+            "title": "Bilim fuarı atölyesi",
+            "meta": "14:00 · İnovasyon laboratuvarı"
+          }
+        }
+      },
+      "events": {
+        "title": "Etkinlikler",
+        "emptyState": "Seçilen tarih aralığında etkinlik yok.",
+        "locationFallback": "Okul kampüsü",
+        "audiences": {
+          "allClasses": "Tüm sınıflar",
+          "grade7A7B": "7A, 7B"
+        },
+        "items": {
+          "annualSportCompetition": "Yıllık spor yarışması",
+          "parentTeacherMeeting": "Veli-öğretmen görüşmesi",
+          "annualScienceFair": "Yıllık bilim fuarı"
+        }
+      },
+      "recentActivity": {
+        "title": "Son hareketler",
+        "emptyState": "Henüz hareket kaydı yok.",
+        "systemActor": "Sistem",
+        "actions": {
+          "create": "oluşturma",
+          "update": "güncelleme",
+          "delete": "silme",
+          "replace": "değiştirme",
+          "write": "yazma"
+        },
+        "resources": {
+          "attendance": "devam",
+          "auth": "kimlik doğrulama",
+          "events": "etkinlik",
+          "notices": "duyuru",
+          "payments": "ödeme",
+          "students": "öğrenci",
+          "teachers": "öğretmen",
+          "unknown": "kayıt"
+        },
+        "templates": {
+          "generic": "{actor}, {resource} için {action} işlemini gerçekleştirdi."
+        },
+        "items": {
+          "studentEnrolled": "Yeni öğrenci Alicia Gomez (8B Sınıfı) kayıt birimi tarafından eklendi.",
+          "attendanceMarked": "7A sınıfı devam durumu Öğretmen John Smith tarafından işlendi.",
+          "paymentsVerified": "9. sınıf öğrencileri için aylık ödemeler doğrulandı.",
+          "examUpdated": "2. dönem sınav takvimi akademik koordinatör tarafından güncellendi."
+        }
+      }
+    }
   }
 }

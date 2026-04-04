@@ -770,5 +770,262 @@
     "scopeMaleDescription": "Limit your access to male students and male teachers.",
     "scopeFemaleLabel": "Girls and female teachers only",
     "scopeFemaleDescription": "Limit your access to female students and female teachers."
+  },
+  "adminDashboard": {
+    "stats": {
+      "sectionAriaLabel": "Dashboard statistics",
+      "enrolledStudents": "Enrolled students",
+      "activeTeachers": "Active teachers",
+      "supportStaff": "Support staff",
+      "totalAwards": "Total awards"
+    },
+    "studentPerformance": {
+      "title": "Student performance",
+      "filterAriaLabel": "Student performance period",
+      "legend": {
+        "grade7": "Grade 7",
+        "grade8": "Grade 8",
+        "grade9": "Grade 9"
+      },
+      "periods": {
+        "lastSemester": "Last semester",
+        "thisSemester": "This semester"
+      }
+    },
+    "studentsByGender": {
+      "title": "Students by gender",
+      "filterAriaLabel": "Student gender grade filter",
+      "labels": {
+        "boys": "Boys",
+        "girls": "Girls"
+      },
+      "grades": {
+        "grade7": "Grade 7",
+        "grade8": "Grade 8",
+        "grade9": "Grade 9"
+      }
+    },
+    "studentAttendance": {
+      "title": "Student attendance",
+      "filterAriaLabel": "Attendance period",
+      "periods": {
+        "weekly": "Weekly",
+        "monthly": "Monthly"
+      },
+      "days": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat"
+      },
+      "groups": {
+        "a1": "A1 Group",
+        "a2": "A2 Group",
+        "a3": "A3 Group",
+        "a4": "A4 Group",
+        "a5": "A5 Group",
+        "a6": "A6 Group"
+      },
+      "grades": {
+        "grade7": "Grade 7",
+        "grade8": "Grade 8",
+        "grade9": "Grade 9"
+      }
+    },
+    "earnings": {
+      "title": "Earnings",
+      "filterAriaLabel": "Earnings period",
+      "legend": {
+        "earnings": "Earnings",
+        "expenses": "Expenses"
+      },
+      "periods": {
+        "lastYear": "Last year",
+        "thisYear": "This year"
+      }
+    },
+    "todo": {
+      "title": "To Do List",
+      "menuAriaLabel": "To do list menu",
+      "menu": {
+        "addTask": "Add task",
+        "markAllDone": "Mark all done",
+        "clearCompleted": "Clear completed"
+      },
+      "addPlaceholder": "Add a new task",
+      "buttons": {
+        "cancel": "Cancel",
+        "save": "Save",
+        "update": "Update"
+      },
+      "emptyState": "No tasks yet. Add the first task from the menu.",
+      "items": {
+        "reviewTeacherAttendanceRecords": "Review teacher attendance records",
+        "prepareScienceFairGuidelines": "Prepare science fair guidelines",
+        "updateLibraryBookInventory": "Update library book inventory"
+      },
+      "actions": {
+        "edit": "Edit {title}",
+        "delete": "Delete {title}"
+      }
+    },
+    "noticeBoard": {
+      "title": "Notice Board",
+      "sortLabel": "Sort by:",
+      "emptyState": "No notices found yet.",
+      "createdByFallback": "System",
+      "sortOptions": {
+        "popular": "Popular",
+        "latest": "Latest",
+        "oldest": "Oldest"
+      },
+      "audiences": {
+        "all": "Everyone",
+        "teachers": "Teachers",
+        "students": "Students",
+        "parents": "Parents"
+      },
+      "priority": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "urgent": "Urgent"
+      },
+      "meta": {
+        "audience": "Audience",
+        "date": "Date",
+        "createdBy": "Created By"
+      },
+      "badges": {
+        "academic": "Academic",
+        "event": "Event",
+        "training": "Training",
+        "resources": "Resources",
+        "announcement": "Announcement"
+      },
+      "items": {
+        "scienceFairRegistrationOpens": {
+          "title": "Science fair registration opens",
+          "audience": "All students",
+          "createdBy": "Academic coordinator"
+        },
+        "teacherDevelopmentWorkshop": {
+          "title": "Teacher development workshop",
+          "audience": "All teachers",
+          "createdBy": "Principal's office"
+        },
+        "newLibraryBooksArrived": {
+          "title": "New library books arrived",
+          "audience": "Students & teachers",
+          "createdBy": "Librarian"
+        },
+        "fieldTripConsentFormsDue": {
+          "title": "Field trip consent forms due",
+          "audience": "Grade 7 & 8 students",
+          "createdBy": "Class advisor"
+        }
+      },
+      "actionsAriaLabel": "Actions for {title}"
+    },
+    "sidebar": {
+      "title": "Calendar and activity",
+      "description": "Review dates, events, and recent actions from the side panel.",
+      "openPanel": "Open calendar and events",
+      "calendar": {
+        "eventsCount": "{count} events",
+        "types": {
+          "academic": "Academic",
+          "exam": "Exam",
+          "holiday": "Holiday",
+          "sports": "Sports",
+          "other": "Other"
+        },
+        "items": {
+          "parentMeeting": {
+            "title": "Parent meeting",
+            "meta": "09:00 · Main hall"
+          },
+          "teachingWorkshop": {
+            "title": "Teaching workshop",
+            "meta": "11:30 · Staff room"
+          },
+          "noticeBoardReview": {
+            "title": "Notice board review",
+            "meta": "08:30 · Admin office"
+          },
+          "parentAdvisoryMeeting": {
+            "title": "Parent advisory meeting",
+            "meta": "10:00 · Parents hall"
+          },
+          "academicReviewSession": {
+            "title": "Academic review session",
+            "meta": "13:00 · Grade 9A"
+          },
+          "readingClubGathering": {
+            "title": "Reading club gathering",
+            "meta": "15:30 · Library"
+          },
+          "teacherPlanningMeeting": {
+            "title": "Teacher planning meeting",
+            "meta": "09:30 · Meeting room"
+          },
+          "libraryResourceUpdate": {
+            "title": "Library resource update",
+            "meta": "12:00 · Resource center"
+          },
+          "scienceFairWorkshop": {
+            "title": "Science fair workshop",
+            "meta": "14:00 · Innovation lab"
+          }
+        }
+      },
+      "events": {
+        "title": "Events",
+        "emptyState": "No events scheduled for the selected date range.",
+        "locationFallback": "School campus",
+        "audiences": {
+          "allClasses": "All classes",
+          "grade7A7B": "7A, 7B"
+        },
+        "items": {
+          "annualSportCompetition": "Annual sport competition",
+          "parentTeacherMeeting": "Parent-teacher meeting",
+          "annualScienceFair": "Annual science fair"
+        }
+      },
+      "recentActivity": {
+        "title": "Recent activity",
+        "emptyState": "No activity records yet.",
+        "systemActor": "System",
+        "actions": {
+          "create": "create",
+          "update": "update",
+          "delete": "delete",
+          "replace": "replace",
+          "write": "write"
+        },
+        "resources": {
+          "attendance": "attendance",
+          "auth": "authentication",
+          "events": "event",
+          "notices": "notice",
+          "payments": "payment",
+          "students": "student",
+          "teachers": "teacher",
+          "unknown": "record"
+        },
+        "templates": {
+          "generic": "{actor} performed the {action} action for {resource}."
+        },
+        "items": {
+          "studentEnrolled": "New student Alicia Gomez (Class 8B) enrolled by Registrar.",
+          "attendanceMarked": "Attendance for Class 7A marked by Teacher John Smith.",
+          "paymentsVerified": "Monthly fee payments verified for Grade 9 students.",
+          "examUpdated": "Exam timetable for Term 2 updated by Academic Coordinator."
+        }
+      }
+    }
   }
 }

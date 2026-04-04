@@ -139,5 +139,262 @@
     "scopeMaleDescription": "حصر الوصول بالطلاب الذكور والمعلمين الذكور.",
     "scopeFemaleLabel": "البنات والمعلمات فقط",
     "scopeFemaleDescription": "حصر الوصول بالطالبات والمعلمات."
+  },
+  "adminDashboard": {
+    "stats": {
+      "sectionAriaLabel": "إحصاءات لوحة التحكم",
+      "enrolledStudents": "الطلاب المسجلون",
+      "activeTeachers": "المعلمون النشطون",
+      "supportStaff": "طاقم الدعم",
+      "totalAwards": "إجمالي الإنجازات"
+    },
+    "studentPerformance": {
+      "title": "أداء الطلاب",
+      "filterAriaLabel": "فترة أداء الطلاب",
+      "legend": {
+        "grade7": "الصف السابع",
+        "grade8": "الصف الثامن",
+        "grade9": "الصف التاسع"
+      },
+      "periods": {
+        "lastSemester": "الفصل السابق",
+        "thisSemester": "الفصل الحالي"
+      }
+    },
+    "studentsByGender": {
+      "title": "الطلاب حسب الجنس",
+      "filterAriaLabel": "فلتر صفوف الطلاب حسب الجنس",
+      "labels": {
+        "boys": "البنون",
+        "girls": "البنات"
+      },
+      "grades": {
+        "grade7": "الصف السابع",
+        "grade8": "الصف الثامن",
+        "grade9": "الصف التاسع"
+      }
+    },
+    "studentAttendance": {
+      "title": "حضور الطلاب",
+      "filterAriaLabel": "فترة الحضور",
+      "periods": {
+        "weekly": "أسبوعي",
+        "monthly": "شهري"
+      },
+      "days": {
+        "mon": "الإث",
+        "tue": "الثل",
+        "wed": "الأر",
+        "thu": "الخ",
+        "fri": "الجم",
+        "sat": "السب"
+      },
+      "groups": {
+        "a1": "المجموعة A1",
+        "a2": "المجموعة A2",
+        "a3": "المجموعة A3",
+        "a4": "المجموعة A4",
+        "a5": "المجموعة A5",
+        "a6": "المجموعة A6"
+      },
+      "grades": {
+        "grade7": "الصف السابع",
+        "grade8": "الصف الثامن",
+        "grade9": "الصف التاسع"
+      }
+    },
+    "earnings": {
+      "title": "الإيرادات",
+      "filterAriaLabel": "فترة الإيرادات",
+      "legend": {
+        "earnings": "الإيرادات",
+        "expenses": "المصروفات"
+      },
+      "periods": {
+        "lastYear": "العام الماضي",
+        "thisYear": "هذا العام"
+      }
+    },
+    "todo": {
+      "title": "قائمة المهام",
+      "menuAriaLabel": "قائمة مهام لوحة التحكم",
+      "menu": {
+        "addTask": "إضافة مهمة",
+        "markAllDone": "تحديد الكل كمكتمل",
+        "clearCompleted": "إزالة المكتمل"
+      },
+      "addPlaceholder": "أضف مهمة جديدة",
+      "buttons": {
+        "cancel": "إلغاء",
+        "save": "حفظ",
+        "update": "تحديث"
+      },
+      "emptyState": "لا توجد مهام بعد. أضف أول مهمة من القائمة.",
+      "items": {
+        "reviewTeacherAttendanceRecords": "مراجعة سجلات حضور المعلمين",
+        "prepareScienceFairGuidelines": "إعداد إرشادات معرض العلوم",
+        "updateLibraryBookInventory": "تحديث جرد كتب المكتبة"
+      },
+      "actions": {
+        "edit": "تعديل {title}",
+        "delete": "حذف {title}"
+      }
+    },
+    "noticeBoard": {
+      "title": "لوحة الإعلانات",
+      "sortLabel": "الترتيب:",
+      "emptyState": "لا توجد إعلانات حالياً.",
+      "createdByFallback": "النظام",
+      "sortOptions": {
+        "popular": "الأكثر شيوعاً",
+        "latest": "الأحدث",
+        "oldest": "الأقدم"
+      },
+      "audiences": {
+        "all": "للجميع",
+        "teachers": "المعلمون",
+        "students": "الطلاب",
+        "parents": "أولياء الأمور"
+      },
+      "priority": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "مرتفع",
+        "urgent": "عاجل"
+      },
+      "meta": {
+        "audience": "الفئة",
+        "date": "التاريخ",
+        "createdBy": "أنشأها"
+      },
+      "badges": {
+        "academic": "أكاديمي",
+        "event": "فعالية",
+        "training": "تدريب",
+        "resources": "موارد",
+        "announcement": "إعلان"
+      },
+      "items": {
+        "scienceFairRegistrationOpens": {
+          "title": "فتح التسجيل لمعرض العلوم",
+          "audience": "جميع الطلاب",
+          "createdBy": "المنسق الأكاديمي"
+        },
+        "teacherDevelopmentWorkshop": {
+          "title": "ورشة تطوير المعلمين",
+          "audience": "جميع المعلمين",
+          "createdBy": "مكتب المدير"
+        },
+        "newLibraryBooksArrived": {
+          "title": "وصول كتب جديدة إلى المكتبة",
+          "audience": "الطلاب والمعلمون",
+          "createdBy": "أمين المكتبة"
+        },
+        "fieldTripConsentFormsDue": {
+          "title": "آخر موعد لنماذج موافقة الرحلة",
+          "audience": "طلاب الصفين السابع والثامن",
+          "createdBy": "مرشد الصف"
+        }
+      },
+      "actionsAriaLabel": "إجراءات {title}"
+    },
+    "sidebar": {
+      "title": "التقويم والنشاط",
+      "description": "تابع التواريخ والفعاليات وآخر الأنشطة من اللوحة الجانبية.",
+      "openPanel": "فتح التقويم والفعاليات",
+      "calendar": {
+        "eventsCount": "{count} فعاليات",
+        "types": {
+          "academic": "أكاديمي",
+          "exam": "امتحان",
+          "holiday": "عطلة",
+          "sports": "رياضة",
+          "other": "أخرى"
+        },
+        "items": {
+          "parentMeeting": {
+            "title": "اجتماع أولياء الأمور",
+            "meta": "09:00 · القاعة الرئيسية"
+          },
+          "teachingWorkshop": {
+            "title": "ورشة تعليمية",
+            "meta": "11:30 · غرفة المعلمين"
+          },
+          "noticeBoardReview": {
+            "title": "مراجعة لوحة الإعلانات",
+            "meta": "08:30 · الإدارة"
+          },
+          "parentAdvisoryMeeting": {
+            "title": "اجتماع استشاري لأولياء الأمور",
+            "meta": "10:00 · قاعة أولياء الأمور"
+          },
+          "academicReviewSession": {
+            "title": "جلسة مراجعة أكاديمية",
+            "meta": "13:00 · الصف 9A"
+          },
+          "readingClubGathering": {
+            "title": "لقاء نادي القراءة",
+            "meta": "15:30 · المكتبة"
+          },
+          "teacherPlanningMeeting": {
+            "title": "اجتماع تخطيط المعلمين",
+            "meta": "09:30 · غرفة الاجتماعات"
+          },
+          "libraryResourceUpdate": {
+            "title": "تحديث موارد المكتبة",
+            "meta": "12:00 · مركز الموارد"
+          },
+          "scienceFairWorkshop": {
+            "title": "ورشة معرض العلوم",
+            "meta": "14:00 · مختبر الابتكار"
+          }
+        }
+      },
+      "events": {
+        "title": "الفعاليات",
+        "emptyState": "لا توجد فعاليات ضمن النطاق الزمني المحدد.",
+        "locationFallback": "حرم المدرسة",
+        "audiences": {
+          "allClasses": "جميع الصفوف",
+          "grade7A7B": "7A، 7B"
+        },
+        "items": {
+          "annualSportCompetition": "المسابقة الرياضية السنوية",
+          "parentTeacherMeeting": "اجتماع أولياء الأمور والمعلمين",
+          "annualScienceFair": "معرض العلوم السنوي"
+        }
+      },
+      "recentActivity": {
+        "title": "آخر النشاطات",
+        "emptyState": "لا توجد سجلات نشاط حتى الآن.",
+        "systemActor": "النظام",
+        "actions": {
+          "create": "إنشاء",
+          "update": "تحديث",
+          "delete": "حذف",
+          "replace": "استبدال",
+          "write": "كتابة"
+        },
+        "resources": {
+          "attendance": "الحضور",
+          "auth": "المصادقة",
+          "events": "الفعالية",
+          "notices": "الإعلان",
+          "payments": "الدفعة",
+          "students": "الطالب",
+          "teachers": "المعلم",
+          "unknown": "السجل"
+        },
+        "templates": {
+          "generic": "قام {actor} بتنفيذ إجراء {action} على {resource}."
+        },
+        "items": {
+          "studentEnrolled": "تم تسجيل الطالبة الجديدة أليسيا غوميز (الصف 8B) بواسطة قسم التسجيل.",
+          "attendanceMarked": "تم تسجيل حضور الصف 7A بواسطة المعلم جون سميث.",
+          "paymentsVerified": "تم التحقق من الرسوم الشهرية لطلاب الصف التاسع.",
+          "examUpdated": "تم تحديث جدول امتحانات الفصل الثاني بواسطة المنسق الأكاديمي."
+        }
+      }
+    }
   }
 }

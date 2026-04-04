@@ -467,12 +467,12 @@ principal          → Full access regardless of gender
 
 ### Supported Languages
 
-| Code | Language      | Status   |
-| ---- | ------------- | -------- |
-| `uz` | O'zbek tili   | Default  |
-| `tr` | Turk tili     | Default  |
-| `en` | English       | Optional |
-| `ar` | العربية       | Optional |
+| Code | Language    | Status   |
+| ---- | ----------- | -------- |
+| `uz` | O'zbek tili | Default  |
+| `tr` | Turk tili   | Default  |
+| `en` | English     | Optional |
+| `ar` | العربية     | Optional |
 
 ### Implementation
 
@@ -720,12 +720,15 @@ bun run test:e2e               # Playwright E2E tests
 6. **Never skip** tenant isolation. Every DB query MUST include `tenantId`.
 7. **Minimal-diff editing**: Change only what is required for the task. Do not rewrite unchanged lines.
 8. **Surgical updates**: If one prop/value/path changes, edit only that exact part; keep surrounding code untouched.
-9. **Post-install verification is agent-owned**: After setup/install steps (e.g., shadcn init/add), the agent MUST verify generated config and paths itself before giving next steps.
-10. **Mandatory quick checks after UI setup**: verify `components.json` (`tailwind.css` path), `src/app/globals.css` presence, and TS path aliases (`@/*`, `@talimy/ui/*`) and then report actionable next tasks.
-11. **Diff hygiene is mandatory**: when editing a file, change only target lines; unchanged neighboring lines (headers/keys/values) MUST NOT be deleted and re-added. After edits, verify with `git diff --word-diff -- <file>` and ensure only intended tokens changed.
-12. **Best-practice first (strict)**: Do NOT choose temporary / pragmatic / quick-fix workarounds as the primary solution. Default to the cleanest, most correct, long-term, best-practice implementation even if it takes longer.
-13. **No "smallest quick fix" decision rule (strict)**: When a bug is found, do NOT prioritize the smallest / fastest patch if it leaves architectural inconsistency in place. Prefer the root-cause fix that aligns the module with the project's intended standard (even if the patch is larger).
-    -11. **Env-path precision is mandatory**: when asking the user to add/update environment variables, the agent MUST provide a single exact file path per variable based on scope (e.g., `apps/api/.env` or `apps/web/.env.local`) and MUST NOT use ambiguous alternatives like "A yoki B".
+9. **Rename operations via move command only**: When renaming a file or directory, use a shell move command (`mv`, `Move-Item`, or equivalent). Do NOT delete/recreate files just to rename them.
+10. **Symbol rename discipline**: If the task is only naming/renaming (`CollectionPreviewSortOrder` -> `FeedSortOrder` kabi), change only the exact identifier/import/path lines required. Do NOT rewrite entire blocks or reflow unrelated code for a simple rename.
+11. **External snippet adaptation rule**: If the user provides code copied from another source, adapt component/file/type names and mock data to Talimy context before integrating. Component naming MUST come from the component's actual responsibility inside Talimy, not from the source snippet. Do NOT preserve foreign/source-specific naming (masalan `subscription`, `pricing`, `shop`) unless the feature itself truly belongs to that domain.
+12. **Post-install verification is agent-owned**: After setup/install steps (e.g., shadcn init/add), the agent MUST verify generated config and paths itself before giving next steps.
+13. **Mandatory quick checks after UI setup**: verify `components.json` (`tailwind.css` path), `src/app/globals.css` presence, and TS path aliases (`@/*`, `@talimy/ui/*`) and then report actionable next tasks.
+14. **Diff hygiene is mandatory**: when editing a file, change only target lines; unchanged neighboring lines (headers/keys/values) MUST NOT be deleted and re-added. After edits, verify with `git diff --word-diff -- <file>` and ensure only intended tokens changed.
+15. **Best-practice first (strict)**: Do NOT choose temporary / pragmatic / quick-fix workarounds as the primary solution. Default to the cleanest, most correct, long-term, best-practice implementation even if it takes longer.
+16. **No "smallest quick fix" decision rule (strict)**: When a bug is found, do NOT prioritize the smallest / fastest patch if it leaves architectural inconsistency in place. Prefer the root-cause fix that aligns the module with the project's intended standard (even if the patch is larger).
+17. **Env-path precision is mandatory**: when asking the user to add/update environment variables, the agent MUST provide a single exact file path per variable based on scope (e.g., `apps/api/.env` or `apps/web/.env.local`) and MUST NOT use ambiguous alternatives like "A yoki B".
 
 ### After Writing Code
 

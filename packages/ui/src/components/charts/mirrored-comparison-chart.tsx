@@ -6,13 +6,16 @@ import { cn } from "../../lib/utils"
 
 export type MirroredComparisonChartDatum = Record<string, number | string>
 
-export type MirroredComparisonChartProps<TData extends MirroredComparisonChartDatum = MirroredComparisonChartDatum> = {
+export type MirroredComparisonChartProps<
+  TData extends MirroredComparisonChartDatum = MirroredComparisonChartDatum,
+> = {
   className?: string
   data: TData[]
   formatMonthLabel?: (label: string, index: number) => string
   formatTooltipLabel?: (label: string, index: number) => string
   formatValue?: (value: number, key: string) => string
   height?: number
+  hideXAxisLabels?: boolean
   labelKey: keyof TData & string
   maxValue?: number
   negativeColor?: string
@@ -24,15 +27,17 @@ export type MirroredComparisonChartProps<TData extends MirroredComparisonChartDa
 }
 
 const DEFAULT_HEIGHT = 320
-const DEFAULT_WIDTH = 720
 
-export function MirroredComparisonChart<TData extends MirroredComparisonChartDatum = MirroredComparisonChartDatum>({
+export function MirroredComparisonChart<
+  TData extends MirroredComparisonChartDatum = MirroredComparisonChartDatum,
+>({
   className,
   data,
   formatMonthLabel,
   formatTooltipLabel = (label) => `${label} 2034`,
   formatValue = (value) => `$${value.toLocaleString()}`,
   height = DEFAULT_HEIGHT,
+  hideXAxisLabels = false,
   labelKey,
   maxValue,
   negativeColor = "var(--talimy-color-pink)",
@@ -42,9 +47,11 @@ export function MirroredComparisonChart<TData extends MirroredComparisonChartDat
   positiveKey,
   positiveLabel,
 }: MirroredComparisonChartProps<TData>) {
+  const containerRef = React.useRef<HTMLDivElement | null>(null)
   const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null)
   const [displayIndex, setDisplayIndex] = React.useState<number | null>(null)
   const [tooltipVisible, setTooltipVisible] = React.useState(false)
+  const [chartWidth, setChartWidth] = React.useState(0)
 
   React.useEffect(() => {
     if (hoveredIndex === null) {
@@ -58,6 +65,30 @@ export function MirroredComparisonChart<TData extends MirroredComparisonChartDat
     return () => window.clearTimeout(timeout)
   }, [hoveredIndex])
 
+  React.useEffect(() => {
+    const element = containerRef.current
+    if (!element) {
+      return
+    }
+
+    const updateChartWidth = () => {
+      const nextWidth = Math.round(element.getBoundingClientRect().width)
+      setChartWidth((currentWidth) => (currentWidth === nextWidth ? currentWidth : nextWidth))
+    }
+
+    updateChartWidth()
+
+    const observer = new ResizeObserver(() => {
+      updateChartWidth()
+    })
+
+    observer.observe(element)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
+
   const computedMaxValue = React.useMemo(() => {
     const seriesMax = data.reduce((max, item) => {
       const positiveValue = Number(item[positiveKey] ?? 0)
@@ -68,10 +99,11 @@ export function MirroredComparisonChart<TData extends MirroredComparisonChartDat
     return maxValue ?? Math.max(Math.ceil(seriesMax / 1000) * 1000, 1000)
   }, [data, maxValue, negativeKey, positiveKey])
 
-  const chartWidth = DEFAULT_WIDTH
-  const xOffset = 24
-  const innerWidth = chartWidth - xOffset
+  const xOffset = 0
+  const resolvedChartWidth = Math.max(chartWidth, data.length)
+  const innerWidth = Math.max(resolvedChartWidth, data.length)
   const chartHeight = height
+  const svgHeight = hideXAxisLabels ? chartHeight : chartHeight + 40
   const centerY = chartHeight / 2
   const slotWidth = innerWidth / data.length
 
@@ -86,11 +118,12 @@ export function MirroredComparisonChart<TData extends MirroredComparisonChartDat
   const hoveredPoint = tooltipIndex === null ? null : data[tooltipIndex]
 
   return (
-    <div className={cn("relative h-full w-full", className)}>
+    <div ref={containerRef} className={cn("relative h-full w-full", className)}>
       <svg
         className="h-full w-full overflow-visible"
         onMouseLeave={() => setHoveredIndex(null)}
-        viewBox={`0 0 ${chartWidth} ${chartHeight + 40}`}
+        preserveAspectRatio="none"
+        viewBox={`0 0 ${resolvedChartWidth} ${svgHeight}`}
       >
         <defs>
           <linearGradient id="talimy-mirror-positive-gradient" x1="0" x2="0" y1="0" y2="1">
@@ -120,11 +153,15 @@ export function MirroredComparisonChart<TData extends MirroredComparisonChartDat
           return (
             <line
               key={`grid-${index}`}
-              stroke={isCenter ? "color-mix(in oklab, var(--border) 90%, white 10%)" : "color-mix(in oklab, var(--border) 65%, white 35%)"}
+              stroke={
+                isCenter
+                  ? "color-mix(in oklab, var(--border) 90%, white 10%)"
+                  : "color-mix(in oklab, var(--border) 65%, white 35%)"
+              }
               strokeDasharray={isCenter ? undefined : "6 6"}
               strokeWidth={isCenter ? 1.6 : 1}
               x1={xOffset}
-              x2={chartWidth}
+              x2={resolvedChartWidth}
               y1={y}
               y2={y}
             />
@@ -133,6 +170,8 @@ export function MirroredComparisonChart<TData extends MirroredComparisonChartDat
 
         {data.map((point, index) => {
           const x = xOffset + index * slotWidth
+          const barWidth = slotWidth
+          const barX = x
           const positiveValue = Number(point[positiveKey] ?? 0)
           const negativeValue = Number(point[negativeKey] ?? 0)
           const positiveHeight = scaleY(positiveValue)
@@ -141,53 +180,68 @@ export function MirroredComparisonChart<TData extends MirroredComparisonChartDat
           const isActive = hoveredIndex === index
 
           return (
-            <g key={`${label}-${index}`} className="cursor-pointer" onMouseEnter={() => setHoveredIndex(index)}>
+            <g
+              key={`${label}-${index}`}
+              className="cursor-pointer"
+              onMouseEnter={() => setHoveredIndex(index)}
+            >
               <rect
-                fill={isActive ? "url(#talimy-mirror-positive-gradient-active)" : "url(#talimy-mirror-positive-gradient)"}
+                fill={
+                  isActive
+                    ? "url(#talimy-mirror-positive-gradient-active)"
+                    : "url(#talimy-mirror-positive-gradient)"
+                }
                 height={positiveHeight}
                 style={{ transition: "fill 180ms ease, opacity 180ms ease" }}
-                width={slotWidth}
-                x={x}
+                width={barWidth}
+                x={barX}
                 y={centerY - positiveHeight}
               />
               <line
                 stroke={positiveColor}
                 strokeWidth={isActive ? 3.5 : 3}
                 style={{ transition: "stroke-width 180ms ease" }}
-                x1={x}
-                x2={x + slotWidth}
+                x1={barX}
+                x2={barX + barWidth}
                 y1={centerY - positiveHeight}
                 y2={centerY - positiveHeight}
               />
 
               <rect
-                fill={isActive ? "url(#talimy-mirror-negative-gradient-active)" : "url(#talimy-mirror-negative-gradient)"}
+                fill={
+                  isActive
+                    ? "url(#talimy-mirror-negative-gradient-active)"
+                    : "url(#talimy-mirror-negative-gradient)"
+                }
                 height={negativeHeight}
                 style={{ transition: "fill 180ms ease, opacity 180ms ease" }}
-                width={slotWidth}
-                x={x}
+                width={barWidth}
+                x={barX}
                 y={centerY}
               />
               <line
                 stroke={negativeColor}
                 strokeWidth={isActive ? 3.5 : 3}
                 style={{ transition: "stroke-width 180ms ease" }}
-                x1={x}
-                x2={x + slotWidth}
+                x1={barX}
+                x2={barX + barWidth}
                 y1={centerY + negativeHeight}
                 y2={centerY + negativeHeight}
               />
 
-              <text
-                fill={isActive ? "var(--foreground)" : "var(--muted-foreground)"}
-                fontSize="14"
-                fontWeight={isActive ? "600" : "400"}
-                textAnchor="middle"
-                x={x + slotWidth / 2}
-                y={chartHeight + 30}
-              >
-                {formatMonthLabel ? formatMonthLabel(label, index) : label}
-              </text>
+              {!hideXAxisLabels ? (
+                <text
+                  fill={isActive ? "var(--foreground)" : "var(--muted-foreground)"}
+                  dominantBaseline="hanging"
+                  fontSize="16"
+                  fontWeight={isActive ? "600" : "400"}
+                  textAnchor="middle"
+                  x={x + slotWidth / 2}
+                  y={chartHeight + 12}
+                >
+                  {formatMonthLabel ? formatMonthLabel(label, index) : label}
+                </text>
+              ) : null}
             </g>
           )
         })}
@@ -216,7 +270,7 @@ export function MirroredComparisonChart<TData extends MirroredComparisonChartDat
             <foreignObject
               height="128"
               width="208"
-              x={Math.min(hoveredCenterX + 18, chartWidth - 208)}
+              x={Math.min(hoveredCenterX + 18, resolvedChartWidth - 208)}
               y={centerY - 78}
             >
               <div className="rounded-xl border border-border/70 bg-card/95 p-4 shadow-md backdrop-blur">
@@ -226,7 +280,10 @@ export function MirroredComparisonChart<TData extends MirroredComparisonChartDat
                 <div className="mt-2 space-y-2">
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <span className="h-0.5 w-3 rounded-full" style={{ backgroundColor: positiveColor }} />
+                      <span
+                        className="h-0.5 w-3 rounded-full"
+                        style={{ backgroundColor: positiveColor }}
+                      />
                       <span>{positiveLabel}</span>
                     </div>
                     <span className="text-sm font-bold text-foreground">
@@ -235,7 +292,10 @@ export function MirroredComparisonChart<TData extends MirroredComparisonChartDat
                   </div>
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <span className="h-0.5 w-3 rounded-full" style={{ backgroundColor: negativeColor }} />
+                      <span
+                        className="h-0.5 w-3 rounded-full"
+                        style={{ backgroundColor: negativeColor }}
+                      />
                       <span>{negativeLabel}</span>
                     </div>
                     <span className="text-sm font-bold text-foreground">

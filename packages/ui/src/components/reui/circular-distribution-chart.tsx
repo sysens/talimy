@@ -18,13 +18,18 @@ export type CircularDistributionSegment = {
 export type CircularDistributionChartProps = {
   centerContent?: React.ReactNode
   className?: string
+  contentClassName?: string
   filterAriaLabel?: string
   filterOptions?: ChartFilterOption[]
+  filterTriggerClassName?: string
   filterValue?: string
+  legendClassName?: string
   onFilterChange?: (value: string) => void
   segments: CircularDistributionSegment[]
+  titleClassName?: string
   title: React.ReactNode
   totalLabel?: (total: number) => React.ReactNode
+  totalLabelClassName?: string
 }
 
 const VIEWBOX_SIZE = 220
@@ -49,13 +54,18 @@ function getStrokeOffsetFromAngle(angle: number, circumference: number) {
 export function CircularDistributionChart({
   centerContent,
   className,
+  contentClassName,
   filterAriaLabel = "Distribution filter",
   filterOptions,
+  filterTriggerClassName,
   filterValue,
+  legendClassName,
   onFilterChange,
   segments,
   title,
+  titleClassName,
   totalLabel = (total) => total.toLocaleString(),
+  totalLabelClassName,
 }: CircularDistributionChartProps) {
   const total = React.useMemo(
     () => segments.reduce((sum, segment) => sum + segment.value, 0),
@@ -64,9 +74,14 @@ export function CircularDistributionChart({
 
   return (
     <Card className={cn("rounded-[28px] border-0 bg-card p-0 shadow-none", className)}>
-      <div className="space-y-5 p-6">
+      <div className={cn("space-y-5 p-6", contentClassName)}>
         <header className="flex items-start justify-between gap-3">
-          <h3 className="text-[1.75rem] leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200">
+          <h3
+            className={cn(
+              "text-[1.75rem] leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200",
+              titleClassName
+            )}
+          >
             {title}
           </h3>
 
@@ -74,7 +89,10 @@ export function CircularDistributionChart({
             <ChartFilterSelect
               ariaLabel={filterAriaLabel}
               options={filterOptions}
-              triggerClassName="h-11 min-w-28 rounded-xl px-3 text-base"
+              triggerClassName={cn(
+                "h-11 min-w-28 rounded-xl px-3 text-base",
+                filterTriggerClassName
+              )}
               value={filterValue}
               onValueChange={onFilterChange}
             />
@@ -104,7 +122,10 @@ export function CircularDistributionChart({
                       cy={CENTER}
                       fill="none"
                       r={radius}
-                      stroke={segment.trackColor ?? "color-mix(in oklab, var(--talimy-color-sky) 10%, var(--background) 90%)"}
+                      stroke={
+                        segment.trackColor ??
+                        "color-mix(in oklab, var(--talimy-color-sky) 10%, var(--background) 90%)"
+                      }
                       strokeWidth={strokeWidth}
                     />
                     <circle
@@ -117,7 +138,9 @@ export function CircularDistributionChart({
                       strokeDashoffset={startOffset}
                       strokeLinecap="round"
                       strokeWidth={strokeWidth}
-                      style={{ transition: "stroke-dasharray 320ms ease, stroke-dashoffset 320ms ease" }}
+                      style={{
+                        transition: "stroke-dasharray 320ms ease, stroke-dashoffset 320ms ease",
+                      }}
                     />
                   </g>
                 )
@@ -127,7 +150,12 @@ export function CircularDistributionChart({
             <div className="absolute inset-0 grid place-items-center">
               <div className="grid size-[92px] place-items-center rounded-full bg-[color-mix(in_oklab,var(--background)_86%,white_14%)]">
                 {centerContent ?? (
-                  <p className="text-[2.2rem] leading-none font-semibold text-[var(--talimy-color-navy)] dark:text-sky-200">
+                  <p
+                    className={cn(
+                      "text-[2.2rem] leading-none font-semibold text-[var(--talimy-color-navy)] dark:text-sky-200",
+                      totalLabelClassName
+                    )}
+                  >
                     {totalLabel(total)}
                   </p>
                 )}
@@ -135,11 +163,13 @@ export function CircularDistributionChart({
             </div>
           </div>
 
-          <div className="grid w-full grid-cols-2 gap-4">
+          <div className={cn("grid w-full grid-cols-2 gap-4", legendClassName)}>
             {segments.map((segment) => (
               <div key={segment.key} className="flex items-center justify-center gap-2 text-base">
                 <span className="size-3 rounded-[4px]" style={{ backgroundColor: segment.color }} />
-                <span className="text-[var(--talimy-color-gray)] dark:text-muted-foreground">{segment.label}:</span>
+                <span className="text-[var(--talimy-color-gray)] dark:text-muted-foreground">
+                  {segment.label}:
+                </span>
                 <span className="font-semibold text-[var(--talimy-color-navy)] dark:text-sky-200">
                   {segment.value.toLocaleString()}
                 </span>

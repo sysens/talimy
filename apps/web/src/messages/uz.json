@@ -770,5 +770,262 @@
     "scopeMaleDescription": "Faqat o'g'il o'quvchilar va erkak o'qituvchilar bilan ishlash.",
     "scopeFemaleLabel": "Faqat qiz / ayol",
     "scopeFemaleDescription": "Faqat qiz o'quvchilar va ayol o'qituvchilar bilan ishlash."
+  },
+  "adminDashboard": {
+    "stats": {
+      "sectionAriaLabel": "Boshqaruv paneli statistikasi",
+      "enrolledStudents": "Ro'yxatdagi o'quvchilar",
+      "activeTeachers": "Faol o'qituvchilar",
+      "supportStaff": "Yordamchi xodimlar",
+      "totalAwards": "Jami yutuqlar"
+    },
+    "studentPerformance": {
+      "title": "O'quvchilar natijasi",
+      "filterAriaLabel": "O'quvchilar natijasi davri",
+      "legend": {
+        "grade7": "7-sinf",
+        "grade8": "8-sinf",
+        "grade9": "9-sinf"
+      },
+      "periods": {
+        "lastSemester": "O'tgan semestr",
+        "thisSemester": "Joriy semestr"
+      }
+    },
+    "studentsByGender": {
+      "title": "Jins bo'yicha o'quvchilar",
+      "filterAriaLabel": "O'quvchilar jinsi bo'yicha sinf filtri",
+      "labels": {
+        "boys": "Bolalar",
+        "girls": "Qizlar"
+      },
+      "grades": {
+        "grade7": "7-sinf",
+        "grade8": "8-sinf",
+        "grade9": "9-sinf"
+      }
+    },
+    "studentAttendance": {
+      "title": "O'quvchilar davomati",
+      "filterAriaLabel": "Davomat davri",
+      "periods": {
+        "weekly": "Haftalik",
+        "monthly": "Oylik"
+      },
+      "days": {
+        "mon": "Du",
+        "tue": "Se",
+        "wed": "Cho",
+        "thu": "Pa",
+        "fri": "Ju",
+        "sat": "Sha"
+      },
+      "groups": {
+        "a1": "A1 guruh",
+        "a2": "A2 guruh",
+        "a3": "A3 guruh",
+        "a4": "A4 guruh",
+        "a5": "A5 guruh",
+        "a6": "A6 guruh"
+      },
+      "grades": {
+        "grade7": "7-sinf",
+        "grade8": "8-sinf",
+        "grade9": "9-sinf"
+      }
+    },
+    "earnings": {
+      "title": "Tushum",
+      "filterAriaLabel": "Tushum davri",
+      "legend": {
+        "earnings": "Tushum",
+        "expenses": "Xarajatlar"
+      },
+      "periods": {
+        "lastYear": "O'tgan yil",
+        "thisYear": "Shu yil"
+      }
+    },
+    "todo": {
+      "title": "Vazifalar",
+      "menuAriaLabel": "Vazifalar menyusi",
+      "menu": {
+        "addTask": "Vazifa qo'shish",
+        "markAllDone": "Hammasini bajarildi deb belgilash",
+        "clearCompleted": "Bajarilganlarni tozalash"
+      },
+      "addPlaceholder": "Yangi vazifa kiriting",
+      "buttons": {
+        "cancel": "Bekor qilish",
+        "save": "Saqlash",
+        "update": "Yangilash"
+      },
+      "emptyState": "Hali vazifalar yo'q. Menyudan birinchi vazifani qo'shing.",
+      "items": {
+        "reviewTeacherAttendanceRecords": "O'qituvchilar davomatini tekshirish",
+        "prepareScienceFairGuidelines": "Ilmiy ko'rgazma yo'riqnomasini tayyorlash",
+        "updateLibraryBookInventory": "Kutubxona kitoblari ro'yxatini yangilash"
+      },
+      "actions": {
+        "edit": "{title} vazifasini tahrirlash",
+        "delete": "{title} vazifasini o'chirish"
+      }
+    },
+    "noticeBoard": {
+      "title": "E'lonlar",
+      "sortLabel": "Saralash:",
+      "emptyState": "Hozircha e'lonlar topilmadi.",
+      "createdByFallback": "Tizim",
+      "sortOptions": {
+        "popular": "Mashhur",
+        "latest": "Yangi",
+        "oldest": "Eski"
+      },
+      "audiences": {
+        "all": "Barchaga",
+        "teachers": "O'qituvchilar",
+        "students": "O'quvchilar",
+        "parents": "Ota-onalar"
+      },
+      "priority": {
+        "low": "Past",
+        "medium": "O'rta",
+        "high": "Yuqori",
+        "urgent": "Shoshilinch"
+      },
+      "meta": {
+        "audience": "Kimlar uchun",
+        "date": "Sana",
+        "createdBy": "Yaratgan"
+      },
+      "badges": {
+        "academic": "Akademik",
+        "event": "Tadbir",
+        "training": "Trening",
+        "resources": "Resurslar",
+        "announcement": "E'lon"
+      },
+      "items": {
+        "scienceFairRegistrationOpens": {
+          "title": "Ilmiy ko'rgazma ro'yxati ochildi",
+          "audience": "Barcha o'quvchilar",
+          "createdBy": "Akademik koordinator"
+        },
+        "teacherDevelopmentWorkshop": {
+          "title": "O'qituvchilar rivojlanish seminari",
+          "audience": "Barcha o'qituvchilar",
+          "createdBy": "Direktor ofisi"
+        },
+        "newLibraryBooksArrived": {
+          "title": "Kutubxonaga yangi kitoblar keldi",
+          "audience": "O'quvchilar va o'qituvchilar",
+          "createdBy": "Kutubxonachi"
+        },
+        "fieldTripConsentFormsDue": {
+          "title": "Ekskursiya rozilik shakllari muddati",
+          "audience": "7- va 8-sinf o'quvchilari",
+          "createdBy": "Sinf rahbari"
+        }
+      },
+      "actionsAriaLabel": "{title} bo'yicha amallar"
+    },
+    "sidebar": {
+      "title": "Kalendar va faoliyat",
+      "description": "Sana, tadbirlar va so'nggi harakatlarni shu paneldan ko'ring.",
+      "openPanel": "Kalendar va tadbirlar",
+      "calendar": {
+        "eventsCount": "{count} ta tadbir",
+        "types": {
+          "academic": "Akademik",
+          "exam": "Imtihon",
+          "holiday": "Ta'til",
+          "sports": "Sport",
+          "other": "Boshqa"
+        },
+        "items": {
+          "parentMeeting": {
+            "title": "Ota-onalar uchrashuvi",
+            "meta": "09:00 · Asosiy zal"
+          },
+          "teachingWorkshop": {
+            "title": "Ta'lim seminari",
+            "meta": "11:30 · Ustozlar xonasi"
+          },
+          "noticeBoardReview": {
+            "title": "E'lonlar ko'rigi",
+            "meta": "08:30 · Ma'muriyat"
+          },
+          "parentAdvisoryMeeting": {
+            "title": "Ota-onalar maslahat yig'ilishi",
+            "meta": "10:00 · Ota-onalar zali"
+          },
+          "academicReviewSession": {
+            "title": "Akademik tahlil uchrashuvi",
+            "meta": "13:00 · 9A sinf"
+          },
+          "readingClubGathering": {
+            "title": "Kitobxonlar klubi yig'ilishi",
+            "meta": "15:30 · Kutubxona"
+          },
+          "teacherPlanningMeeting": {
+            "title": "O'qituvchilar reja uchrashuvi",
+            "meta": "09:30 · Majlis xonasi"
+          },
+          "libraryResourceUpdate": {
+            "title": "Kutubxona resurslari yangilandi",
+            "meta": "12:00 · Resurs markazi"
+          },
+          "scienceFairWorkshop": {
+            "title": "Ilmiy ko'rgazma seminari",
+            "meta": "14:00 · Innovatsiya laboratoriyasi"
+          }
+        }
+      },
+      "events": {
+        "title": "Tadbirlar",
+        "emptyState": "Tanlangan sana oralig'ida tadbirlar yo'q.",
+        "locationFallback": "Maktab hududi",
+        "audiences": {
+          "allClasses": "Barcha sinflar",
+          "grade7A7B": "7A, 7B"
+        },
+        "items": {
+          "annualSportCompetition": "Yillik sport musobaqasi",
+          "parentTeacherMeeting": "Ota-ona va ustoz uchrashuvi",
+          "annualScienceFair": "Yillik ilmiy ko'rgazma"
+        }
+      },
+      "recentActivity": {
+        "title": "So'nggi faollik",
+        "emptyState": "Hozircha faoliyat qaydlari yo'q.",
+        "systemActor": "Tizim",
+        "actions": {
+          "create": "yaratish",
+          "update": "yangilash",
+          "delete": "o'chirish",
+          "replace": "almashtirish",
+          "write": "yozish"
+        },
+        "resources": {
+          "attendance": "davomat",
+          "auth": "autentifikatsiya",
+          "events": "tadbir",
+          "notices": "e'lon",
+          "payments": "to'lov",
+          "students": "o'quvchi",
+          "teachers": "o'qituvchi",
+          "unknown": "yozuv"
+        },
+        "templates": {
+          "generic": "{actor} tomonidan {resource} uchun {action} amali bajarildi."
+        },
+        "items": {
+          "studentEnrolled": "Ro'yxatga olish bo'limi orqali Alicia Gomez (8B sinf) tizimga qo'shildi.",
+          "attendanceMarked": "7A sinf davomatini ustoz John Smith belgiladi.",
+          "paymentsVerified": "9-sinf o'quvchilari uchun oylik to'lovlar tasdiqlandi.",
+          "examUpdated": "2-chorak imtihon jadvali akademik koordinator tomonidan yangilandi."
+        }
+      }
+    }
   }
 }

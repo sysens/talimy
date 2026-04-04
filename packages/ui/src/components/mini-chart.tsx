@@ -52,10 +52,12 @@ export type MiniChartProps = Omit<React.ComponentPropsWithoutRef<typeof Card>, "
   children: React.ReactNode
   contentClassName?: string
   filter?: MiniChartFilter
+  filterTriggerClassName?: string
   legend?: MiniChartLegendItem[]
   sideMetrics?: MiniChartMetricItem[]
   subtitle?: React.ReactNode
   title: React.ReactNode
+  titleClassName?: string
   topLabels?: MiniChartAxisLabels
   yScale?: MiniChartScale
   bottomLabels?: MiniChartAxisLabels
@@ -68,10 +70,12 @@ export function MiniChart({
   className,
   contentClassName,
   filter,
+  filterTriggerClassName,
   legend,
   sideMetrics,
   subtitle,
   title,
+  titleClassName,
   topLabels,
   yScale,
   bottomLabels,
@@ -82,11 +86,19 @@ export function MiniChart({
   const hasRightScale = Boolean(yScale && scalePosition === "right")
 
   return (
-    <Card className={cn("rounded-3xl border-0 bg-card p-0 shadow-none ring-0", className)} {...props}>
+    <Card
+      className={cn("rounded-3xl border-0 bg-card p-0 shadow-none ring-0", className)}
+      {...props}
+    >
       <div className={cn("space-y-4 p-5", contentClassName)}>
-        <header className="flex flex-wrap items-start justify-between gap-3">
+        <header className="flex items-start justify-between gap-3">
           <div className="space-y-1">
-            <h3 className="text-base leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200">
+            <h3
+              className={cn(
+                "text-base leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200",
+                titleClassName
+              )}
+            >
               {title}
             </h3>
             {subtitle ? <p className="text-sm text-muted-foreground">{subtitle}</p> : null}
@@ -99,6 +111,7 @@ export function MiniChart({
               onValueChange={filter.onValueChange}
               options={filter.options}
               placeholder={filter.placeholder}
+              triggerClassName={filterTriggerClassName}
               value={filter.value}
             />
           ) : null}
@@ -120,7 +133,12 @@ export function MiniChart({
           </div>
         ) : null}
 
-        <div className={cn("grid gap-4", sideMetrics?.length ? "md:grid-cols-[minmax(0,1fr)_126px]" : "grid-cols-1")}>
+        <div
+          className={cn(
+            "grid gap-4",
+            sideMetrics?.length ? "md:grid-cols-[minmax(0,1fr)_126px]" : "grid-cols-1"
+          )}
+        >
           <div className="space-y-2">
             {topLabels ? (
               <div
@@ -130,7 +148,9 @@ export function MiniChart({
                   hasRightScale ? "pr-8" : "",
                   topLabels.className
                 )}
-                style={{ gridTemplateColumns: `repeat(${topLabels.values.length}, minmax(0, 1fr))` }}
+                style={{
+                  gridTemplateColumns: `repeat(${topLabels.values.length}, minmax(0, 1fr))`,
+                }}
               >
                 {topLabels.values.map((value, index) => (
                   <span key={`top-label-${index}`}>{value}</span>
@@ -193,14 +213,18 @@ export function MiniChart({
                 style={{
                   ...(bottomLabels.distribution === "evenly"
                     ? undefined
-                    : { gridTemplateColumns: `repeat(${bottomLabels.values.length}, minmax(0, 1fr))` }),
+                    : {
+                        gridTemplateColumns: `repeat(${bottomLabels.values.length}, minmax(0, 1fr))`,
+                      }),
                   ...bottomLabels.style,
                 }}
               >
                 {bottomLabels.values.map((value, index) => (
                   <span
                     key={`bottom-label-${index}`}
-                    className={bottomLabels.distribution === "evenly" ? "flex-1 text-center" : undefined}
+                    className={
+                      bottomLabels.distribution === "evenly" ? "flex-1 text-center" : undefined
+                    }
                   >
                     {value}
                   </span>
@@ -215,7 +239,10 @@ export function MiniChart({
                 <div key={metric.label} className="flex items-center justify-between gap-2 text-xs">
                   <div className="flex min-w-0 items-center gap-2 text-muted-foreground">
                     <span
-                      className={cn("size-2 shrink-0 rounded-full", metric.color ? "" : "bg-border")}
+                      className={cn(
+                        "size-2 shrink-0 rounded-full",
+                        metric.color ? "" : "bg-border"
+                      )}
                       style={metric.color ? { backgroundColor: metric.color } : undefined}
                     />
                     <span className="truncate">{metric.label}</span>

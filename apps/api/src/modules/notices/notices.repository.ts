@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
-import { db, notices } from "@talimy/database"
+import { db, notices, users } from "@talimy/database"
 import { and, asc, desc, eq, ilike, inArray, isNull, or, sql, type SQL } from "drizzle-orm"
 
 import { CreateNoticeDto, UpdateNoticeDto } from "./dto/create-notice.dto"
@@ -38,12 +38,15 @@ export class NoticesRepository {
         targetRole: notices.targetRole,
         priority: notices.priority,
         createdBy: notices.createdBy,
+        createdByFirstName: users.firstName,
+        createdByLastName: users.lastName,
         publishDate: notices.publishDate,
         expiryDate: notices.expiryDate,
         createdAt: notices.createdAt,
         updatedAt: notices.updatedAt,
       })
       .from(notices)
+      .leftJoin(users, eq(notices.createdBy, users.id))
       .where(and(...filters))
       .orderBy(...orderBy)
       .limit(query.limit)
@@ -89,9 +92,15 @@ export class NoticesRepository {
   async update(tenantId: string, id: string, payload: UpdateNoticeDto): Promise<NoticeView> {
     const current = await this.findNoticeOrThrow(tenantId, id)
 
-    const nextPublishDate = payload.publishDate ? new Date(payload.publishDate) : current.publishDate
+    const nextPublishDate = payload.publishDate
+      ? new Date(payload.publishDate)
+      : current.publishDate
     const nextExpiryDate =
-      payload.expiryDate === null ? null : payload.expiryDate ? new Date(payload.expiryDate) : current.expiryDate
+      payload.expiryDate === null
+        ? null
+        : payload.expiryDate
+          ? new Date(payload.expiryDate)
+          : current.expiryDate
 
     this.assertDateRange(nextPublishDate, nextExpiryDate)
 
@@ -150,8 +159,21 @@ export class NoticesRepository {
 
   private resolveOrderBy(sort: string | undefined, order: "asc" | "desc") {
     const direction = order === "asc" ? asc : desc
+    const popularityDirection = order === "asc" ? asc : desc
+    const priorityRank = sql<number>`case
+      when ${notices.priority} = 'urgent' then 4
+      when ${notices.priority} = 'high' then 3
+      when ${notices.priority} = 'medium' then 2
+      else 1
+    end`
 
     switch (sort) {
+      case "popular":
+        return [
+          popularityDirection(priorityRank),
+          desc(notices.publishDate),
+          desc(notices.createdAt),
+        ] as const
       case "title":
         return [direction(notices.title), desc(notices.updatedAt), desc(notices.createdAt)] as const
       case "updatedAt":
@@ -172,6 +194,8 @@ export class NoticesRepository {
     targetRole: string
     priority: string
     createdBy: string | null
+    createdByFirstName?: string | null
+    createdByLastName?: string | null
     publishDate: Date
     expiryDate: Date | null
     createdAt: Date
@@ -185,6 +209,7 @@ export class NoticesRepository {
       targetRole: row.targetRole as NoticeTargetRole,
       priority: row.priority as NoticePriority,
       createdBy: row.createdBy,
+      createdByName: resolveActorName(row.createdByFirstName, row.createdByLastName),
       publishDate: row.publishDate.toISOString(),
       expiryDate: row.expiryDate?.toISOString() ?? null,
       createdAt: row.createdAt.toISOString(),
@@ -202,12 +227,15 @@ export class NoticesRepository {
         targetRole: notices.targetRole,
         priority: notices.priority,
         createdBy: notices.createdBy,
+        createdByFirstName: users.firstName,
+        createdByLastName: users.lastName,
         publishDate: notices.publishDate,
         expiryDate: notices.expiryDate,
         createdAt: notices.createdAt,
         updatedAt: notices.updatedAt,
       })
       .from(notices)
+      .leftJoin(users, eq(notices.createdBy, users.id))
       .where(and(eq(notices.id, id), eq(notices.tenantId, tenantId), isNull(notices.deletedAt)))
       .limit(1)
 
@@ -237,3 +265,9 @@ export class NoticesRepository {
   }
 }
 
+function resolveActorName(firstName?: string | null, lastName?: string | null): string | null {
+  const parts = [firstName, lastName].filter(
+    (part): part is string => typeof part === "string" && part.length > 0
+  )
+  return parts.length > 0 ? parts.join(" ") : null
+}
