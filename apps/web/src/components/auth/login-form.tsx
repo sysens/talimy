@@ -9,7 +9,7 @@ import type { Session } from "next-auth"
 import { getSession, signIn } from "next-auth/react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import { sileo } from "sileo"
 
@@ -25,6 +25,7 @@ type LoginFormProps = {
 }
 
 export function LoginForm({ workspaceKind }: LoginFormProps) {
+  const [isHydrated, setIsHydrated] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [rememberMe, setRememberMe] = useState(false)
   const t = useTranslations("authPage")
@@ -38,6 +39,11 @@ export function LoginForm({ workspaceKind }: LoginFormProps) {
       password: "",
     },
   })
+  const isSubmitDisabled = !isHydrated || form.formState.isSubmitting
+
+  useEffect(() => {
+    setIsHydrated(true)
+  }, [])
 
   const handleSubmit = form.handleSubmit(async (values) => {
     const result = await signIn("credentials", {
@@ -84,81 +90,82 @@ export function LoginForm({ workspaceKind }: LoginFormProps) {
         </div>
       </div>
 
-
       <form className="space-y-5" onSubmit={handleSubmit}>
-        <div className="space-y-2">
-          <Label htmlFor="login-email">{t("emailLabel")}</Label>
-          <Input
-            id="login-email"
-            autoComplete="email"
-            placeholder={
-              workspaceKind === "platform"
-                ? t("emailPlaceholderPlatform")
-                : t("emailPlaceholderSchool")
-            }
-            className="h-11 border-slate-200 bg-white shadow-none focus-visible:ring-talimy-navy/18"
-            {...form.register("email")}
-          />
-          {form.formState.errors.email ? (
-            <p className="text-sm text-red-600">{form.formState.errors.email.message}</p>
-          ) : null}
-        </div>
-
-        <div className="space-y-2">
-          <Label htmlFor="login-password">{t("passwordLabel")}</Label>
-          <div className="relative">
+        <fieldset disabled={!isHydrated} className="space-y-5">
+          <div className="space-y-2">
+            <Label htmlFor="login-email">{t("emailLabel")}</Label>
             <Input
-              id="login-password"
-              type={showPassword ? "text" : "password"}
-              autoComplete="current-password"
-              placeholder={t("passwordPlaceholder")}
-              className="h-11 border-slate-200 bg-white pr-12 shadow-none focus-visible:ring-talimy-navy/18"
-              {...form.register("password")}
+              id="login-email"
+              autoComplete="email"
+              placeholder={
+                workspaceKind === "platform"
+                  ? t("emailPlaceholderPlatform")
+                  : t("emailPlaceholderSchool")
+              }
+              className="h-11 border-slate-200 bg-white shadow-none focus-visible:ring-talimy-navy/18"
+              {...form.register("email")}
             />
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon-sm"
-              onClick={() => setShowPassword((value) => !value)}
-              aria-label={showPassword ? "Hide password" : "Show password"}
-              className="absolute inset-y-0 right-1 my-auto text-slate-500 hover:text-slate-700"
+            {form.formState.errors.email ? (
+              <p className="text-sm text-red-600">{form.formState.errors.email.message}</p>
+            ) : null}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="login-password">{t("passwordLabel")}</Label>
+            <div className="relative">
+              <Input
+                id="login-password"
+                type={showPassword ? "text" : "password"}
+                autoComplete="current-password"
+                placeholder={t("passwordPlaceholder")}
+                className="h-11 border-slate-200 bg-white pr-12 shadow-none focus-visible:ring-talimy-navy/18"
+                {...form.register("password")}
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => setShowPassword((value) => !value)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="absolute inset-y-0 right-1 my-auto text-slate-500 hover:text-slate-700"
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </Button>
+            </div>
+            {form.formState.errors.password ? (
+              <p className="text-sm text-red-600">{form.formState.errors.password.message}</p>
+            ) : null}
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <Checkbox
+                id="remember-me"
+                checked={rememberMe}
+                onCheckedChange={(checked) => setRememberMe(Boolean(checked))}
+                className="border-slate-300 data-checked:bg-talimy-navy data-checked:border-talimy-navy"
+              />
+              <Label htmlFor="remember-me" className="text-sm font-medium text-slate-600">
+                {t("rememberMe")}
+              </Label>
+            </div>
+            <Link
+              href={AUTH_ROUTE_PATHS.forgotPassword}
+              className="text-sm font-medium text-talimy-navy hover:underline"
             >
-              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            </Button>
+              {t("forgotPassword")}
+            </Link>
           </div>
-          {form.formState.errors.password ? (
-            <p className="text-sm text-red-600">{form.formState.errors.password.message}</p>
-          ) : null}
-        </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Checkbox
-              id="remember-me"
-              checked={rememberMe}
-              onCheckedChange={(checked) => setRememberMe(Boolean(checked))}
-              className="border-slate-300 data-checked:bg-talimy-navy data-checked:border-talimy-navy"
-            />
-            <Label htmlFor="remember-me" className="text-sm font-medium text-slate-600">
-              {t("rememberMe")}
-            </Label>
-          </div>
-          <Link
-            href={AUTH_ROUTE_PATHS.forgotPassword}
-            className="text-sm font-medium text-talimy-navy hover:underline"
+          <Button
+            type="submit"
+            className="h-11 w-full bg-talimy-navy text-white shadow-none hover:bg-talimy-navy/92"
+            disabled={isSubmitDisabled}
           >
-            {t("forgotPassword")}
-          </Link>
-        </div>
-
-        <Button
-          type="submit"
-          className="h-11 w-full bg-talimy-navy text-white shadow-none hover:bg-talimy-navy/92"
-          disabled={form.formState.isSubmitting}
-        >
-          {form.formState.isSubmitting ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
-          {t("signInButton")}
-        </Button>
+            {form.formState.isSubmitting ? <LoaderCircle className="h-4 w-4 animate-spin" /> : null}
+            {t("signInButton")}
+          </Button>
+        </fieldset>
       </form>
 
       <p className="text-center text-sm leading-7 text-slate-500">{content.loginFooter}</p>
@@ -199,7 +206,7 @@ function resolveCurrentAuthCallbackUrl(): string | undefined {
     return undefined
   }
 
-  return window.location.href
+  return new URL(AUTH_ROUTE_PATHS.login, window.location.origin).toString()
 }
 
 function resolveSafeCallbackPath(value: string | null): string | undefined {

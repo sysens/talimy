@@ -12,6 +12,7 @@ export function toUserView(row: typeof users.$inferSelect): UserView {
     lastName: row.lastName,
     email: row.email,
     role: row.role,
+    genderScope: row.genderScope,
     isActive: row.isActive,
     lastLogin: row.lastLogin,
     createdAt: row.createdAt,

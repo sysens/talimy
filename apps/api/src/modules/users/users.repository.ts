@@ -80,6 +80,7 @@ export class UsersRepository {
         email: payload.email.toLowerCase(),
         passwordHash,
         role: payload.role ?? "teacher",
+        genderScope: payload.genderScope ?? "all",
         isActive: payload.isActive ?? true,
       })
       .returning()
@@ -100,6 +101,7 @@ export class UsersRepository {
     }
     if (payload.email) updatePayload.email = payload.email.toLowerCase()
     if (payload.role) updatePayload.role = payload.role
+    if (payload.genderScope) updatePayload.genderScope = payload.genderScope
     if (typeof payload.isActive === "boolean") updatePayload.isActive = payload.isActive
 
     const [updated] = await db

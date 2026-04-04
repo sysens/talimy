@@ -3,6 +3,7 @@
   "extends": "../../packages/config-typescript/nestjs.json",
   "compilerOptions": {
     "outDir": "./dist",
+    "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo",
     "rootDir": "../../",
     "verbatimModuleSyntax": false,
     "paths": {

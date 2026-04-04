@@ -35,6 +35,9 @@ const SCHOOL_ADMIN_PASSWORD = process.env.SCHOOL_ADMIN_PASSWORD?.trim() || "Meza
 const TEACHER_PASSWORD = process.env.TEACHER_PASSWORD?.trim() || "MezanaTeacher!2026"
 const STUDENT_PASSWORD = process.env.STUDENT_PASSWORD?.trim() || "MezanaStudent!2026"
 const PARENT_PASSWORD = process.env.PARENT_PASSWORD?.trim() || "MezanaParent!2026"
+const SCHOOL_ADMIN_GENDER_SCOPE = resolveGenderScope(
+  process.env.SCHOOL_ADMIN_GENDER_SCOPE?.trim() || null
+)
 
 const PLATFORM_USERS = [
   {
@@ -75,6 +78,14 @@ const SCHOOL_USERS = {
 
 function normalizeEmail(email: string): string {
   return email.toLowerCase()
+}
+
+function resolveGenderScope(value: string | null): "male" | "female" | "all" {
+  if (value === "male" || value === "female" || value === "all") {
+    return value
+  }
+
+  return "all"
 }
 
 async function hashPassword(password: string): Promise<string> {
@@ -118,6 +129,7 @@ async function upsertUser(tx: DatabaseTransaction, payload: UserInsert): Promise
         firstName: payload.firstName,
         lastName: payload.lastName,
         role: payload.role,
+        genderScope: payload.genderScope ?? "all",
         isActive: true,
         updatedAt: new Date(),
         deletedAt: null,
@@ -316,6 +328,7 @@ export async function bootstrapProductionData(): Promise<void> {
         firstName: platformUser.firstName,
         lastName: platformUser.lastName,
         role: "platform_admin",
+        genderScope: "all",
         isActive: true,
       })
     }
@@ -327,6 +340,7 @@ export async function bootstrapProductionData(): Promise<void> {
       firstName: SCHOOL_USERS.schoolAdmin.firstName,
       lastName: SCHOOL_USERS.schoolAdmin.lastName,
       role: "school_admin",
+      genderScope: SCHOOL_ADMIN_GENDER_SCOPE,
       isActive: true,
     })
 
@@ -337,6 +351,7 @@ export async function bootstrapProductionData(): Promise<void> {
       firstName: SCHOOL_USERS.teacher.firstName,
       lastName: SCHOOL_USERS.teacher.lastName,
       role: "teacher",
+      genderScope: "all",
       isActive: true,
     })
 
@@ -347,6 +362,7 @@ export async function bootstrapProductionData(): Promise<void> {
       firstName: SCHOOL_USERS.student.firstName,
       lastName: SCHOOL_USERS.student.lastName,
       role: "student",
+      genderScope: "all",
       isActive: true,
     })
 
@@ -357,6 +373,7 @@ export async function bootstrapProductionData(): Promise<void> {
       firstName: SCHOOL_USERS.parent.firstName,
       lastName: SCHOOL_USERS.parent.lastName,
       role: "parent",
+      genderScope: "all",
       isActive: true,
     })
 

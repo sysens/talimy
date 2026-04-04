@@ -28,7 +28,12 @@ const ROLE_PATH_PREFIXES = [
   ...PANEL_PREFIXES.parent,
 ] as const
 const PLATFORM_PATH_PREFIXES = [...PANEL_PREFIXES.platform] as const
-const AUTH_PUBLIC_PATHS = new Set(["/login", "/forgot-password", "/reset-password", "/verify-email"])
+const AUTH_PUBLIC_PATHS = new Set([
+  "/login",
+  "/forgot-password",
+  "/reset-password",
+  "/verify-email",
+])
 
 export async function proxy(request: NextRequest) {
   const scope = resolveHostScope(request)
@@ -40,10 +45,7 @@ export async function proxy(request: NextRequest) {
     return finalizeResponse(request, scope, locale, redirect(request, "/login"))
   }
 
-  if (
-    scope.kind === "public" &&
-    (isAnyPlatformPath(pathname) || isSchoolPanelPath(pathname))
-  ) {
+  if (scope.kind === "public" && (isAnyPlatformPath(pathname) || isSchoolPanelPath(pathname))) {
     return finalizeResponse(request, scope, locale, redirect(request, "/login"))
   }
 
@@ -59,7 +61,8 @@ export async function proxy(request: NextRequest) {
   }
 
   const isSchoolDashboardAlias = scope.kind === "school" && pathname === "/dashboard"
-  const requiresAuth = !isApiOrAssetPath && (requiresAuthGate(scope, pathname) || isSchoolDashboardAlias)
+  const requiresAuth =
+    !isApiOrAssetPath && (requiresAuthGate(scope, pathname) || isSchoolDashboardAlias)
   const sessionToken = requiresAuth ? await resolveSessionToken(request) : null
 
   if (isSchoolDashboardAlias) {
@@ -87,12 +90,7 @@ export async function proxy(request: NextRequest) {
   }
 
   if (requiresAuth && sessionToken && !hasRequiredRole(scope, pathname, sessionToken)) {
-    return finalizeResponse(
-      request,
-      scope,
-      locale,
-      new NextResponse("Forbidden", { status: 403 })
-    )
+    return finalizeResponse(request, scope, locale, new NextResponse("Forbidden", { status: 403 }))
   }
 
   const forwardedHeaders = new Headers(request.headers)
@@ -239,12 +237,7 @@ function resolveRequestLocale(request: NextRequest): string {
   }
 
   const fromCookie = request.cookies.get(APP_LOCALE_COOKIE)?.value?.trim().toLowerCase()
-  if (
-    fromCookie === "uz" ||
-    fromCookie === "tr" ||
-    fromCookie === "en" ||
-    fromCookie === "ar"
-  ) {
+  if (fromCookie === "uz" || fromCookie === "tr" || fromCookie === "en" || fromCookie === "ar") {
     return fromCookie
   }
 
@@ -257,6 +250,12 @@ function finalizeResponse(
   locale: string,
   response: NextResponse
 ): NextResponse {
+  if (shouldDisableResponseCaching(scope, request.nextUrl.pathname)) {
+    response.headers.set("cache-control", "private, no-store, no-cache, max-age=0, must-revalidate")
+    response.headers.set("pragma", "no-cache")
+    response.headers.set("expires", "0")
+  }
+
   if (!shouldBypassLocaleHandling(request.nextUrl.pathname)) {
     response.cookies.set(APP_LOCALE_COOKIE, locale, {
       path: "/",
@@ -271,6 +270,22 @@ function finalizeResponse(
   response.headers.set("x-panel-scope", resolvePanelScope(request.nextUrl.pathname))
 
   return response
+}
+
+function shouldDisableResponseCaching(scope: HostScope, pathname: string): boolean {
+  if (AUTH_PUBLIC_PATHS.has(pathname)) {
+    return true
+  }
+
+  if (scope.kind === "platform") {
+    return pathname === "/" || isAnyPlatformPath(pathname)
+  }
+
+  if (scope.kind === "school") {
+    return pathname === "/" || pathname === "/dashboard" || isSchoolPanelPath(pathname)
+  }
+
+  return false
 }
 
 function redirect(request: NextRequest, pathname: string): NextResponse {

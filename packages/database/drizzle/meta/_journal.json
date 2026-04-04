@@ -8,6 +8,13 @@
       "when": 1771608028909,
       "tag": "0000_noisy_valeria_richards",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1775287032948,
+      "tag": "0001_loving_stellaris",
+      "breakpoints": true
     }
   ]
 }

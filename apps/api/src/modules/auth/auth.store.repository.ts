@@ -42,6 +42,7 @@ export class AuthStoreRepository {
       firstName: firstName || user.fullName,
       lastName,
       role: (user.roles[0] ?? "school_admin") as StoredRole,
+      genderScope: user.genderScope,
       isActive: true,
     })
   }
@@ -124,6 +125,7 @@ export class AuthStoreRepository {
         tenantSlug: tenants.slug,
         passwordHash: users.passwordHash,
         role: users.role,
+        genderScope: users.genderScope,
       })
       .from(users)
       .innerJoin(tenants, eq(users.tenantId, tenants.id))
@@ -151,7 +153,7 @@ export class AuthStoreRepository {
       tenantSlug: row.tenantSlug,
       passwordHash: row.passwordHash,
       roles: [row.role],
-      genderScope: "all",
+      genderScope: row.genderScope,
     }
   }
 

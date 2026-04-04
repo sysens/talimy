@@ -8,6 +8,7 @@ export const userRoleEnum = pgEnum("user_role", [
   "student",
   "parent",
 ])
+export const userGenderScopeEnum = pgEnum("user_gender_scope", ["male", "female", "all"])
 
 export const users = pgTable(
   "users",
@@ -19,6 +20,7 @@ export const users = pgTable(
     firstName: varchar("first_name", { length: 100 }).notNull(),
     lastName: varchar("last_name", { length: 100 }).notNull(),
     role: userRoleEnum("role").notNull(),
+    genderScope: userGenderScopeEnum("gender_scope").notNull().default("all"),
     tenantId: uuid("tenant_id")
       .notNull()
       .references(() => tenants.id, { onDelete: "cascade" }),

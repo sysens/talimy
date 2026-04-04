@@ -1,6 +1,7 @@
 import { z } from "zod"
 
 const userRoleSchema = z.enum(["platform_admin", "school_admin", "teacher", "student", "parent"])
+const userGenderScopeSchema = z.enum(["male", "female", "all"])
 
 export const userTenantQuerySchema = z.object({
   tenantId: z.string().uuid(),
@@ -23,6 +24,7 @@ export const createUserSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
   role: userRoleSchema.optional(),
+  genderScope: userGenderScopeSchema.optional(),
   isActive: z.boolean().optional(),
 })
 
@@ -31,6 +33,7 @@ export const updateUserSchema = z.object({
   fullName: z.string().min(2).optional(),
   email: z.string().email().optional(),
   role: userRoleSchema.optional(),
+  genderScope: userGenderScopeSchema.optional(),
   isActive: z.boolean().optional(),
 })
 
