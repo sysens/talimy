@@ -21,6 +21,48 @@ export class AuthStoreRepository {
     })
   }
 
+  async getUserById(userId: string, tenantId: string): Promise<StoredUser | null> {
+    const [row] = await db
+      .select({
+        id: users.id,
+        firstName: users.firstName,
+        lastName: users.lastName,
+        email: users.email,
+        tenantId: users.tenantId,
+        tenantSlug: tenants.slug,
+        passwordHash: users.passwordHash,
+        role: users.role,
+        genderScope: users.genderScope,
+      })
+      .from(users)
+      .innerJoin(tenants, eq(users.tenantId, tenants.id))
+      .where(
+        and(
+          eq(users.id, userId),
+          eq(users.tenantId, tenantId),
+          eq(users.isActive, true),
+          isNull(users.deletedAt),
+          isNull(tenants.deletedAt)
+        )
+      )
+      .limit(1)
+
+    if (!row) {
+      return null
+    }
+
+    return {
+      id: row.id,
+      fullName: `${row.firstName} ${row.lastName}`.trim(),
+      email: row.email,
+      tenantId: row.tenantId,
+      tenantSlug: row.tenantSlug,
+      passwordHash: row.passwordHash,
+      roles: [row.role],
+      genderScope: row.genderScope,
+    }
+  }
+
   async getUserByEmailForRole(email: string, role: StoredRole): Promise<StoredUser | null> {
     return this.findUserByEmail(this.normalizeEmail(email), { role })
   }

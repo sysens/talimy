@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt"
-import { db, users } from "@talimy/database"
+import { db, tenants, users } from "@talimy/database"
+import { coerceGenderScopeForPolicy, resolveAllowedGenderScopes } from "@talimy/shared"
 import { and, asc, desc, eq, ilike, isNull, ne, or, type SQL, sql } from "drizzle-orm"
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 
@@ -7,7 +8,12 @@ import { CreateUserDto } from "./dto/create-user.dto"
 import { ListUsersQueryDto } from "./dto/list-users-query.dto"
 import { UpdateUserDto } from "./dto/update-user.dto"
 import { splitFullName, toUserView } from "./users.mapper"
-import type { UserView } from "./users.types"
+import type {
+  SchoolAdminGenderScopeSettingsView,
+  TenantGenderPolicy,
+  UserGenderScope,
+  UserView,
+} from "./users.types"
 
 @Injectable()
 export class UsersRepository {
@@ -161,6 +167,81 @@ export class UsersRepository {
       .returning()
     if (!updated) throw new NotFoundException("User not found")
     return toUserView(updated)
+  }
+
+  async getSchoolAdminGenderScopeSettings(
+    tenantId: string,
+    userId: string
+  ): Promise<SchoolAdminGenderScopeSettingsView> {
+    const [row] = await db
+      .select({
+        userId: users.id,
+        fullName: sql<string>`concat(${users.firstName}, ' ', ${users.lastName})`,
+        email: users.email,
+        role: users.role,
+        genderScope: users.genderScope,
+        tenantId: tenants.id,
+        tenantName: tenants.name,
+        tenantGenderPolicy: tenants.genderPolicy,
+      })
+      .from(users)
+      .innerJoin(tenants, eq(users.tenantId, tenants.id))
+      .where(
+        and(
+          eq(users.id, userId),
+          eq(users.tenantId, tenantId),
+          isNull(users.deletedAt),
+          isNull(tenants.deletedAt)
+        )
+      )
+      .limit(1)
+
+    if (!row) {
+      throw new NotFoundException("User not found")
+    }
+
+    if (row.role !== "school_admin") {
+      throw new BadRequestException("Gender scope settings are only available for school admins")
+    }
+
+    const tenantGenderPolicy = row.tenantGenderPolicy as TenantGenderPolicy
+    return {
+      userId: row.userId,
+      fullName: row.fullName.trim(),
+      email: row.email,
+      tenantId: row.tenantId,
+      tenantName: row.tenantName,
+      tenantGenderPolicy,
+      genderScope: coerceGenderScopeForPolicy(
+        tenantGenderPolicy,
+        row.genderScope as UserGenderScope
+      ),
+      availableGenderScopes: [...resolveAllowedGenderScopes(tenantGenderPolicy)],
+    }
+  }
+
+  async updateSchoolAdminGenderScope(
+    tenantId: string,
+    userId: string,
+    genderScope: UserGenderScope
+  ): Promise<SchoolAdminGenderScopeSettingsView> {
+    const current = await this.getSchoolAdminGenderScopeSettings(tenantId, userId)
+    if (!current.availableGenderScopes.includes(genderScope)) {
+      throw new BadRequestException("Selected gender scope is not allowed for this school policy")
+    }
+
+    await db
+      .update(users)
+      .set({
+        genderScope,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(users.id, userId), eq(users.tenantId, tenantId), isNull(users.deletedAt)))
+
+    return {
+      ...current,
+      genderScope,
+    }
   }
 
   private async findUserOrThrow(

@@ -59,6 +59,10 @@ export class AuthService {
     return this.sessionService.verifyAccessToken(token)
   }
 
+  reissueSessionForUser(userId: string, tenantId: string): Promise<AuthSession> {
+    return this.sessionService.reissueSessionForUser(userId, tenantId)
+  }
+
   validateUserCredentials(
     email: string,
     password: string,

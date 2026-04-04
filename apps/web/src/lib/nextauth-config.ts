@@ -110,7 +110,7 @@ export const nextAuthConfig: NextAuthConfig = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         const authUser = user as AuthUser
         token.sub = authUser.id
@@ -123,6 +123,10 @@ export const nextAuthConfig: NextAuthConfig = {
         token.refreshToken = authUser.refreshToken
         token.expiresAt = authUser.expiresAt
         return token
+      }
+
+      if (trigger === "update") {
+        return applySessionUpdateToToken(token, session)
       }
 
       const expiresAt = typeof token.expiresAt === "number" ? token.expiresAt : 0
@@ -522,6 +526,44 @@ function normalizeGenderScope(value: unknown): GenderScope | null {
   }
 
   return null
+}
+
+function applySessionUpdateToToken(
+  token: Record<string, unknown>,
+  sessionUpdate: unknown
+): Record<string, unknown> {
+  if (!sessionUpdate || typeof sessionUpdate !== "object") {
+    return token
+  }
+
+  const updateRecord = sessionUpdate as {
+    accessToken?: unknown
+    expiresAt?: unknown
+    refreshToken?: unknown
+    user?: {
+      genderScope?: unknown
+    }
+  }
+
+  if (typeof updateRecord.accessToken === "string" && updateRecord.accessToken.length > 0) {
+    token.accessToken = updateRecord.accessToken
+  }
+
+  if (typeof updateRecord.refreshToken === "string" && updateRecord.refreshToken.length > 0) {
+    token.refreshToken = updateRecord.refreshToken
+  }
+
+  if (typeof updateRecord.expiresAt === "number" && Number.isFinite(updateRecord.expiresAt)) {
+    token.expiresAt = updateRecord.expiresAt
+  }
+
+  const genderScope = normalizeGenderScope(updateRecord.user?.genderScope)
+  if (genderScope) {
+    token.genderScope = genderScope
+  }
+
+  delete token.authError
+  return token
 }
 
 function markTokenAuthError(

@@ -6,7 +6,13 @@ import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/co
 import { AuthRateLimitService } from "./auth-rate-limit.service"
 import { AuthStoreRepository } from "./auth.store.repository"
 import { AuthTokenService } from "./auth.token.service"
-import type { AuthIdentity, AuthRequestContext, AuthSession, StoredUser, TokenPayload } from "./auth.types"
+import type {
+  AuthIdentity,
+  AuthRequestContext,
+  AuthSession,
+  StoredUser,
+  TokenPayload,
+} from "./auth.types"
 import { AuthWorkspaceService } from "./auth-workspace.service"
 import { LoginDto } from "./dto/login.dto"
 import { LogoutDto } from "./dto/logout.dto"
@@ -57,7 +63,9 @@ export class AuthSessionService {
     }
 
     if (hostScope.kind !== "platform") {
-      throw new UnauthorizedException("Platform admin registration is only allowed on platform workspace")
+      throw new UnauthorizedException(
+        "Platform admin registration is only allowed on platform workspace"
+      )
     }
 
     const expectedBootstrapKey = process.env.AUTH_PLATFORM_ADMIN_BOOTSTRAP_KEY?.trim()
@@ -65,7 +73,9 @@ export class AuthSessionService {
       throw new UnauthorizedException("Platform admin registration is disabled")
     }
 
-    const platformTenantId = await this.store.getTenantIdBySlug(AuthSessionService.PLATFORM_TENANT_SLUG)
+    const platformTenantId = await this.store.getTenantIdBySlug(
+      AuthSessionService.PLATFORM_TENANT_SLUG
+    )
     if (!platformTenantId) {
       throw new NotFoundException("Platform tenant not found")
     }
@@ -131,6 +141,15 @@ export class AuthSessionService {
       roles: tokenPayload.roles,
       genderScope: tokenPayload.genderScope,
     }
+  }
+
+  async reissueSessionForUser(userId: string, tenantId: string): Promise<AuthSession> {
+    const user = await this.store.getUserById(userId, tenantId)
+    if (!user) {
+      throw new UnauthorizedException("User not found")
+    }
+
+    return this.tokenService.createSession(this.toIdentity(user))
   }
 
   async validateUserCredentials(

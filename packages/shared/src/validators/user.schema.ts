@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 const userRoleSchema = z.enum(["platform_admin", "school_admin", "teacher", "student", "parent"])
-const userGenderScopeSchema = z.enum(["male", "female", "all"])
+export const userGenderScopeSchema = z.enum(["male", "female", "all"])
 
 export const userTenantQuerySchema = z.object({
   tenantId: z.string().uuid(),
@@ -52,9 +52,14 @@ export const updateUserAvatarSchema = z.object({
   avatar: z.string().url().max(500),
 })
 
+export const updateMyGenderScopeSchema = z.object({
+  genderScope: userGenderScopeSchema,
+})
+
 export type CreateUserInput = z.infer<typeof createUserSchema>
 export type UpdateUserInput = z.infer<typeof updateUserSchema>
 export type ListUsersQueryInput = z.infer<typeof listUsersQuerySchema>
 export type UpdateUserRoleInput = z.infer<typeof updateUserRoleSchema>
 export type ChangeUserPasswordInput = z.infer<typeof changeUserPasswordSchema>
 export type UpdateUserAvatarInput = z.infer<typeof updateUserAvatarSchema>
+export type UpdateMyGenderScopeInput = z.infer<typeof updateMyGenderScopeSchema>
