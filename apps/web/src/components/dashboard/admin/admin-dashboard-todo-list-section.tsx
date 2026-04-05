@@ -161,7 +161,7 @@ export function AdminDashboardTodoListSection() {
     <section className="rounded-[28px] border border-slate-200/80 bg-white p-4 xl:flex xl:h-full xl:min-h-[300px] xl:flex-col">
       <header className="mb-2 flex items-start justify-between gap-3">
         <div className="space-y-1">
-          <h2 className="text-[1.05rem] leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)]">
+          <h2 className="text-[1.05rem] leading-none font-semibold tracking-tight text-talimy-navy">
             {t("title")}
           </h2>
         </div>
@@ -170,7 +170,7 @@ export function AdminDashboardTodoListSection() {
           <DropdownMenuTrigger asChild>
             <Button
               aria-label={t("menuAriaLabel")}
-              className="size-9 rounded-full text-slate-500 hover:text-[var(--talimy-color-navy)]"
+              className="size-9 rounded-full text-slate-500 hover:text-talimy-navy"
               size="icon"
               variant="ghost"
             >
@@ -263,8 +263,8 @@ export function AdminDashboardTodoListSection() {
                   <Button
                     aria-label={t("actions.edit", { title: item.title })}
                     className={cn(
-                      "size-7 rounded-full text-slate-500 hover:text-[var(--talimy-color-navy)]",
-                      editingId === item.id && "text-[var(--talimy-color-navy)]"
+                      "size-7 rounded-full text-slate-500 hover:text-talimy-navy",
+                      editingId === item.id && "text-talimy-navy"
                     )}
                     onClick={() => handleStartEdit(item)}
                     size="icon"

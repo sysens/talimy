@@ -267,11 +267,3 @@ html[data-theme-transition]::view-transition-new(root) {
         @apply bg-background text-foreground;
     }
 }
-
-.recharts-responsive-container{
-  height: 180px !important;
-}
-
-.recharts-responsive-container:has(.cpiechart){
-  height: 280px !important;
-}

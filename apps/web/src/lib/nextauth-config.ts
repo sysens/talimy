@@ -22,6 +22,7 @@ type AuthIdentity = {
   tenantSlug?: string | null
   roles: string[]
   genderScope: GenderScope
+  rememberMe: boolean
 }
 
 type AuthSession = {
@@ -45,18 +46,26 @@ type AuthUser = {
   tenantSlug?: string | null
   roles: string[]
   genderScope: GenderScope
+  rememberMe: boolean
   accessToken: string
   refreshToken: string
   expiresAt: number
 }
 
 const ACCESS_TOKEN_REFRESH_SKEW_MS = 30_000
+const DEFAULT_NEXTAUTH_SESSION_MAX_AGE_SEC = 30 * 24 * 60 * 60
+const NEXTAUTH_SESSION_MAX_AGE_SEC = Number(
+  process.env.NEXTAUTH_SESSION_MAX_AGE_SEC ?? DEFAULT_NEXTAUTH_SESSION_MAX_AGE_SEC
+)
+
+const pendingRefreshPromises = new Map<string, Promise<AuthSession | null>>()
 
 export const nextAuthConfig: NextAuthConfig = {
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   trustHost: true,
   session: {
     strategy: "jwt",
+    maxAge: NEXTAUTH_SESSION_MAX_AGE_SEC,
   },
   pages: {
     signIn: AUTH_ROUTE_PATHS.login,
@@ -67,6 +76,7 @@ export const nextAuthConfig: NextAuthConfig = {
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        rememberMe: { label: "Remember me", type: "text" },
       },
       authorize: async (credentials) => {
         const parsed = loginSchema.safeParse(credentials)
@@ -102,6 +112,7 @@ export const nextAuthConfig: NextAuthConfig = {
           tenantSlug: identity.tenantSlug ?? null,
           roles: identity.roles,
           genderScope: identity.genderScope,
+          rememberMe: identity.rememberMe,
           accessToken: loginSession.accessToken,
           refreshToken: loginSession.refreshToken,
           expiresAt: toExpiresAt(loginSession.expiresIn),
@@ -119,6 +130,7 @@ export const nextAuthConfig: NextAuthConfig = {
         token.tenantSlug = authUser.tenantSlug ?? null
         token.roles = authUser.roles
         token.genderScope = authUser.genderScope
+        token.rememberMe = authUser.rememberMe
         token.accessToken = authUser.accessToken
         token.refreshToken = authUser.refreshToken
         token.expiresAt = authUser.expiresAt
@@ -138,9 +150,24 @@ export const nextAuthConfig: NextAuthConfig = {
         return token
       }
 
-      const refreshedSession = await requestAuthSession("/api/auth/refresh", {
-        refreshToken: token.refreshToken,
-      })
+      let refreshedSession: AuthSession | null = null
+
+      if (pendingRefreshPromises.has(token.refreshToken)) {
+        refreshedSession = (await pendingRefreshPromises.get(token.refreshToken)) ?? null
+      } else {
+        const promise = requestAuthSession("/api/auth/refresh", {
+          refreshToken: token.refreshToken,
+        }).finally(() => {
+          // Xotirani tozalash va zaxira qoldirmaslik (boshqa refresh jarayonlari alohida token orqali ishlaydi)
+          setTimeout(() => {
+            pendingRefreshPromises.delete(token.refreshToken as string)
+          }, 10000)
+        })
+
+        pendingRefreshPromises.set(token.refreshToken, promise)
+        refreshedSession = await promise
+      }
+
       if (!refreshedSession) {
         return markTokenAuthError(token, "refresh_failed")
       }
@@ -156,6 +183,7 @@ export const nextAuthConfig: NextAuthConfig = {
       token.tenantSlug = refreshedIdentity.tenantSlug ?? null
       token.roles = refreshedIdentity.roles
       token.genderScope = refreshedIdentity.genderScope
+      token.rememberMe = refreshedIdentity.rememberMe
       token.accessToken = refreshedSession.accessToken
       token.refreshToken = refreshedSession.refreshToken
       token.expiresAt = toExpiresAt(refreshedSession.expiresIn)
@@ -187,6 +215,7 @@ export const nextAuthConfig: NextAuthConfig = {
         tenantSlug: typeof token.tenantSlug === "string" ? token.tenantSlug : null,
         roles: normalizeStringArray(token.roles),
         genderScope: resolvedGenderScope,
+        rememberMe: token.rememberMe === true,
       }
 
       session.accessToken = typeof token.accessToken === "string" ? token.accessToken : null
@@ -413,6 +442,7 @@ function decodeAccessIdentity(accessToken: string): AuthIdentity | null {
       tenantSlug: unknown
       roles: unknown
       genderScope: unknown
+      rememberMe: unknown
     }>
 
     if (
@@ -436,6 +466,7 @@ function decodeAccessIdentity(accessToken: string): AuthIdentity | null {
       tenantSlug: typeof payload.tenantSlug === "string" ? payload.tenantSlug : null,
       roles,
       genderScope,
+      rememberMe: payload.rememberMe === true,
     }
   } catch {
     return null
@@ -540,8 +571,10 @@ function applySessionUpdateToToken(
     accessToken?: unknown
     expiresAt?: unknown
     refreshToken?: unknown
+    rememberMe?: unknown
     user?: {
       genderScope?: unknown
+      rememberMe?: unknown
     }
   }
 
@@ -562,6 +595,14 @@ function applySessionUpdateToToken(
     token.genderScope = genderScope
   }
 
+  if (updateRecord.rememberMe === true || updateRecord.rememberMe === false) {
+    token.rememberMe = updateRecord.rememberMe
+  }
+
+  if (updateRecord.user?.rememberMe === true || updateRecord.user?.rememberMe === false) {
+    token.rememberMe = updateRecord.user.rememberMe
+  }
+
   delete token.authError
   return token
 }
@@ -573,6 +614,7 @@ function markTokenAuthError(
   delete token.accessToken
   delete token.expiresAt
   delete token.genderScope
+  delete token.rememberMe
   delete token.refreshToken
   delete token.roles
   delete token.tenantId

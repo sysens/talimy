@@ -1027,5 +1027,332 @@
         }
       }
     }
+  },
+  "adminTeachers": {
+    "overview": {
+      "stats": {
+        "totalTeachers": "Toplam öğretmen",
+        "fullTimeTeachers": "Tam zamanlı öğretmen",
+        "partTimeTeachers": "Yarı zamanlı öğretmen",
+        "substituteTeachers": "Yedek öğretmen"
+      },
+      "attendance": {
+        "title": "Devam görünümü",
+        "filterAriaLabel": "Öğretmen devam dönemi",
+        "periods": {
+          "weekly": "Haftalık",
+          "monthly": "Aylık"
+        },
+        "days": {
+          "mon": "Pzt",
+          "tue": "Sal",
+          "wed": "Çar",
+          "thu": "Per",
+          "fri": "Cum"
+        }
+      },
+      "workload": {
+        "title": "İş yükü dağılımı",
+        "subjectFilterAriaLabel": "Ders filtresi",
+        "periodFilterAriaLabel": "İş yükü dönemi",
+        "periods": {
+          "weekly": "Haftalık",
+          "monthly": "Aylık"
+        },
+        "legend": {
+          "totalClasses": "Toplam ders",
+          "teachingHours": "Ders saatleri",
+          "extraDuties": "Ek görevler"
+        },
+        "departments": {
+          "science": "Fen",
+          "mathematics": "Matematik",
+          "language": "Dil",
+          "social": "Sosyal",
+          "arts": "Sanat",
+          "physicalEducation": "Beden eğitimi",
+          "other": "Diğer"
+        }
+      },
+      "department": {
+        "title": "Bölüm",
+        "centerLabel": "Toplam öğretmen",
+        "actionsAriaLabel": "Bölüm grafiği işlemleri",
+        "items": {
+          "science": "Fen",
+          "mathematics": "Matematik",
+          "language": "Dil",
+          "social": "Sosyal",
+          "arts": "Sanat",
+          "physicalEducation": "Beden eğitimi",
+          "other": "Diğer"
+        }
+      }
+    },
+    "list": {
+      "title": "Öğretmenler",
+      "addTeacher": "Ekle",
+      "searchPlaceholder": "Öğretmen ara",
+      "sortLabel": "Sırala:",
+      "message": "Görüntüle",
+      "filterButton": "Filtre",
+      "filterTitle": "Öğretmenleri filtrele",
+      "filters": {
+        "department": "Bölüm",
+        "statusLabel": "Durum",
+        "genderLabel": "Cinsiyet",
+        "status": {
+          "active": "Aktif",
+          "inactive": "Pasif",
+          "onLeave": "İzinde"
+        },
+        "gender": {
+          "male": "Erkek",
+          "female": "Kadın"
+        },
+        "actions": {
+          "clear": "Temizle",
+          "apply": "Uygula"
+        }
+      },
+      "sort": {
+        "latest": "En yeni",
+        "oldest": "En eski",
+        "nameAsc": "İsim A-Z"
+      },
+      "pagination": {
+        "show": "Göster",
+        "of": "/",
+        "results": "sonuç",
+        "previous": "Önceki",
+        "next": "Sonraki"
+      },
+      "states": {
+        "empty": "Öğretmen bulunamadı.",
+        "error": "Öğretmen listesi yüklenemedi."
+      }
+    },
+    "detail": {
+      "header": {
+        "title": "Öğretmen Detayları"
+      },
+      "subject": "Ders",
+      "class": "Sınıf",
+      "notAssigned": "Atanmadı",
+      "states": {
+        "error": "Öğretmen detayları yüklenemedi.",
+        "empty": "Öğretmen bulunamadı."
+      },
+      "employment": {
+        "fullTime": "Tam zamanlı",
+        "partTime": "Yarı zamanlı",
+        "substitute": "Yedek"
+      },
+      "toastErrorTitle": "Öğretmen detayları",
+      "toastErrorDescription": "Öğretmen bilgileri yüklenirken bir hata oluştu.",
+      "weeklyHours": "{hours} saat",
+      "employmentCompact": {
+        "fullTime": "Tam",
+        "partTime": "Yarı",
+        "substitute": "Yedek"
+      },
+      "schedule": {
+        "title": "Ders Programı",
+        "periodOptions": {
+          "weekly": "Haftalık",
+          "today": "Bugün"
+        }
+      },
+      "workload": {
+        "title": "İş Yükü Özeti",
+        "filterAriaLabel": "İş yükü dönemi",
+        "periodOptions": {
+          "last8Months": "Son 8 Ay",
+          "thisSemester": "Bu Dönem"
+        }
+      },
+      "training": {
+        "title": "Gelişim ve Eğitim",
+        "filterAriaLabel": "Eğitim dönemi",
+        "periodOptions": {
+          "thisSemester": "Bu Dönem",
+          "lastSemester": "Geçen Dönem"
+        },
+        "columns": {
+          "event": "Etkinlik",
+          "date": "Tarih",
+          "location": "Konum/Platform",
+          "status": "Durum"
+        },
+        "statusMap": {
+          "completed": "Tamamlandı",
+          "upcoming": "Gelecek",
+          "cancelled": "İptal Edildi"
+        }
+      },
+      "documents": {
+        "title": "Belgeler ve Uyumluluk",
+        "actionLabel": "Belge işlemleri"
+      },
+      "personalInfo": {
+        "title": "Kişisel Bilgiler",
+        "actionLabel": "İşlemler",
+        "fields": {
+          "gender": "Cinsiyet",
+          "dateOfBirth": "Doğum Tarihi",
+          "emailAddress": "E-posta Adresi",
+          "phoneNumber": "Telefon Numarası",
+          "address": "Adres"
+        },
+        "states": {
+          "male": "Erkek",
+          "female": "Kadın"
+        }
+      },
+      "leaveRequest": {
+        "title": "İzin Talebi",
+        "toastUpdateError": "İzin durumu güncellenemedi.",
+        "toastUpdateSuccess": "İzin durumu güncellendi.",
+        "approve": "Onayla",
+        "decline": "Reddet"
+      },
+      "performance": {
+        "title": "Performans",
+        "filterAriaLabel": "Performans dönemi",
+        "periodOptions": {
+          "lastMonth": "Geçen Ay",
+          "lastQuarter": "Geçen Çeyrek"
+        }
+      }
+    },
+    "create": {
+      "header": {
+        "title": "Yeni Öğretmen Ekle",
+        "backLabel": "Öğretmenler",
+        "breadcrumbs": {
+          "dashboard": "Dashboard",
+          "teachers": "Öğretmenler",
+          "addTeacher": "Yeni Öğretmen Ekle"
+        }
+      },
+      "loading": "Öğretmen form verileri yükleniyor...",
+      "loadError": "Öğretmen ekleme form verileri yüklenemedi.",
+      "retry": "Tekrar dene",
+      "personal": {
+        "title": "Kişisel Bilgiler",
+        "firstNameLabel": "Ad",
+        "firstNamePlaceholder": "Adı girin",
+        "lastNameLabel": "Soyad",
+        "lastNamePlaceholder": "Soyadı girin",
+        "middleNameLabel": "Baba adı",
+        "middleNamePlaceholder": "Baba adını girin",
+        "dateOfBirthLabel": "Doğum Tarihi",
+        "genderLabel": "Cinsiyet",
+        "genderPlaceholder": "Cinsiyet seçin",
+        "genderOptions": {
+          "male": "Erkek",
+          "female": "Kadın"
+        },
+        "avatar": {
+          "label": "Avatar",
+          "uploadLabel": "Resim yükle",
+          "changeLabel": "Resmi değiştir",
+          "removeLabel": "Kaldır",
+          "emptyLabel": "Resim eklenmedi",
+          "previewLabel": "Yüklenen resim önizlemesi",
+          "uploadErrorTitle": "Avatar yüklenemedi"
+        },
+        "nationalityLabel": "Milliyet",
+        "nationalityPlaceholder": "Milliyet seçin",
+        "nationalityOptions": {
+          "uzbek": "Özbek",
+          "kazakh": "Kazak",
+          "kyrgyz": "Kırgız",
+          "russian": "Rus",
+          "tajik": "Tacik",
+          "turkish": "Türk",
+          "other": "Diğer"
+        },
+        "statusLabel": "Durum",
+        "statusPlaceholder": "Durum seçin",
+        "statusOptions": {
+          "active": "Aktif",
+          "inactive": "Pasif"
+        }
+      },
+      "contact": {
+        "title": "İletişim Bilgileri",
+        "emailLabel": "E-posta",
+        "emailPlaceholder": "teacher@school.uz",
+        "phoneLabel": "Telefon Numarası",
+        "telegramLabel": "Telegram kullanıcı adı",
+        "telegramPlaceholder": "@username",
+        "addressLabel": "Adres",
+        "addressPlaceholder": "Şehir, ilçe, adres girin"
+      },
+      "academic": {
+        "title": "Akademik Bilgiler",
+        "subjectsLabel": "Uzmanlık",
+        "subjectsPlaceholder": "Uzmanlık seçin",
+        "subjectsEmpty": "Ders bulunamadı.",
+        "classesLabel": "Sınıflar",
+        "classesPlaceholder": "Sınıf seçin",
+        "classesEmpty": "Sınıf bulunamadı.",
+        "classesSearchPlaceholder": "Sınıf ara",
+        "employmentTypeLabel": "Çalışma Türü",
+        "employmentTypePlaceholder": "Çalışma türü seçin",
+        "employmentTypeOptions": {
+          "fullTime": "Tam zamanlı",
+          "partTime": "Yarı zamanlı",
+          "hourly": "Saatlik"
+        },
+        "joinDateLabel": "İşe Başlama Tarihi"
+      },
+      "documents": {
+        "title": "Belgeler",
+        "emptyState": "Belge eklenmedi.",
+        "addLabel": "Belge ekle",
+        "removeLabel": "Sil",
+        "fileLabel": "Dosya",
+        "filePlaceholder": "PDF veya görsel dosyası seçin",
+        "fileReadyLabel": "Dosya kaydetmeye hazır.",
+        "uploadLabel": "Yükle",
+        "documentTypeLabel": "Belge Türü",
+        "documentTypePlaceholder": "Tür seçin",
+        "documentTypeOptions": {
+          "diploma": "Diploma",
+          "certificate": "Sertifika",
+          "idCard": "Kimlik",
+          "other": "Diğer"
+        }
+      },
+      "actions": {
+        "cancel": "İptal",
+        "submit": "Kaydet ve Öğretmen Ekle",
+        "submitting": "Kaydediliyor..."
+      },
+      "validation": {
+        "classIdsRequired": "En az bir sınıf seçin.",
+        "dateOfBirthRequired": "Doğum tarihi zorunludur.",
+        "documentFileRequired": "Bir belge dosyası seçin.",
+        "emailInvalid": "Geçerli bir e-posta girin.",
+        "emailRequired": "E-posta zorunludur.",
+        "firstNameRequired": "Ad zorunludur.",
+        "joinDateRequired": "İşe başlama tarihi zorunludur.",
+        "lastNameRequired": "Soyad zorunludur.",
+        "nationalityRequired": "Bir milliyet seçin.",
+        "phoneInvalid": "Geçerli bir telefon numarası girin.",
+        "subjectIdsRequired": "En az bir ders seçin.",
+        "telegramInvalid": "Telegram kullanıcı adı geçersiz."
+      },
+      "toasts": {
+        "formOptionsMissing": "Gerekli form seçenekleri bulunamadı.",
+        "documentUploadMissing": "Belge yükleme eksik.",
+        "createErrorTitle": "Öğretmen eklenemedi",
+        "createErrorDescription": "Girilen verileri kontrol edip tekrar deneyin.",
+        "createSuccessTitle": "Öğretmen eklendi",
+        "createSuccessDescription": "Yeni öğretmen başarıyla oluşturuldu."
+      }
+    }
   }
 }

@@ -110,7 +110,7 @@ export function MultipleBarChart<
       {!hideHeader ? (
         <CardHeader className="px-0 pb-3">
           {title ? (
-            <CardTitle className="text-base leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200">
+            <CardTitle className="text-base leading-none font-semibold tracking-tight text-talimy-navy dark:text-sky-200">
               {title}
             </CardTitle>
           ) : null}

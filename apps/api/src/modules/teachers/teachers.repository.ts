@@ -1,12 +1,30 @@
-import { classes, db, schedules, subjects, teachers, users } from "@talimy/database"
-import { and, asc, desc, eq, ilike, isNull, ne, or, type SQL, sql } from "drizzle-orm"
+import {
+  classes,
+  db,
+  schedules,
+  subjects,
+  teacherClassAssignments,
+  teacherSubjectAssignments,
+  teachers,
+  users,
+} from "@talimy/database"
+import { and, asc, desc, eq, ilike, inArray, isNull, ne, or, type SQL, sql } from "drizzle-orm"
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 
-import { CreateTeacherDto } from "./dto/create-teacher.dto"
 import { ListTeachersQueryDto } from "./dto/list-teachers-query.dto"
 import { UpdateTeacherDto } from "./dto/update-teacher.dto"
 import { toTeacherView } from "./teachers.mapper"
 import type { TeacherScheduleItem, TeacherView } from "./teachers.types"
+
+const TEACHER_DEPARTMENT_SPECIALIZATION_MAP = {
+  arts: "Arts",
+  language: "Language",
+  mathematics: "Mathematics",
+  physicalEducation: "Physical Education",
+  science: "Science",
+  social: "Social",
+} as const
+type TeacherDepartmentKey = keyof typeof TEACHER_DEPARTMENT_SPECIALIZATION_MAP | "other"
 
 @Injectable()
 export class TeachersRepository {
@@ -15,8 +33,34 @@ export class TeachersRepository {
     meta: { page: number; limit: number; total: number; totalPages: number }
   }> {
     const filters: SQL[] = [eq(teachers.tenantId, query.tenantId), isNull(teachers.deletedAt)]
-    if (query.gender) filters.push(eq(teachers.gender, query.gender))
-    if (query.status) filters.push(eq(teachers.status, query.status))
+    const genderFilters = query.gender ?? []
+    const statusFilters = query.status ?? []
+    const departmentFilters = query.departmentId ?? []
+
+    if (genderFilters.length > 0) {
+      filters.push(inArray(teachers.gender, genderFilters))
+    }
+    if (statusFilters.length > 0) {
+      filters.push(inArray(teachers.status, statusFilters))
+    }
+    if (departmentFilters.length > 0) {
+      const departmentConditions: SQL[] = []
+
+      for (const departmentKey of departmentFilters as TeacherDepartmentKey[]) {
+        if (departmentKey === "other") {
+          departmentConditions.push(isNull(teachers.specialization))
+          continue
+        }
+
+        departmentConditions.push(
+          eq(teachers.specialization, TEACHER_DEPARTMENT_SPECIALIZATION_MAP[departmentKey])
+        )
+      }
+
+      if (departmentConditions.length > 0) {
+        filters.push(or(...departmentConditions)!)
+      }
+    }
     if (query.search) {
       const search = query.search.trim()
       if (search.length > 0) {
@@ -42,15 +86,14 @@ export class TeachersRepository {
     const totalPages = Math.max(1, Math.ceil(total / query.limit))
     const page = Math.min(query.page, totalPages)
     const offset = (page - 1) * query.limit
-    const sortColumn = this.resolveSortColumn(query.sort)
-    const orderExpr = query.order === "asc" ? asc(sortColumn) : desc(sortColumn)
+    const orderExpressions = this.resolveSortOrder(query.sort, query.order)
 
     const rows = await db
       .select({ teacher: teachers, user: users })
       .from(teachers)
       .innerJoin(users, eq(users.id, teachers.userId))
       .where(whereExpr)
-      .orderBy(orderExpr)
+      .orderBy(...orderExpressions)
       .limit(query.limit)
       .offset(offset)
 
@@ -65,30 +108,6 @@ export class TeachersRepository {
     return toTeacherView(row.teacher, row.user)
   }
 
-  async create(payload: CreateTeacherDto): Promise<TeacherView> {
-    const user = await this.findUserOrThrow(payload.tenantId, payload.userId)
-    await this.assertUniqueEmployeeId(payload.tenantId, payload.employeeId)
-    await this.assertUserNotTeacher(payload.tenantId, payload.userId)
-
-    const [created] = await db
-      .insert(teachers)
-      .values({
-        tenantId: payload.tenantId,
-        userId: payload.userId,
-        employeeId: payload.employeeId,
-        gender: payload.gender,
-        joinDate: payload.joinDate,
-        dateOfBirth: payload.dateOfBirth,
-        qualification: payload.qualification,
-        specialization: payload.specialization,
-        salary: typeof payload.salary === "number" ? String(payload.salary) : null,
-        status: payload.status ?? "active",
-      })
-      .returning()
-    if (!created) throw new BadRequestException("Failed to create teacher")
-    return toTeacherView(created, user)
-  }
-
   async update(tenantId: string, id: string, payload: UpdateTeacherDto): Promise<TeacherView> {
     const current = await this.findTeacherRowOrThrow(tenantId, id)
     if (payload.employeeId && payload.employeeId !== current.teacher.employeeId) {
@@ -98,6 +117,7 @@ export class TeachersRepository {
     const updatePayload: Partial<typeof teachers.$inferInsert> = { updatedAt: new Date() }
     if (payload.employeeId) updatePayload.employeeId = payload.employeeId
     if (payload.gender) updatePayload.gender = payload.gender
+    if (payload.employmentType) updatePayload.employmentType = payload.employmentType
     if (payload.joinDate) updatePayload.joinDate = payload.joinDate
     if (typeof payload.dateOfBirth !== "undefined") updatePayload.dateOfBirth = payload.dateOfBirth
     if (typeof payload.qualification !== "undefined")
@@ -156,38 +176,76 @@ export class TeachersRepository {
 
   async getClasses(tenantId: string, id: string): Promise<Array<{ id: string; name: string }>> {
     await this.findTeacherRowOrThrow(tenantId, id)
-    return db
-      .select({ id: classes.id, name: classes.name })
-      .from(schedules)
-      .innerJoin(classes, eq(classes.id, schedules.classId))
-      .where(
-        and(
-          eq(schedules.tenantId, tenantId),
-          eq(schedules.teacherId, id),
-          isNull(schedules.deletedAt),
-          isNull(classes.deletedAt)
+
+    const [scheduleClasses, assignedClasses] = await Promise.all([
+      db
+        .select({ id: classes.id, name: classes.name })
+        .from(schedules)
+        .innerJoin(classes, eq(classes.id, schedules.classId))
+        .where(
+          and(
+            eq(schedules.tenantId, tenantId),
+            eq(schedules.teacherId, id),
+            isNull(schedules.deletedAt),
+            isNull(classes.deletedAt)
+          )
         )
-      )
-      .groupBy(classes.id, classes.name)
-      .orderBy(asc(classes.name))
+        .groupBy(classes.id, classes.name)
+        .orderBy(asc(classes.name)),
+      db
+        .select({ id: classes.id, name: classes.name })
+        .from(teacherClassAssignments)
+        .innerJoin(classes, eq(classes.id, teacherClassAssignments.classId))
+        .where(
+          and(
+            eq(teacherClassAssignments.tenantId, tenantId),
+            eq(teacherClassAssignments.teacherId, id),
+            isNull(teacherClassAssignments.deletedAt),
+            isNull(classes.deletedAt)
+          )
+        )
+        .groupBy(classes.id, classes.name)
+        .orderBy(asc(classes.name)),
+    ])
+
+    return this.mergeNamedItems(scheduleClasses, assignedClasses)
   }
 
   async getSubjects(tenantId: string, id: string): Promise<Array<{ id: string; name: string }>> {
     await this.findTeacherRowOrThrow(tenantId, id)
-    return db
-      .select({ id: subjects.id, name: subjects.name })
-      .from(schedules)
-      .innerJoin(subjects, eq(subjects.id, schedules.subjectId))
-      .where(
-        and(
-          eq(schedules.tenantId, tenantId),
-          eq(schedules.teacherId, id),
-          isNull(schedules.deletedAt),
-          isNull(subjects.deletedAt)
+
+    const [scheduledSubjects, assignedSubjects] = await Promise.all([
+      db
+        .select({ id: subjects.id, name: subjects.name })
+        .from(schedules)
+        .innerJoin(subjects, eq(subjects.id, schedules.subjectId))
+        .where(
+          and(
+            eq(schedules.tenantId, tenantId),
+            eq(schedules.teacherId, id),
+            isNull(schedules.deletedAt),
+            isNull(subjects.deletedAt)
+          )
         )
-      )
-      .groupBy(subjects.id, subjects.name)
-      .orderBy(asc(subjects.name))
+        .groupBy(subjects.id, subjects.name)
+        .orderBy(asc(subjects.name)),
+      db
+        .select({ id: subjects.id, name: subjects.name })
+        .from(teacherSubjectAssignments)
+        .innerJoin(subjects, eq(subjects.id, teacherSubjectAssignments.subjectId))
+        .where(
+          and(
+            eq(teacherSubjectAssignments.tenantId, tenantId),
+            eq(teacherSubjectAssignments.teacherId, id),
+            isNull(teacherSubjectAssignments.deletedAt),
+            isNull(subjects.deletedAt)
+          )
+        )
+        .groupBy(subjects.id, subjects.name)
+        .orderBy(asc(subjects.name)),
+    ])
+
+    return this.mergeNamedItems(scheduledSubjects, assignedSubjects)
   }
 
   private async findTeacherRowOrThrow(
@@ -203,19 +261,6 @@ export class TeachersRepository {
       )
       .limit(1)
     if (!row) throw new NotFoundException("Teacher not found")
-    return row
-  }
-
-  private async findUserOrThrow(
-    tenantId: string,
-    userId: string
-  ): Promise<typeof users.$inferSelect> {
-    const [row] = await db
-      .select()
-      .from(users)
-      .where(and(eq(users.id, userId), eq(users.tenantId, tenantId), isNull(users.deletedAt)))
-      .limit(1)
-    if (!row) throw new NotFoundException("Teacher user account not found in tenant")
     return row
   }
 
@@ -238,36 +283,39 @@ export class TeachersRepository {
     if (existing) throw new BadRequestException("Employee ID already exists")
   }
 
-  private async assertUserNotTeacher(tenantId: string, userId: string): Promise<void> {
-    const [existing] = await db
-      .select({ id: teachers.id })
-      .from(teachers)
-      .where(
-        and(
-          eq(teachers.tenantId, tenantId),
-          eq(teachers.userId, userId),
-          isNull(teachers.deletedAt)
-        )
-      )
-      .limit(1)
-    if (existing) throw new BadRequestException("User already linked to another teacher record")
-  }
-
-  private resolveSortColumn(sort: string | undefined) {
+  private resolveSortOrder(sort: string | undefined, order: "asc" | "desc") {
     switch (sort) {
       case "employeeId":
-        return teachers.employeeId
+        return [order === "asc" ? asc(teachers.employeeId) : desc(teachers.employeeId)]
+      case "fullName":
+        return [
+          order === "asc" ? asc(users.firstName) : desc(users.firstName),
+          order === "asc" ? asc(users.lastName) : desc(users.lastName),
+        ]
       case "gender":
-        return teachers.gender
+        return [order === "asc" ? asc(teachers.gender) : desc(teachers.gender)]
       case "status":
-        return teachers.status
+        return [order === "asc" ? asc(teachers.status) : desc(teachers.status)]
       case "joinDate":
-        return teachers.joinDate
+        return [order === "asc" ? asc(teachers.joinDate) : desc(teachers.joinDate)]
       case "updatedAt":
-        return teachers.updatedAt
+        return [order === "asc" ? asc(teachers.updatedAt) : desc(teachers.updatedAt)]
       case "createdAt":
       default:
-        return teachers.createdAt
+        return [order === "asc" ? asc(teachers.createdAt) : desc(teachers.createdAt)]
     }
+  }
+
+  private mergeNamedItems(
+    first: ReadonlyArray<{ id: string; name: string }>,
+    second: ReadonlyArray<{ id: string; name: string }>
+  ): Array<{ id: string; name: string }> {
+    const itemsById = new Map<string, { id: string; name: string }>()
+
+    for (const item of [...first, ...second]) {
+      itemsById.set(item.id, item)
+    }
+
+    return [...itemsById.values()].sort((left, right) => left.name.localeCompare(right.name))
   }
 }

@@ -1,7 +1,15 @@
 "use client"
 
 import * as React from "react"
-import { Bar, BarChart, CartesianGrid, LabelList, ResponsiveContainer, XAxis, YAxis } from "recharts"
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  LabelList,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+} from "recharts"
 
 import { cn } from "../../lib/utils"
 import type { ChartFilterSelectProps } from "../chart-filter-select"
@@ -61,7 +69,7 @@ export function CappedProgressBarChart({
       <div className="space-y-4 p-4 sm:p-5">
         <header className="flex items-start justify-between gap-3">
           <div className="space-y-1">
-            <h3 className="text-[15px] leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200">
+            <h3 className="text-[15px] leading-none font-semibold tracking-tight text-talimy-navy dark:text-sky-200">
               {title}
             </h3>
             {subtitle ? <p className="text-xs text-muted-foreground">{subtitle}</p> : null}
@@ -82,20 +90,21 @@ export function CappedProgressBarChart({
               <BarChart data={chartData} margin={{ bottom: 18, left: -20, right: 8, top: 18 }}>
                 <defs>
                   <linearGradient id="talimy-capped-progress-fill" x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stopColor="color-mix(in srgb, var(--talimy-color-pink) 58%, white 42%)" />
-                    <stop offset="100%" stopColor="color-mix(in srgb, var(--talimy-color-pink) 12%, white 88%)" />
+                    <stop
+                      offset="0%"
+                      stopColor="color-mix(in srgb, var(--talimy-color-pink) 58%, white 42%)"
+                    />
+                    <stop
+                      offset="100%"
+                      stopColor="color-mix(in srgb, var(--talimy-color-pink) 12%, white 88%)"
+                    />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
                   stroke="color-mix(in srgb, var(--talimy-color-gray) 14%, white 86%)"
                   vertical={false}
                 />
-                <YAxis
-                  axisLine={false}
-                  domain={[0, maxValue]}
-                  hide
-                  tickLine={false}
-                />
+                <YAxis axisLine={false} domain={[0, maxValue]} hide tickLine={false} />
                 <XAxis
                   axisLine={false}
                   dataKey="label"
@@ -117,7 +126,13 @@ export function CappedProgressBarChart({
                 >
                   <LabelList
                     content={(props) => {
-                      const { index = 0, value, x = 0, width = 0, y = 0 } = props as {
+                      const {
+                        index = 0,
+                        value,
+                        x = 0,
+                        width = 0,
+                        y = 0,
+                      } = props as {
                         index?: number
                         value?: number
                         width?: number
@@ -125,7 +140,7 @@ export function CappedProgressBarChart({
                         y?: number
                       }
                       const datum = chartData[index]
-                      const numericValue = typeof value === "number" ? value : datum?.value ?? 0
+                      const numericValue = typeof value === "number" ? value : (datum?.value ?? 0)
 
                       return (
                         <text

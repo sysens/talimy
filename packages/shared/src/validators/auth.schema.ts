@@ -1,8 +1,23 @@
 import { z } from "zod"
 
+const rememberMeSchema = z
+  .union([
+    z.boolean(),
+    z.literal("true"),
+    z.literal("false"),
+    z.literal("1"),
+    z.literal("0"),
+    z.literal("on"),
+    z.literal("off"),
+  ])
+  .transform((value) => value === true || value === "true" || value === "1" || value === "on")
+  .optional()
+  .default(false)
+
 export const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
+  rememberMe: rememberMeSchema,
 })
 
 export const registerSchema = z.object({

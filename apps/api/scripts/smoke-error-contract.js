@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-/* eslint-disable no-console */
-
 function getArg(name, fallback = "") {
   const prefix = `--${name}=`
   const hit = process.argv.find((arg) => arg.startsWith(prefix))

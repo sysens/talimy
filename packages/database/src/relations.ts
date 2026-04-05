@@ -32,6 +32,14 @@ import {
   students,
   subjects,
   teachers,
+  teacherAttendanceRecords,
+  teacherClassAssignments,
+  teacherDocuments,
+  teacherLeaveRequests,
+  teacherPerformanceSnapshots,
+  teacherSubjectAssignments,
+  teacherTrainingRecords,
+  teacherWorkloadSnapshots,
   tenants,
   terms,
   users,
@@ -48,6 +56,14 @@ export const tenantsRelations = relations(tenants, ({ many }) => ({
   subjects: many(subjects),
   schedules: many(schedules),
   teachers: many(teachers),
+  teacherDocuments: many(teacherDocuments),
+  teacherSubjectAssignments: many(teacherSubjectAssignments),
+  teacherClassAssignments: many(teacherClassAssignments),
+  teacherWorkloadSnapshots: many(teacherWorkloadSnapshots),
+  teacherTrainingRecords: many(teacherTrainingRecords),
+  teacherAttendanceRecords: many(teacherAttendanceRecords),
+  teacherLeaveRequests: many(teacherLeaveRequests),
+  teacherPerformanceSnapshots: many(teacherPerformanceSnapshots),
   students: many(students),
   parents: many(parents),
   parentStudent: many(parentStudent),
@@ -88,6 +104,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   notices: many(notices),
   aiConversations: many(aiConversations),
   aiReports: many(aiReports),
+  teacherLeaveDecisions: many(teacherLeaveRequests),
 }))
 
 export const rolesRelations = relations(roles, ({ one, many }) => ({
@@ -165,7 +182,115 @@ export const teachersRelations = relations(teachers, ({ one, many }) => ({
   assignments: many(assignments),
   grades: many(grades),
   attendance: many(attendance),
+  documents: many(teacherDocuments),
+  subjectAssignments: many(teacherSubjectAssignments),
+  classAssignments: many(teacherClassAssignments),
+  workloadSnapshots: many(teacherWorkloadSnapshots),
+  trainingRecords: many(teacherTrainingRecords),
+  attendanceRecords: many(teacherAttendanceRecords),
+  leaveRequests: many(teacherLeaveRequests),
+  performanceSnapshots: many(teacherPerformanceSnapshots),
 }))
+
+export const teacherDocumentsRelations = relations(teacherDocuments, ({ one }) => ({
+  tenant: one(tenants, { fields: [teacherDocuments.tenantId], references: [tenants.id] }),
+  teacher: one(teachers, { fields: [teacherDocuments.teacherId], references: [teachers.id] }),
+}))
+
+export const teacherSubjectAssignmentsRelations = relations(
+  teacherSubjectAssignments,
+  ({ one }) => ({
+    tenant: one(tenants, {
+      fields: [teacherSubjectAssignments.tenantId],
+      references: [tenants.id],
+    }),
+    teacher: one(teachers, {
+      fields: [teacherSubjectAssignments.teacherId],
+      references: [teachers.id],
+    }),
+    subject: one(subjects, {
+      fields: [teacherSubjectAssignments.subjectId],
+      references: [subjects.id],
+    }),
+  })
+)
+
+export const teacherClassAssignmentsRelations = relations(teacherClassAssignments, ({ one }) => ({
+  tenant: one(tenants, {
+    fields: [teacherClassAssignments.tenantId],
+    references: [tenants.id],
+  }),
+  teacher: one(teachers, {
+    fields: [teacherClassAssignments.teacherId],
+    references: [teachers.id],
+  }),
+  class: one(classes, {
+    fields: [teacherClassAssignments.classId],
+    references: [classes.id],
+  }),
+}))
+
+export const teacherWorkloadSnapshotsRelations = relations(teacherWorkloadSnapshots, ({ one }) => ({
+  tenant: one(tenants, {
+    fields: [teacherWorkloadSnapshots.tenantId],
+    references: [tenants.id],
+  }),
+  teacher: one(teachers, {
+    fields: [teacherWorkloadSnapshots.teacherId],
+    references: [teachers.id],
+  }),
+}))
+
+export const teacherTrainingRecordsRelations = relations(teacherTrainingRecords, ({ one }) => ({
+  tenant: one(tenants, {
+    fields: [teacherTrainingRecords.tenantId],
+    references: [tenants.id],
+  }),
+  teacher: one(teachers, {
+    fields: [teacherTrainingRecords.teacherId],
+    references: [teachers.id],
+  }),
+}))
+
+export const teacherAttendanceRecordsRelations = relations(teacherAttendanceRecords, ({ one }) => ({
+  tenant: one(tenants, {
+    fields: [teacherAttendanceRecords.tenantId],
+    references: [tenants.id],
+  }),
+  teacher: one(teachers, {
+    fields: [teacherAttendanceRecords.teacherId],
+    references: [teachers.id],
+  }),
+}))
+
+export const teacherLeaveRequestsRelations = relations(teacherLeaveRequests, ({ one }) => ({
+  tenant: one(tenants, {
+    fields: [teacherLeaveRequests.tenantId],
+    references: [tenants.id],
+  }),
+  teacher: one(teachers, {
+    fields: [teacherLeaveRequests.teacherId],
+    references: [teachers.id],
+  }),
+  decidedByUser: one(users, {
+    fields: [teacherLeaveRequests.decidedByUserId],
+    references: [users.id],
+  }),
+}))
+
+export const teacherPerformanceSnapshotsRelations = relations(
+  teacherPerformanceSnapshots,
+  ({ one }) => ({
+    tenant: one(tenants, {
+      fields: [teacherPerformanceSnapshots.tenantId],
+      references: [tenants.id],
+    }),
+    teacher: one(teachers, {
+      fields: [teacherPerformanceSnapshots.teacherId],
+      references: [teachers.id],
+    }),
+  })
+)
 
 export const studentsRelations = relations(students, ({ one, many }) => ({
   tenant: one(tenants, { fields: [students.tenantId], references: [tenants.id] }),

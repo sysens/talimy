@@ -2,13 +2,10 @@ import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 
 import { AUTH_ROUTE_PATHS } from "@/lib/auth-options"
-import {
-  buildPlatformWebOrigin,
-  resolveRequestOrigin,
-} from "@/config/site"
+import { buildPlatformWebOrigin, resolveRequestOrigin } from "@/config/site"
 import { resolveHostScopeFromHeaders, type RequestHostScope } from "@/lib/server/request-host"
 
-type AllowedAuthHostScope = "platform" | "school"
+type AllowedAuthHostScope = "platform" | "public" | "school"
 
 type AuthPageAccessOptions = {
   allowedScopes: AllowedAuthHostScope[]
@@ -26,6 +23,10 @@ export async function enforceAuthPageWorkspaceAccess(
   }
 
   if (scope.kind === "platform" && options.allowedScopes.includes("platform")) {
+    return scope
+  }
+
+  if (scope.kind === "public" && options.allowedScopes.includes("public")) {
     return scope
   }
 

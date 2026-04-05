@@ -5,12 +5,7 @@ import { Customized, Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "r
 
 import { cn } from "../../lib/utils"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "../ui/chart"
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "../ui/chart"
 
 export type StackedRadialChartSegment = {
   color: string
@@ -20,11 +15,18 @@ export type StackedRadialChartSegment = {
 }
 
 export type ChartRadialStackedProps = {
+  centerLabelClassName?: string
   centerLabel?: React.ReactNode
+  centerValueClassName?: string
   centerValue: React.ReactNode
   className?: string
+  containerClassName?: string
+  cx?: number | string
+  cy?: number | string
   description?: React.ReactNode
   endAngle?: number
+  guideRadius?: number
+  chartClassName?: string
   hideHeader?: boolean
   innerRadius?: number
   outerRadius?: number
@@ -37,10 +39,10 @@ export const stackedRadialDescription = "A radial chart with stacked sections"
 type SemiGuideProps = {
   cx?: number
   cy?: number
+  radius: number
 }
 
-function SemiGuideArc({ cx = 0, cy = 0 }: SemiGuideProps) {
-  const radius = 78
+function SemiGuideArc({ cx = 0, cy = 0, radius }: SemiGuideProps) {
   const startX = cx - radius
   const endX = cx + radius
 
@@ -57,17 +59,26 @@ function SemiGuideArc({ cx = 0, cy = 0 }: SemiGuideProps) {
 }
 
 export function ChartRadialStacked({
+  centerLabelClassName,
   centerLabel = "Average Score",
+  centerValueClassName,
   centerValue,
   className,
+  containerClassName,
+  cx = "50%",
+  cy = "50%",
   description: chartDescription,
   endAngle = 180,
+  guideRadius,
+  chartClassName,
   hideHeader = false,
   innerRadius = 72,
   outerRadius = 116,
   segments,
   title,
 }: ChartRadialStackedProps) {
+  const resolvedGuideRadius =
+    guideRadius ?? Math.max(Math.round((innerRadius + outerRadius) / 2) - 12, 0)
   const chartConfig = React.useMemo(
     () =>
       Object.fromEntries(
@@ -84,15 +95,21 @@ export function ChartRadialStacked({
 
   const chartData = React.useMemo(
     () => [
-      Object.fromEntries(
-        segments.map((segment) => [segment.key, segment.value])
-      ) as Record<string, number>,
+      Object.fromEntries(segments.map((segment) => [segment.key, segment.value])) as Record<
+        string,
+        number
+      >,
     ],
     [segments]
   )
 
   return (
-    <Card className={cn("rounded-3xl border-0 bg-transparent p-0 shadow-none", className)}>
+    <Card
+      className={cn(
+        "rounded-3xl border-0 bg-transparent p-0 shadow-none flex flex-col items-center justify-center",
+        className
+      )}
+    >
       {!hideHeader ? (
         <CardHeader className="items-center pb-0">
           {title ? <CardTitle>{title}</CardTitle> : null}
@@ -101,15 +118,20 @@ export function ChartRadialStacked({
       ) : null}
 
       <CardContent className="flex items-center justify-center p-0">
-        <ChartContainer config={chartConfig} className=" h-[100px] w-full max-w-[280px]">
-          <RadialBarChart className="h-[180px]!" data={chartData} endAngle={endAngle} innerRadius={innerRadius} outerRadius={outerRadius}>
+        <ChartContainer
+          config={chartConfig}
+          className={cn("h-[100px] w-full max-w-[280px]", containerClassName)}
+        >
+          <RadialBarChart
+            className={cn("h-[180px]!", chartClassName)}
+            cx={cx}
+            cy={cy}
+            data={chartData}
+            endAngle={endAngle}
+            innerRadius={innerRadius}
+            outerRadius={outerRadius}
+          >
             <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-            <Customized 
-              component={(props: unknown) => {
-                const viewBox = props as { cx?: number; cy?: number }
-                return <SemiGuideArc cx={viewBox.cx} cy={viewBox.cy} />
-              }}
-            />
             <PolarRadiusAxis axisLine={false} tick={false} tickLine={false}>
               <Label
                 content={({ viewBox }) => {
@@ -117,23 +139,32 @@ export function ChartRadialStacked({
                     return null
                   }
 
+                  const numCx = Number(viewBox.cx) || 0
+                  const numCy = Number(viewBox.cy) || 0
+
                   return (
-                    <text x={viewBox.cx} y={viewBox.cy} textAnchor="middle">
-                      <tspan
-                        x={viewBox.cx}
-                        y={(viewBox.cy || 0) - 6}
-                        className="fill-[var(--talimy-color-navy)] text-[24px] font-bold dark:fill-sky-200"
-                      >
-                        {centerValue}
-                      </tspan>
-                      <tspan
-                        x={viewBox.cx}
-                        y={(viewBox.cy || 0) + 18}
-                        className="fill-muted-foreground text-[11px]"
-                      >
-                        {centerLabel}
-                      </tspan>
-                    </text>
+                    <g>
+                      <SemiGuideArc cx={numCx} cy={numCy} radius={resolvedGuideRadius} />
+                      <text x={numCx} y={numCy} textAnchor="middle">
+                        <tspan
+                          x={numCx}
+                          y={numCy - 6}
+                          className={cn(
+                            "fill-[var(--talimy-color-navy)] text-[24px] font-bold dark:fill-sky-200",
+                            centerValueClassName
+                          )}
+                        >
+                          {centerValue}
+                        </tspan>
+                        <tspan
+                          x={numCx}
+                          y={numCy + 18}
+                          className={cn("fill-muted-foreground text-[11px]", centerLabelClassName)}
+                        >
+                          {centerLabel}
+                        </tspan>
+                      </text>
+                    </g>
                   )
                 }}
               />

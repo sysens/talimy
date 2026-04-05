@@ -2,11 +2,11 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { loginSchema, type LoginInput } from "@talimy/shared"
-import { Button, Checkbox, Input, Label, Separator } from "@talimy/ui"
+import { Button, Checkbox, Input, Label } from "@talimy/ui"
 import { Eye, EyeOff, LoaderCircle } from "lucide-react"
 import { useTranslations } from "next-intl"
 import type { Session } from "next-auth"
-import { getSession, signIn } from "next-auth/react"
+import { getSession, signIn, type SignInResponse } from "next-auth/react"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -18,11 +18,24 @@ import {
   getAuthWorkspaceContent,
   type AuthWorkspaceKind,
 } from "@/components/auth/auth-workspace-content"
+import { buildPlatformWebOrigin, buildTenantWebOrigin } from "@/config/site"
 import { AUTH_ROUTE_PATHS } from "@/lib/auth-options"
+import {
+  clearRememberedEmail,
+  loadRememberedEmail,
+  saveRememberedEmail,
+} from "@/lib/auth-remember-me"
 
 type LoginFormProps = {
   workspaceKind: AuthWorkspaceKind
 }
+
+type LoginFormValues = Pick<LoginInput, "email" | "password">
+
+const loginFormSchema = loginSchema.pick({
+  email: true,
+  password: true,
+})
 
 export function LoginForm({ workspaceKind }: LoginFormProps) {
   const [isHydrated, setIsHydrated] = useState(false)
@@ -32,8 +45,8 @@ export function LoginForm({ workspaceKind }: LoginFormProps) {
   const searchParams = useSearchParams()
   const nextPath = resolveSafeCallbackPath(searchParams.get("next"))
   const content = getAuthWorkspaceContent(t, workspaceKind)
-  const form = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginFormSchema),
     defaultValues: {
       email: "",
       password: "",
@@ -45,11 +58,30 @@ export function LoginForm({ workspaceKind }: LoginFormProps) {
     setIsHydrated(true)
   }, [])
 
+  useEffect(() => {
+    if (!isHydrated) {
+      return
+    }
+
+    const rememberedEmail = loadRememberedEmail(workspaceKind)
+    if (!rememberedEmail) {
+      return
+    }
+
+    form.setValue("email", rememberedEmail, {
+      shouldDirty: false,
+      shouldTouch: false,
+      shouldValidate: false,
+    })
+    setRememberMe(true)
+  }, [form, isHydrated, workspaceKind])
+
   const handleSubmit = form.handleSubmit(async (values) => {
-    const result = await signIn("credentials", {
+    const result: SignInResponse = await signIn("credentials", {
       ...values,
+      rememberMe,
       callbackUrl: nextPath ?? resolveCurrentAuthCallbackUrl(),
-      redirect: false,
+      redirect: false as const,
     })
 
     if (!result || result.error) {
@@ -66,6 +98,12 @@ export function LoginForm({ workspaceKind }: LoginFormProps) {
         },
       })
       return
+    }
+
+    if (rememberMe) {
+      saveRememberedEmail(workspaceKind, values.email)
+    } else {
+      clearRememberedEmail(workspaceKind)
     }
 
     const session = await getSession()
@@ -178,24 +216,35 @@ function resolvePostLoginDestination(
   currentOrigin: string
 ): string | null {
   const roles = session?.user?.roles ?? []
+  const tenantSlug =
+    typeof session?.user?.tenantSlug === "string" && session.user.tenantSlug.length > 0
+      ? session.user.tenantSlug
+      : null
+
   if (roles.includes("platform_admin")) {
-    return `${currentOrigin}/dashboard`
+    return `${buildPlatformWebOrigin(currentOrigin)}/dashboard`
   }
 
+  if (!tenantSlug) {
+    return null
+  }
+
+  const tenantOrigin = buildTenantWebOrigin(tenantSlug, currentOrigin)
+
   if (roles.includes("school_admin")) {
-    return `${currentOrigin}/admin/dashboard`
+    return `${tenantOrigin}/admin/dashboard`
   }
 
   if (roles.includes("teacher")) {
-    return `${currentOrigin}/teacher/dashboard`
+    return `${tenantOrigin}/teacher/dashboard`
   }
 
   if (roles.includes("student")) {
-    return `${currentOrigin}/student/dashboard`
+    return `${tenantOrigin}/student/dashboard`
   }
 
   if (roles.includes("parent")) {
-    return `${currentOrigin}/parent/dashboard`
+    return `${tenantOrigin}/parent/dashboard`
   }
 
   return null

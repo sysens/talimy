@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-/* eslint-disable no-console */
 const fs = require("node:fs")
 const os = require("node:os")
 const path = require("node:path")
@@ -96,7 +95,9 @@ function ensureDistBuild(apiRoot) {
   ]
 
   for (const step of buildSteps) {
-    console.log(`[smoke:queue-dual] missing dist artifacts, running \`bun ${step.args.join(" ")}\`...`)
+    console.log(
+      `[smoke:queue-dual] missing dist artifacts, running \`bun ${step.args.join(" ")}\`...`
+    )
     const build = spawnSync("bun", step.args, {
       cwd: step.cwd,
       stdio: "inherit",
@@ -133,8 +134,7 @@ async function main() {
   const apiLogFile =
     getArg("api-log-file", "") || path.join(os.tmpdir(), `talimy-api-dual-${Date.now()}.log`)
   const workerLogFile =
-    getArg("worker-log-file", "") ||
-    path.join(os.tmpdir(), `talimy-worker-dual-${Date.now()}.log`)
+    getArg("worker-log-file", "") || path.join(os.tmpdir(), `talimy-worker-dual-${Date.now()}.log`)
 
   if (!process.env.DATABASE_URL || !process.env.REDIS_URL) {
     throw new Error("DATABASE_URL and REDIS_URL must be set for dual-process smoke")
@@ -209,13 +209,22 @@ async function main() {
       const apiLog = readFileSafe(apiLogFile)
       const workerLog = readFileSafe(workerLogFile)
 
-      const apiHasDisabledMessage = apiLog.includes("Queue workers disabled via QUEUE_WORKERS_ENABLED")
+      const apiHasDisabledMessage = apiLog.includes(
+        "Queue workers disabled via QUEUE_WORKERS_ENABLED"
+      )
       const apiHasWorkerStart = apiLog.includes("Queue worker started:")
       const workerHasRuntimeStarted = workerLog.includes("Queue worker runtime started")
       const workerHasWorkerStart = workerLog.includes("Queue worker started:")
 
-      if (apiHasDisabledMessage && !apiHasWorkerStart && workerHasRuntimeStarted && workerHasWorkerStart) {
-        console.log("[smoke:queue-dual] PASS: API disabled workers, worker process started consumers")
+      if (
+        apiHasDisabledMessage &&
+        !apiHasWorkerStart &&
+        workerHasRuntimeStarted &&
+        workerHasWorkerStart
+      ) {
+        console.log(
+          "[smoke:queue-dual] PASS: API disabled workers, worker process started consumers"
+        )
         return
       }
 

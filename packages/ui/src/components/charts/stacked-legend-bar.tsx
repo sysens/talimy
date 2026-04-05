@@ -69,8 +69,13 @@ export function ChartBarStacked({
       ) : null}
 
       <CardContent className="p-0">
-        <ChartContainer className="h-[220px] w-full !aspect-auto" config={chartConfig}>
-          <BarChart accessibilityLayer barCategoryGap="16%" data={data}>
+        <ChartContainer className="h-[236px] w-full !aspect-auto" config={chartConfig}>
+          <BarChart
+            accessibilityLayer
+            barCategoryGap="16%"
+            data={data}
+            margin={{ bottom: 20, left: 0, right: 0, top: 0 }}
+          >
             <CartesianGrid vertical={false} />
             <YAxis
               axisLine={false}
@@ -84,9 +89,14 @@ export function ChartBarStacked({
             <XAxis
               axisLine={false}
               dataKey="label"
+              height={52}
               interval={0}
               tick={(props: unknown) => {
-                const { payload, x = 0, y = 0 } = props as {
+                const {
+                  payload,
+                  x = 0,
+                  y = 0,
+                } = props as {
                   payload?: { value?: string }
                   x?: number
                   y?: number
@@ -95,14 +105,15 @@ export function ChartBarStacked({
 
                 return (
                   <text
+                    dominantBaseline="hanging"
                     fill="var(--talimy-color-gray)"
                     fontSize="11"
                     textAnchor="middle"
                     x={x}
-                    y={y + 10}
+                    y={y + 8}
                   >
                     {lines.map((line, index) => (
-                      <tspan key={`${line}-${index}`} x={x} dy={index === 0 ? -15 : 12}>
+                      <tspan key={`${line}-${index}`} x={x} dy={index === 0 ? 0 : 13}>
                         {line}
                       </tspan>
                     ))}
@@ -110,13 +121,10 @@ export function ChartBarStacked({
                 )
               }}
               tickLine={false}
-              tickMargin={14}
+              tickMargin={10}
             />
-            <ChartTooltip
-              content={<ChartTooltipContent indicator="line" />}
-              cursor={false}
-            />
-            <ChartLegend content={<ChartLegendContent />} />
+            <ChartTooltip content={<ChartTooltipContent indicator="line" />} cursor={false} />
+            <ChartLegend content={<ChartLegendContent />} height={28} />
             {series.map((item, index) => (
               <Bar
                 key={item.key}
@@ -124,7 +132,11 @@ export function ChartBarStacked({
                 dataKey={item.key}
                 fill={`var(--color-${item.key})`}
                 radius={
-                  index === series.length - 1 ? [6, 6, 6, 6] : index === 0 ? [6, 6, 6, 6] : [6, 6, 6, 6]
+                  index === series.length - 1
+                    ? [6, 6, 6, 6]
+                    : index === 0
+                      ? [6, 6, 6, 6]
+                      : [6, 6, 6, 6]
                 }
                 stackId="workload"
                 strokeWidth={4}

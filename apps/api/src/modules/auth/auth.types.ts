@@ -20,6 +20,7 @@ export type TokenPayload = {
   tenantSlug?: string | null
   roles: string[]
   genderScope: "male" | "female" | "all"
+  rememberMe?: boolean
   type: "access" | "refresh"
   jti: string
   iat: number
@@ -39,7 +40,9 @@ export type StoredUser = {
 
 export type StoredRole = "platform_admin" | "school_admin" | "teacher" | "student" | "parent"
 
-export type AuthIdentity = Omit<TokenPayload, "iat" | "exp" | "jti" | "type">
+export type AuthIdentity = Omit<TokenPayload, "iat" | "exp" | "jti" | "type" | "rememberMe"> & {
+  rememberMe: boolean
+}
 
 export type MagicLinkRecord = {
   email: string

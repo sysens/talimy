@@ -64,7 +64,7 @@ export function PlayfulTodolist({
               className={cn(
                 "mt-0.5 flex size-[18px] shrink-0 items-center justify-center rounded-[6px] border transition-colors",
                 item.checked
-                  ? "border-[var(--talimy-color-navy)] bg-[var(--talimy-color-navy)] text-white"
+                  ? "border-[var(--talimy-color-navy)] bg-talimy-navy text-white"
                   : "border-slate-300 bg-white text-transparent hover:border-slate-400"
               )}
               id={`todo-${item.id}`}
@@ -112,7 +112,7 @@ export function PlayfulTodolist({
                 </motion.svg>
               </div>
 
-              <div className="col-start-1 row-start-2 inline-flex min-w-0 items-center gap-2 rounded-xl bg-slate-50 px-2.5 py-1.5 text-[0.78rem] text-[var(--talimy-color-navy)]">
+              <div className="col-start-1 row-start-2 inline-flex min-w-0 items-center gap-2 rounded-xl bg-slate-50 px-2.5 py-1.5 text-[0.78rem] text-talimy-navy">
                 <span aria-hidden="true" className="text-[0.8rem]">
                   📅
                 </span>

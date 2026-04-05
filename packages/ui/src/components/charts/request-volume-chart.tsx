@@ -62,14 +62,18 @@ export function RequestVolumeChart({
   return (
     <Card className={cn("rounded-[28px] border-0 bg-card shadow-none", className)}>
       <CardHeader className="space-y-2 px-6 pt-6 pb-0">
-        <CardTitle className="text-[2rem] leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200">
+        <CardTitle className="text-[2rem] leading-none font-semibold tracking-tight text-talimy-navy dark:text-sky-200">
           {title}
         </CardTitle>
         <p className="text-sm text-muted-foreground">{description}</p>
       </CardHeader>
       <CardContent className="px-4 pt-4 pb-5 sm:px-6">
         <ChartContainer className="h-[260px] w-full sm:h-[280px]" config={chartConfig}>
-          <AreaChart accessibilityLayer data={data} margin={{ top: 20, right: 0, bottom: 0, left: 0 }}>
+          <AreaChart
+            accessibilityLayer
+            data={data}
+            margin={{ top: 20, right: 0, bottom: 0, left: 0 }}
+          >
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis
               axisLine={false}

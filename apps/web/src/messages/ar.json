@@ -1,4 +1,36 @@
 {
+  "common": {
+    "appName": "Talimy",
+    "loading": "جارٍ التحميل...",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "search": "بحث",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "view": "عرض",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "submit": "إرسال",
+    "reset": "إعادة تعيين",
+    "confirm": "تأكيد",
+    "retry": "إعادة المحاولة",
+    "refresh": "تحديث",
+    "download": "تنزيل",
+    "upload": "تحميل",
+    "status": "الحالة",
+    "actions": "إجراءات",
+    "filters": "مرشحات",
+    "yes": "نعم",
+    "no": "لا",
+    "optional": "اختياري",
+    "required": "مطلوب",
+    "notImplemented": "لم يتم التنفيذ بعد",
+    "comingSoon": "قريباً"
+  },
   "auth": {
     "loginTitle": "تسجيل الدخول",
     "loginSubtitle": "أدخل بياناتك للوصول إلى حسابك",
@@ -394,6 +426,333 @@
           "paymentsVerified": "تم التحقق من الرسوم الشهرية لطلاب الصف التاسع.",
           "examUpdated": "تم تحديث جدول امتحانات الفصل الثاني بواسطة المنسق الأكاديمي."
         }
+      }
+    }
+  },
+  "adminTeachers": {
+    "overview": {
+      "stats": {
+        "totalTeachers": "إجمالي المعلمين",
+        "fullTimeTeachers": "معلم بدوام كامل",
+        "partTimeTeachers": "معلم بدوام جزئي",
+        "substituteTeachers": "معلم بديل"
+      },
+      "attendance": {
+        "title": "نظرة على الحضور",
+        "filterAriaLabel": "فترة حضور المعلمين",
+        "periods": {
+          "weekly": "أسبوعي",
+          "monthly": "شهري"
+        },
+        "days": {
+          "mon": "الإث",
+          "tue": "الث",
+          "wed": "الأر",
+          "thu": "الخ",
+          "fri": "الجم"
+        }
+      },
+      "workload": {
+        "title": "توزيع عبء العمل",
+        "subjectFilterAriaLabel": "مرشح المادة",
+        "periodFilterAriaLabel": "فترة عبء العمل",
+        "periods": {
+          "weekly": "أسبوعي",
+          "monthly": "شهري"
+        },
+        "legend": {
+          "totalClasses": "إجمالي الحصص",
+          "teachingHours": "ساعات التدريس",
+          "extraDuties": "المهام الإضافية"
+        },
+        "departments": {
+          "science": "العلوم",
+          "mathematics": "الرياضيات",
+          "language": "اللغة",
+          "social": "الاجتماعيات",
+          "arts": "الفنون",
+          "physicalEducation": "التربية البدنية",
+          "other": "أخرى"
+        }
+      },
+      "department": {
+        "title": "القسم",
+        "centerLabel": "إجمالي المعلمين",
+        "actionsAriaLabel": "إجراءات مخطط الأقسام",
+        "items": {
+          "science": "العلوم",
+          "mathematics": "الرياضيات",
+          "language": "اللغة",
+          "social": "الاجتماعيات",
+          "arts": "الفنون",
+          "physicalEducation": "التربية البدنية",
+          "other": "أخرى"
+        }
+      }
+    },
+    "list": {
+      "title": "المعلمون",
+      "addTeacher": "إضافة",
+      "searchPlaceholder": "ابحث عن معلم",
+      "sortLabel": "الترتيب:",
+      "message": "عرض",
+      "filterButton": "تصفية",
+      "filterTitle": "تصفية المعلمين",
+      "filters": {
+        "department": "القسم",
+        "statusLabel": "الحالة",
+        "genderLabel": "الجنس",
+        "status": {
+          "active": "نشط",
+          "inactive": "غير نشط",
+          "onLeave": "في إجازة"
+        },
+        "gender": {
+          "male": "ذكر",
+          "female": "أنثى"
+        },
+        "actions": {
+          "clear": "مسح",
+          "apply": "تطبيق"
+        }
+      },
+      "sort": {
+        "latest": "الأحدث",
+        "oldest": "الأقدم",
+        "nameAsc": "الاسم أ-ي"
+      },
+      "pagination": {
+        "show": "عرض",
+        "of": "من",
+        "results": "نتيجة",
+        "previous": "السابق",
+        "next": "التالي"
+      },
+      "states": {
+        "empty": "لم يتم العثور على معلمين.",
+        "error": "تعذر تحميل قائمة المعلمين."
+      }
+    },
+    "detail": {
+      "header": {
+        "title": "تفاصيل المعلم"
+      },
+      "subject": "المادة",
+      "class": "الصف",
+      "notAssigned": "غير مخصص",
+      "states": {
+        "error": "تعذر تحميل تفاصيل المعلم.",
+        "empty": "لم يتم العثور على المعلم."
+      },
+      "employment": {
+        "fullTime": "دوام كامل",
+        "partTime": "دوام جزئي",
+        "substitute": "بديل"
+      },
+      "toastErrorTitle": "تفاصيل المعلم",
+      "toastErrorDescription": "حدث خطأ أثناء تحميل تفاصيل المعلم.",
+      "weeklyHours": "{hours} ساعة",
+      "employmentCompact": {
+        "fullTime": "كامل",
+        "partTime": "جزئي",
+        "substitute": "بديل"
+      },
+      "schedule": {
+        "title": "الجدول الزمني",
+        "periodOptions": {
+          "weekly": "أسبوعي",
+          "today": "اليوم"
+        }
+      },
+      "workload": {
+        "title": "ملخص عبء العمل",
+        "filterAriaLabel": "فترة عبء العمل",
+        "periodOptions": {
+          "last8Months": "آخر 8 أشهر",
+          "thisSemester": "هذا الفصل الدراسي"
+        }
+      },
+      "training": {
+        "title": "التطوير والتدريب",
+        "filterAriaLabel": "فترة التدريب",
+        "periodOptions": {
+          "thisSemester": "هذا الفصل الدراسي",
+          "lastSemester": "الفصل الدراسي الماضي"
+        },
+        "columns": {
+          "event": "الحدث",
+          "date": "التاريخ",
+          "location": "الموقع/المنصة",
+          "status": "الحالة"
+        },
+        "statusMap": {
+          "completed": "مكتمل",
+          "upcoming": "قادم",
+          "cancelled": "ملغي"
+        }
+      },
+      "documents": {
+        "title": "الوثائق والامتثال",
+        "actionLabel": "إجراءات الوثائق"
+      },
+      "personalInfo": {
+        "title": "معلومات شخصية",
+        "actionLabel": "إجراءات المعلومات",
+        "fields": {
+          "gender": "الجنس",
+          "dateOfBirth": "تاريخ الميلاد",
+          "emailAddress": "عنوان البريد الإلكتروني",
+          "phoneNumber": "رقم الهاتف",
+          "address": "العنوان"
+        },
+        "states": {
+          "male": "ذكر",
+          "female": "أنثى"
+        }
+      },
+      "leaveRequest": {
+        "title": "طلب إجازة",
+        "toastUpdateError": "فشل تحديث الطلب",
+        "toastUpdateSuccess": "تم تحديث الطلب",
+        "approve": "موافقة",
+        "decline": "رفض"
+      },
+      "performance": {
+        "title": "الأداء",
+        "filterAriaLabel": "فترة الأداء",
+        "periodOptions": {
+          "lastMonth": "الشهر الماضي",
+          "lastQuarter": "الربع الماضي"
+        }
+      }
+    },
+    "create": {
+      "header": {
+        "title": "إضافة معلم جديد",
+        "backLabel": "المعلمون",
+        "breadcrumbs": {
+          "dashboard": "لوحة التحكم",
+          "teachers": "المعلمون",
+          "addTeacher": "إضافة معلم جديد"
+        }
+      },
+      "loading": "جارٍ تحميل بيانات نموذج المعلم...",
+      "loadError": "تعذر تحميل بيانات نموذج إضافة المعلم.",
+      "retry": "إعادة المحاولة",
+      "personal": {
+        "title": "المعلومات الشخصية",
+        "firstNameLabel": "الاسم",
+        "firstNamePlaceholder": "أدخل الاسم",
+        "lastNameLabel": "اسم العائلة",
+        "lastNamePlaceholder": "أدخل اسم العائلة",
+        "middleNameLabel": "اسم الأب",
+        "middleNamePlaceholder": "أدخل اسم الأب",
+        "dateOfBirthLabel": "تاريخ الميلاد",
+        "genderLabel": "الجنس",
+        "genderPlaceholder": "اختر الجنس",
+        "genderOptions": {
+          "male": "ذكر",
+          "female": "أنثى"
+        },
+        "avatar": {
+          "label": "الصورة الرمزية",
+          "uploadLabel": "رفع صورة",
+          "changeLabel": "تغيير الصورة",
+          "removeLabel": "إزالة",
+          "emptyLabel": "لا توجد صورة مرفقة",
+          "previewLabel": "معاينة الصورة المرفوعة",
+          "uploadErrorTitle": "فشل رفع الصورة الرمزية"
+        },
+        "nationalityLabel": "الجنسية",
+        "nationalityPlaceholder": "اختر الجنسية",
+        "nationalityOptions": {
+          "uzbek": "أوزبكي",
+          "kazakh": "كازاخي",
+          "kyrgyz": "قرغيزي",
+          "russian": "روسي",
+          "tajik": "طاجيكي",
+          "turkish": "تركي",
+          "other": "أخرى"
+        },
+        "statusLabel": "الحالة",
+        "statusPlaceholder": "اختر الحالة",
+        "statusOptions": {
+          "active": "نشط",
+          "inactive": "غير نشط"
+        }
+      },
+      "contact": {
+        "title": "معلومات التواصل",
+        "emailLabel": "البريد الإلكتروني",
+        "emailPlaceholder": "teacher@school.uz",
+        "phoneLabel": "رقم الهاتف",
+        "telegramLabel": "اسم مستخدم تيليجرام",
+        "telegramPlaceholder": "@username",
+        "addressLabel": "العنوان",
+        "addressPlaceholder": "أدخل المدينة والمنطقة والعنوان"
+      },
+      "academic": {
+        "title": "المعلومات الأكاديمية",
+        "subjectsLabel": "التخصص",
+        "subjectsPlaceholder": "اختر التخصص",
+        "subjectsEmpty": "لا توجد مواد.",
+        "classesLabel": "الفصول",
+        "classesPlaceholder": "اختر الفصول",
+        "classesEmpty": "لا توجد فصول.",
+        "classesSearchPlaceholder": "ابحث عن فصل",
+        "employmentTypeLabel": "نوع العمل",
+        "employmentTypePlaceholder": "اختر نوع العمل",
+        "employmentTypeOptions": {
+          "fullTime": "دوام كامل",
+          "partTime": "دوام جزئي",
+          "hourly": "بالساعة"
+        },
+        "joinDateLabel": "تاريخ الانضمام"
+      },
+      "documents": {
+        "title": "الوثائق",
+        "emptyState": "لا توجد وثائق مرفقة.",
+        "addLabel": "إضافة وثيقة",
+        "removeLabel": "حذف",
+        "fileLabel": "الملف",
+        "filePlaceholder": "اختر ملف PDF أو صورة",
+        "fileReadyLabel": "الملف جاهز للحفظ.",
+        "uploadLabel": "رفع",
+        "documentTypeLabel": "نوع الوثيقة",
+        "documentTypePlaceholder": "اختر النوع",
+        "documentTypeOptions": {
+          "diploma": "دبلوم",
+          "certificate": "شهادة",
+          "idCard": "بطاقة هوية",
+          "other": "أخرى"
+        }
+      },
+      "actions": {
+        "cancel": "إلغاء",
+        "submit": "حفظ وإضافة معلم",
+        "submitting": "جارٍ الحفظ..."
+      },
+      "validation": {
+        "classIdsRequired": "اختر فصلاً واحداً على الأقل.",
+        "dateOfBirthRequired": "تاريخ الميلاد مطلوب.",
+        "documentFileRequired": "اختر ملف الوثيقة.",
+        "emailInvalid": "أدخل بريداً إلكترونياً صالحاً.",
+        "emailRequired": "البريد الإلكتروني مطلوب.",
+        "firstNameRequired": "الاسم مطلوب.",
+        "joinDateRequired": "تاريخ الانضمام مطلوب.",
+        "lastNameRequired": "اسم العائلة مطلوب.",
+        "nationalityRequired": "اختر الجنسية.",
+        "phoneInvalid": "أدخل رقم هاتف صالحاً.",
+        "subjectIdsRequired": "اختر مادة واحدة على الأقل.",
+        "telegramInvalid": "اسم مستخدم تيليجرام غير صالح."
+      },
+      "toasts": {
+        "formOptionsMissing": "خيارات النموذج المطلوبة غير موجودة.",
+        "documentUploadMissing": "ملف الوثيقة غير مرفوع.",
+        "createErrorTitle": "تعذر إضافة المعلم",
+        "createErrorDescription": "تحقق من البيانات المدخلة ثم حاول مرة أخرى.",
+        "createSuccessTitle": "تمت إضافة المعلم",
+        "createSuccessDescription": "تم إنشاء المعلم الجديد بنجاح."
       }
     }
   }

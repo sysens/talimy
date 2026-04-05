@@ -15,6 +15,27 @@
       "when": 1775287032948,
       "tag": "0001_loving_stellaris",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1775326526155,
+      "tag": "0002_sparkling_mystique",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1775389558174,
+      "tag": "0003_aberrant_black_knight",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1775398508589,
+      "tag": "0004_superb_goliath",
+      "breakpoints": true
     }
   ]
 }

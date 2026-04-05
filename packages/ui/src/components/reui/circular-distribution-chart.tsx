@@ -78,7 +78,7 @@ export function CircularDistributionChart({
         <header className="flex items-start justify-between gap-3">
           <h3
             className={cn(
-              "text-[1.75rem] leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200",
+              "text-[1.75rem] leading-none font-semibold tracking-tight text-talimy-navy dark:text-sky-200",
               titleClassName
             )}
           >
@@ -99,7 +99,7 @@ export function CircularDistributionChart({
           ) : null}
         </header>
 
-        <div className="mx-auto flex w-full max-w-[300px] flex-col items-center gap-5">
+        <div className="mx-auto flex w-full max-w-75 flex-col items-center gap-5">
           <div className="relative grid place-items-center">
             <svg
               aria-hidden="true"
@@ -152,7 +152,7 @@ export function CircularDistributionChart({
                 {centerContent ?? (
                   <p
                     className={cn(
-                      "text-[2.2rem] leading-none font-semibold text-[var(--talimy-color-navy)] dark:text-sky-200",
+                      "text-[2.2rem] leading-none font-semibold text-talimy-navy dark:text-sky-200",
                       totalLabelClassName
                     )}
                   >
@@ -170,7 +170,7 @@ export function CircularDistributionChart({
                 <span className="text-[var(--talimy-color-gray)] dark:text-muted-foreground">
                   {segment.label}:
                 </span>
-                <span className="font-semibold text-[var(--talimy-color-navy)] dark:text-sky-200">
+                <span className="font-semibold text-talimy-navy dark:text-sky-200">
                   {segment.value.toLocaleString()}
                 </span>
               </div>

@@ -4,5 +4,7 @@ import { loginSchema, type LoginInput } from "@talimy/shared"
 type ZodDtoClass = abstract new (...args: never[]) => object
 const LoginDtoBase = createZodDto(loginSchema) as ZodDtoClass
 
-export class LoginDto extends LoginDtoBase {}
+export class LoginDto extends LoginDtoBase {
+  declare rememberMe: boolean
+}
 export interface LoginDto extends LoginInput {}

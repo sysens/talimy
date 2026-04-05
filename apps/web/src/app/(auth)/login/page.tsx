@@ -4,7 +4,7 @@ import { enforceAuthPageWorkspaceAccess } from "@/lib/server/auth-workspace"
 
 export default async function Page() {
   const scope = await enforceAuthPageWorkspaceAccess({
-    allowedScopes: ["platform", "school"],
+    allowedScopes: ["platform", "public", "school"],
     fallbackPath: AUTH_ROUTE_PATHS.login,
   })
   const workspaceKind = scope.kind === "platform" ? "platform" : "school"

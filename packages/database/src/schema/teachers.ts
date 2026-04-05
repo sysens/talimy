@@ -12,6 +12,11 @@ import { tenants } from "./tenants"
 import { users } from "./users"
 
 export const teacherStatusEnum = pgEnum("teacher_status", ["active", "inactive", "on_leave"])
+export const teacherEmploymentTypeEnum = pgEnum("teacher_employment_type", [
+  "full_time",
+  "part_time",
+  "substitute",
+])
 
 export const teachers = pgTable(
   "teachers",
@@ -29,6 +34,7 @@ export const teachers = pgTable(
     joinDate: date("join_date").notNull(),
     qualification: varchar("qualification", { length: 255 }),
     specialization: varchar("specialization", { length: 255 }),
+    employmentType: teacherEmploymentTypeEnum("employment_type").notNull().default("full_time"),
     salary: numeric("salary", { precision: 12, scale: 2 }),
     status: teacherStatusEnum("status").notNull().default("active"),
     createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),

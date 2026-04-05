@@ -9,7 +9,7 @@ type PageProps = {
 
 export default async function Page({ searchParams }: PageProps) {
   await enforceAuthPageWorkspaceAccess({
-    allowedScopes: ["school"],
+    allowedScopes: ["public", "school"],
     fallbackPath: AUTH_ROUTE_PATHS.login,
   })
 

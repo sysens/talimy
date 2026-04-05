@@ -8,6 +8,7 @@ type ProxyToBackendOptions = {
   targetPath: string
   appendSearch?: string
   extraHeaders?: Headers
+  overrideBody?: BodyInit
   allowedHostScopes?: Array<"api" | "platform" | "public" | "school">
   forbiddenMessage?: string
 }
@@ -38,7 +39,8 @@ export async function proxyToBackendApi(
           error: {
             code: "FORBIDDEN",
             message:
-              options.forbiddenMessage ?? "This auth action is not available on the current workspace.",
+              options.forbiddenMessage ??
+              "This auth action is not available on the current workspace.",
           },
         },
         { status: 403 }
@@ -69,9 +71,13 @@ export async function proxyToBackendApi(
     }
 
     if (request.method !== "GET" && request.method !== "HEAD") {
-      const body = await request.arrayBuffer()
-      if (body.byteLength > 0) {
-        init.body = body
+      if (typeof options.overrideBody !== "undefined") {
+        init.body = options.overrideBody
+      } else {
+        const body = await request.arrayBuffer()
+        if (body.byteLength > 0) {
+          init.body = body
+        }
       }
     }
 

@@ -125,10 +125,13 @@ async function upsertUser(tx: DatabaseTransaction, payload: UserInsert): Promise
     .onConflictDoUpdate({
       target: users.email,
       set: {
+        address: payload.address ?? null,
+        avatar: payload.avatar ?? null,
         tenantId: payload.tenantId,
         passwordHash: payload.passwordHash,
         firstName: payload.firstName,
         lastName: payload.lastName,
+        phone: payload.phone ?? null,
         role: payload.role,
         genderScope: payload.genderScope ?? "all",
         isActive: true,
@@ -346,11 +349,14 @@ export async function bootstrapProductionData(): Promise<void> {
     })
 
     const teacherUserId = await upsertUser(tx, {
+      address: "10 Queen Street, London, United Kingdom",
+      avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/green.jpg",
       tenantId: schoolTenantId,
       email: normalizeEmail(SCHOOL_USERS.teacher.email),
       passwordHash: teacherPasswordHash,
       firstName: SCHOOL_USERS.teacher.firstName,
       lastName: SCHOOL_USERS.teacher.lastName,
+      phone: "+62 812 0011 2233",
       role: "teacher",
       genderScope: "all",
       isActive: true,
@@ -386,6 +392,7 @@ export async function bootstrapProductionData(): Promise<void> {
       userId: teacherUserId,
       tenantId: schoolTenantId,
       employeeId: "MEZ-TEA-001",
+      employmentType: "full_time",
       gender: "male",
       joinDate: "2025-09-01",
       qualification: "B.Ed",

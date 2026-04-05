@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@talimy/ui"
 import { AttendanceOverviewChartShowcase433 } from "@/components/shared/ui-showcase/attendance-overview-chart-4-3-3"
 import { AttendanceProgressChartShowcase433 } from "@/components/shared/ui-showcase/attendance-progress-chart-4-3-3"
 import { DataTableShowcase42 } from "@/components/shared/ui-showcase/data-table-4-2"
+import { DocumentsListCardShowcase } from "@/components/shared/ui-showcase/documents-list-card-showcase"
 import { EarningsExpensesChartShowcase433 } from "@/components/shared/ui-showcase/earnings-expenses-chart-4-3-3"
 import { EventsListShowcase } from "@/components/shared/ui-showcase/events-list-showcase"
 import { FeesCollectionTrendChartShowcase433 } from "@/components/shared/ui-showcase/area-gradient"
@@ -19,12 +20,25 @@ import { PrimitivesShowcase415 } from "@/components/shared/ui-showcase/primitive
 import { PrimitivesShowcase416 } from "@/components/shared/ui-showcase/primitives-4-1-6"
 import { MiniChartShowcase433 } from "@/components/shared/ui-showcase/mini-chart-4-3-3"
 import { RecentActivityShowcase } from "@/components/shared/ui-showcase/recent-activity-showcase"
+import { RecordsTableCardShowcase } from "@/components/shared/ui-showcase/records-table-card-showcase"
+import { RequestDecisionCardShowcase } from "@/components/shared/ui-showcase/request-decision-card-showcase"
+import { MetricProgressCardShowcase } from "@/components/shared/ui-showcase/metric-progress-card-showcase"
 import { StatCardShowcase431 } from "@/components/shared/ui-showcase/stat-card-4-3-1"
 import { StudentAcademicPerformanceChartShowcase433 } from "@/components/shared/ui-showcase/student-academic-performance-chart-4-3-3"
 import { CalendarWidgetShowcase } from "@/components/shared/ui-showcase/calendar-widget-showcase"
+import { ProfileDetailsCardShowcase } from "@/components/shared/ui-showcase/profile-details-card-showcase"
+import { ProfileOverviewCardShowcase } from "@/components/shared/ui-showcase/profile-overview-card-showcase"
+import { PersonalInfoCardShowcase } from "@/components/shared/ui-showcase/personal-info-card-showcase"
 import { TeacherAttendanceChartShowcase433 } from "@/components/shared/ui-showcase/teacher-attendance-chart-4-3-3"
 import { TeacherDepartmentChartShowcase433 } from "@/components/shared/ui-showcase/teacher-department-chart-4-3-3"
+import { TeacherCardShowcase } from "@/components/shared/ui-showcase/teacher-card-showcase"
 import { TeacherProfileWorkloadChartShowcase433 } from "@/components/shared/ui-showcase/teacher-profile-workload-chart-4-3-3"
+import { TeachersFilterBarShowcase } from "@/components/shared/ui-showcase/teachers-filter-bar-showcase"
+import { TeachersGridShowcase } from "@/components/shared/ui-showcase/teachers-grid-showcase"
+import { TeachersPaginationShowcase } from "@/components/shared/ui-showcase/teachers-pagination-showcase"
+import { TeachersResultsSummaryShowcase } from "@/components/shared/ui-showcase/teachers-results-summary-showcase"
+import { TeacherCreateFormShowcase } from "@/components/shared/ui-showcase/teacher-create-form-showcase"
+import { TimetableGridCardShowcase } from "@/components/shared/ui-showcase/timetable-grid-card-showcase"
 import { TeacherWorkloadChartShowcase433 } from "@/components/shared/ui-showcase/teacher-workload-chart-4-3-3"
 import { ThemePreviewToggle } from "@/components/shared/ui-showcase/theme-preview-toggle"
 
@@ -183,6 +197,76 @@ export default function UiShowcasePage() {
               <RecentActivityShowcase />
             </div>
           </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 7.1.5 / 7.1.6 / 7.1.8 - Teachers List</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <TeachersFilterBarShowcase />
+          <TeacherCardShowcase />
+          <TeachersGridShowcase />
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <TeachersResultsSummaryShowcase />
+            <TeachersPaginationShowcase />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            Task 7.2.1 / 7.2.2 / 7.2.3 / 7.2.4 / 7.2.9 - Profile Detail Components
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-wrap items-start gap-6">
+            <div className="w-full max-w-[320px] space-y-4">
+              <ProfileOverviewCardShowcase />
+              <ProfileDetailsCardShowcase />
+            </div>
+            <PersonalInfoCardShowcase />
+            <DocumentsListCardShowcase />
+            <RequestDecisionCardShowcase />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 7.2.6 - Weekly Schedule Grid</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <TimetableGridCardShowcase />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 7.2.7 - Development & Training</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <RecordsTableCardShowcase />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 7.2.10 - Performance</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <MetricProgressCardShowcase />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 7.3.1 - 7.3.7 Add Teacher Page</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <TeacherCreateFormShowcase />
         </CardContent>
       </Card>
     </main>

@@ -106,7 +106,15 @@ export function GroupedCappedProgressChart<
         {bodyHeight > 0 ? (
           <rect fill={fill} height={bodyHeight} rx={0} ry={0} width={width} x={x} y={bodyY} />
         ) : null}
-        <rect fill={accentColor} height={effectiveCapHeight} rx={0} ry={0} width={width} x={x} y={y} />
+        <rect
+          fill={accentColor}
+          height={effectiveCapHeight}
+          rx={0}
+          ry={0}
+          width={width}
+          x={x}
+          y={y}
+        />
       </g>
     )
   }
@@ -116,7 +124,7 @@ export function GroupedCappedProgressChart<
       <div className="space-y-4 p-4 sm:p-5">
         <header className="flex items-start justify-between gap-3">
           <div className="space-y-3">
-            <h3 className="text-[15px] leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200">
+            <h3 className="text-[15px] leading-none font-semibold tracking-tight text-talimy-navy dark:text-sky-200">
               {title}
             </h3>
 
@@ -139,7 +147,11 @@ export function GroupedCappedProgressChart<
           ) : null}
         </header>
 
-        <ChartContainer className="w-full !aspect-auto" config={chartConfig} style={{ height: chartHeight }}>
+        <ChartContainer
+          className="w-full !aspect-auto"
+          config={chartConfig}
+          style={{ height: chartHeight }}
+        >
           <BarChart
             barCategoryGap={barCategoryGap}
             barGap={barGap}
@@ -176,7 +188,7 @@ export function GroupedCappedProgressChart<
                     return (
                       <div className="flex w-full items-center justify-between gap-3">
                         <span className="text-muted-foreground">{label}</span>
-                        <span className="font-semibold text-[var(--talimy-color-navy)] dark:text-sky-200">
+                        <span className="font-semibold text-talimy-navy dark:text-sky-200">
                           {valueFormatter(numericValue, key)}
                         </span>
                       </div>

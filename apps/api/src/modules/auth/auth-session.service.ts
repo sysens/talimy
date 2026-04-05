@@ -50,7 +50,10 @@ export class AuthSessionService {
 
     await this.rateLimitService.clear(loginRateLimitKey)
     await this.store.markUserLoggedIn(identity.sub, identity.tenantId)
-    return this.tokenService.createSession(identity)
+    return this.tokenService.createSession({
+      ...identity,
+      rememberMe: payload.rememberMe ?? false,
+    })
   }
 
   async register(payload: RegisterDto, context: AuthRequestContext = {}): Promise<AuthSession> {
@@ -117,14 +120,23 @@ export class AuthSessionService {
       throw new UnauthorizedException("User not found for refresh token")
     }
 
-    await this.store.revokeRefreshJti(tokenPayload.jti)
-    return this.tokenService.createSession(this.toIdentity(user))
+    await this.store.revokeRefreshJtiWithTtl(
+      tokenPayload.jti,
+      this.resolveRefreshRevocationTtlSec(tokenPayload.exp)
+    )
+    return this.tokenService.createSession({
+      ...this.toIdentity(user),
+      rememberMe: tokenPayload.rememberMe === true,
+    })
   }
 
   async logout(payload?: LogoutDto): Promise<{ loggedOut: true }> {
     if (payload?.refreshToken) {
       const tokenPayload = this.tokenService.verifyRefreshTokenPayload(payload.refreshToken)
-      await this.store.revokeRefreshJti(tokenPayload.jti)
+      await this.store.revokeRefreshJtiWithTtl(
+        tokenPayload.jti,
+        this.resolveRefreshRevocationTtlSec(tokenPayload.exp)
+      )
     }
 
     return { loggedOut: true }
@@ -140,6 +152,7 @@ export class AuthSessionService {
       tenantSlug: tokenPayload.tenantSlug ?? undefined,
       roles: tokenPayload.roles,
       genderScope: tokenPayload.genderScope,
+      rememberMe: tokenPayload.rememberMe === true,
     }
   }
 
@@ -208,6 +221,11 @@ export class AuthSessionService {
       tenantSlug: user.tenantSlug ?? undefined,
       roles: user.roles,
       genderScope: user.genderScope,
+      rememberMe: false,
     }
+  }
+
+  private resolveRefreshRevocationTtlSec(expiresAtEpochSeconds: number): number {
+    return Math.max(expiresAtEpochSeconds - Math.floor(Date.now() / 1000), 1)
   }
 }

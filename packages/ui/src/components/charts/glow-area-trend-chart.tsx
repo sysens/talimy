@@ -5,12 +5,7 @@ import { Area, AreaChart, CartesianGrid, Customized, XAxis, YAxis } from "rechar
 
 import { cn } from "../../lib/utils"
 import { Card } from "../ui/card"
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "../ui/chart"
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "../ui/chart"
 
 export type GlowAreaTrendChartDatum = Record<string, number | string | null | undefined>
 
@@ -69,14 +64,19 @@ function getEvenlyDistributedPositions({
   const width = offset?.width ?? 0
 
   if (ticks.length > 0) {
-    const tickPositions = ticks.flatMap((tick) => (typeof tick.coordinate === "number" ? [tick.coordinate] : []))
+    const tickPositions = ticks.flatMap((tick) =>
+      typeof tick.coordinate === "number" ? [tick.coordinate] : []
+    )
     if (tickPositions.length > 0) {
       return tickPositions
     }
   }
 
   if (dataCount > 0 && width > 0) {
-    return Array.from({ length: dataCount }, (_, index) => left + (width / dataCount) * (index + 0.5))
+    return Array.from(
+      { length: dataCount },
+      (_, index) => left + (width / dataCount) * (index + 0.5)
+    )
   }
 
   return []
@@ -136,7 +136,12 @@ function AreaAlignedDots({
         return (
           <g key={`aligned-dot-${index}`}>
             <circle cx={position} cy={point.y} fill="white" r={6} />
-            <circle cx={position} cy={point.y} fill="color-mix(in srgb, var(--talimy-color-gray) 78%, white 22%)" r={5} />
+            <circle
+              cx={position}
+              cy={point.y}
+              fill="color-mix(in srgb, var(--talimy-color-gray) 78%, white 22%)"
+              r={5}
+            />
             <circle cx={position} cy={point.y} fill={lineColor} r={2.5} />
           </g>
         )
@@ -180,11 +185,13 @@ export function GlowAreaTrendChart<
   )
 
   return (
-    <Card className={cn("w-full rounded-none border border-red-500 bg-card p-0 shadow-none", className)}>
+    <Card
+      className={cn("w-full rounded-none border border-red-500 bg-card p-0 shadow-none", className)}
+    >
       <div className={cn("space-y-4", hideHeader ? "p-0" : "p-4 sm:p-5")}>
         {!hideHeader ? (
           <header className="flex items-start justify-between gap-3">
-            <h3 className="text-[15px] leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200">
+            <h3 className="text-[15px] leading-none font-semibold tracking-tight text-talimy-navy dark:text-sky-200">
               {title}
             </h3>
           </header>
@@ -211,7 +218,10 @@ export function GlowAreaTrendChart<
               </filter>
             </defs>
 
-            <CartesianGrid stroke="color-mix(in srgb, var(--talimy-color-gray) 16%, white 84%)" vertical={false} />
+            <CartesianGrid
+              stroke="color-mix(in srgb, var(--talimy-color-gray) 16%, white 84%)"
+              vertical={false}
+            />
             <YAxis
               axisLine={false}
               domain={yDomain}
@@ -241,8 +251,13 @@ export function GlowAreaTrendChart<
                   formatter={(value, name) => (
                     <div className="flex w-full items-center justify-between gap-2">
                       <div className="flex items-center gap-1.5">
-                        <div className="h-2.5 w-2.5 shrink-0 rounded-xs" style={{ backgroundColor: lineColor }} />
-                        <span className="text-muted-foreground">{chartConfig[String(name)]?.label ?? String(name)}</span>
+                        <div
+                          className="h-2.5 w-2.5 shrink-0 rounded-xs"
+                          style={{ backgroundColor: lineColor }}
+                        />
+                        <span className="text-muted-foreground">
+                          {chartConfig[String(name)]?.label ?? String(name)}
+                        </span>
                       </div>
                       <span className="text-foreground font-semibold tabular-nums">
                         {valueFormatter(Number(value))}
@@ -264,7 +279,11 @@ export function GlowAreaTrendChart<
               strokeWidth={2}
               type="natural"
             />
-            <Customized component={(props: unknown) => <AreaAlignedDots {...(props as CustomizedAxisProps)} lineColor={lineColor} />} />
+            <Customized
+              component={(props: unknown) => (
+                <AreaAlignedDots {...(props as CustomizedAxisProps)} lineColor={lineColor} />
+              )}
+            />
           </AreaChart>
         </ChartContainer>
       </div>

@@ -11,7 +11,14 @@ import {
   grades,
   notices,
   payments,
+  schedules,
   students,
+  teacherAttendanceRecords,
+  teacherDocuments,
+  teacherLeaveRequests,
+  teacherPerformanceSnapshots,
+  teacherTrainingRecords,
+  teacherWorkloadSnapshots,
   subjects,
   teachers,
   terms,
@@ -40,8 +47,24 @@ type DashboardStudentFixture = {
   studentCode: string
 }
 
+type DashboardTeacherFixture = {
+  address: string
+  avatar: string
+  email: string
+  employeeId: string
+  employmentType: "full_time" | "part_time" | "substitute"
+  firstName: string
+  gender: "female" | "male"
+  key: string
+  lastName: string
+  phone: string
+  qualification: string
+  scienceWeeklyClasses: number
+  scienceWeeklyHours: number
+  specialization: string
+}
+
 const DASHBOARD_FIXTURE_PREFIX = "dashboard-fixture"
-const DASHBOARD_SUBJECT = { code: "MATH", name: "Mathematics" } as const
 const DASHBOARD_NOTICE_TITLES = [
   "Science Fair Registration Opens",
   "Teacher Development Workshop",
@@ -62,7 +85,7 @@ const DASHBOARD_STUDENT_FIXTURES: readonly DashboardStudentFixture[] = [
     gender: "male",
     grade: "7",
     lastName: "Jalolov",
-    studentCode: "MEZ-7A-101",
+    studentCode: "7A-101",
   },
   {
     email: "madina.grade7@mezana.talimy.space",
@@ -70,7 +93,7 @@ const DASHBOARD_STUDENT_FIXTURES: readonly DashboardStudentFixture[] = [
     gender: "female",
     grade: "7",
     lastName: "Karimova",
-    studentCode: "MEZ-7A-102",
+    studentCode: "7A-102",
   },
   {
     email: "temur.grade8@mezana.talimy.space",
@@ -78,7 +101,7 @@ const DASHBOARD_STUDENT_FIXTURES: readonly DashboardStudentFixture[] = [
     gender: "male",
     grade: "8",
     lastName: "Nasriddinov",
-    studentCode: "MEZ-8A-201",
+    studentCode: "8A-201",
   },
   {
     email: "aziza.grade8@mezana.talimy.space",
@@ -86,7 +109,7 @@ const DASHBOARD_STUDENT_FIXTURES: readonly DashboardStudentFixture[] = [
     gender: "female",
     grade: "8",
     lastName: "Rasulova",
-    studentCode: "MEZ-8A-202",
+    studentCode: "8A-202",
   },
   {
     email: "javohir.grade9@mezana.talimy.space",
@@ -94,7 +117,7 @@ const DASHBOARD_STUDENT_FIXTURES: readonly DashboardStudentFixture[] = [
     gender: "male",
     grade: "9",
     lastName: "Sobirov",
-    studentCode: "MEZ-9A-301",
+    studentCode: "9A-301",
   },
   {
     email: "dilnoza.grade9@mezana.talimy.space",
@@ -102,7 +125,218 @@ const DASHBOARD_STUDENT_FIXTURES: readonly DashboardStudentFixture[] = [
     gender: "female",
     grade: "9",
     lastName: "Hakimova",
-    studentCode: "MEZ-9A-302",
+    studentCode: "9A-302",
+  },
+] as const
+
+const DASHBOARD_TEACHER_FIXTURES: readonly DashboardTeacherFixture[] = [
+  {
+    address: "14 Regent Street, London, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/red.jpg",
+    email: "rayan.yasmine@mezana.talimy.space",
+    employeeId: "TEA-003",
+    employmentType: "full_time",
+    firstName: "Rayan",
+    gender: "male",
+    key: "rayan-yasmine",
+    lastName: "Yasmine",
+    phone: "+62 812 3456 7890",
+    qualification: "B.Sc",
+    scienceWeeklyClasses: 18,
+    scienceWeeklyHours: 11,
+    specialization: "Science",
+  },
+  {
+    address: "22 Oxford Road, Manchester, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/purple.jpg",
+    email: "aliyah.summer@mezana.talimy.space",
+    employeeId: "TEA-004",
+    employmentType: "full_time",
+    firstName: "Aliyah",
+    gender: "female",
+    key: "aliyah-summer",
+    lastName: "Summer",
+    phone: "+62 813 2234 5567",
+    qualification: "M.Ed",
+    scienceWeeklyClasses: 17,
+    scienceWeeklyHours: 10,
+    specialization: "Mathematics",
+  },
+  {
+    address: "8 Baker Street, London, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/blue.jpg",
+    email: "kelsy.trisha@mezana.talimy.space",
+    employeeId: "TEA-005",
+    employmentType: "full_time",
+    firstName: "Kelsy",
+    gender: "female",
+    key: "kelsy-trisha",
+    lastName: "Trisha",
+    phone: "+62 811 5567 2345",
+    qualification: "B.A",
+    scienceWeeklyClasses: 18,
+    scienceWeeklyHours: 12,
+    specialization: "Language",
+  },
+  {
+    address: "31 King William St, Bristol, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/green.jpg",
+    email: "zackary.smith@mezana.talimy.space",
+    employeeId: "TEA-006",
+    employmentType: "part_time",
+    firstName: "Zackary",
+    gender: "male",
+    key: "zackary-smith",
+    lastName: "Smith",
+    phone: "+62 815 9876 5432",
+    qualification: "B.A",
+    scienceWeeklyClasses: 17,
+    scienceWeeklyHours: 11,
+    specialization: "Social",
+  },
+  {
+    address: "45 Camden High St, London, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/red.jpg",
+    email: "javier.quintero@mezana.talimy.space",
+    employeeId: "TEA-007",
+    employmentType: "full_time",
+    firstName: "Javier",
+    gender: "male",
+    key: "javier-quintero",
+    lastName: "Quintero",
+    phone: "+62 819 6543 2109",
+    qualification: "M.Sc",
+    scienceWeeklyClasses: 22,
+    scienceWeeklyHours: 11,
+    specialization: "Science",
+  },
+  {
+    address: "9 Abbey Road, Liverpool, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg",
+    email: "giana.gomez@mezana.talimy.space",
+    employeeId: "TEA-008",
+    employmentType: "part_time",
+    firstName: "Giana",
+    gender: "female",
+    key: "giana-gomez",
+    lastName: "Gomez",
+    phone: "+62 817 2233 4455",
+    qualification: "B.F.A",
+    scienceWeeklyClasses: 23,
+    scienceWeeklyHours: 9,
+    specialization: "Arts",
+  },
+  {
+    address: "18 Crescent Ave, Leeds, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/purple.jpg",
+    email: "miley.addams@mezana.talimy.space",
+    employeeId: "TEA-009",
+    employmentType: "full_time",
+    firstName: "Miley",
+    gender: "female",
+    key: "miley-addams",
+    lastName: "Addams",
+    phone: "+62 816 7788 9900",
+    qualification: "B.P.Ed",
+    scienceWeeklyClasses: 20,
+    scienceWeeklyHours: 8,
+    specialization: "Physical Education",
+  },
+  {
+    address: "27 Elm Street, Birmingham, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/green.jpg",
+    email: "kaily.jayson@mezana.talimy.space",
+    employeeId: "TEA-010",
+    employmentType: "substitute",
+    firstName: "Kaily",
+    gender: "male",
+    key: "kaily-jayson",
+    lastName: "Jayson",
+    phone: "+62 814 6677 8899",
+    qualification: "B.Sc",
+    scienceWeeklyClasses: 24,
+    scienceWeeklyHours: 10,
+    specialization: "Science",
+  },
+  {
+    address: "11 Rose Lane, York, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/blue.jpg",
+    email: "noah.bennett@mezana.talimy.space",
+    employeeId: "TEA-011",
+    employmentType: "full_time",
+    firstName: "Noah",
+    gender: "male",
+    key: "noah-bennett",
+    lastName: "Bennett",
+    phone: "+62 813 0044 5566",
+    qualification: "M.Sc",
+    scienceWeeklyClasses: 19,
+    scienceWeeklyHours: 10,
+    specialization: "Science",
+  },
+  {
+    address: "7 Hilltop Road, Cardiff, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/purple.jpg",
+    email: "sofia.khan@mezana.talimy.space",
+    employeeId: "TEA-012",
+    employmentType: "full_time",
+    firstName: "Sofia",
+    gender: "female",
+    key: "sofia-khan",
+    lastName: "Khan",
+    phone: "+62 814 1122 3344",
+    qualification: "B.A",
+    scienceWeeklyClasses: 16,
+    scienceWeeklyHours: 9,
+    specialization: "Language",
+  },
+  {
+    address: "5 Maple Close, Sheffield, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/red.jpg",
+    email: "liam.ortega@mezana.talimy.space",
+    employeeId: "TEA-013",
+    employmentType: "part_time",
+    firstName: "Liam",
+    gender: "male",
+    key: "liam-ortega",
+    lastName: "Ortega",
+    phone: "+62 815 7766 5544",
+    qualification: "B.Ed",
+    scienceWeeklyClasses: 14,
+    scienceWeeklyHours: 8,
+    specialization: "Social",
+  },
+  {
+    address: "16 Harbour Road, Brighton, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg",
+    email: "maya.collins@mezana.talimy.space",
+    employeeId: "TEA-014",
+    employmentType: "substitute",
+    firstName: "Maya",
+    gender: "female",
+    key: "maya-collins",
+    lastName: "Collins",
+    phone: "+62 816 2211 4433",
+    qualification: "B.Sc",
+    scienceWeeklyClasses: 12,
+    scienceWeeklyHours: 7,
+    specialization: "Mathematics",
+  },
+  {
+    address: "221B Baker Street, London, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/green.jpg",
+    email: "omar.reed@mezana.talimy.space",
+    employeeId: "TEA-015",
+    employmentType: "full_time",
+    firstName: "Omar",
+    gender: "male",
+    key: "omar-reed",
+    lastName: "Reed",
+    phone: "+62 817 4455 6677",
+    qualification: "B.F.A",
+    scienceWeeklyClasses: 15,
+    scienceWeeklyHours: 8,
+    specialization: "Arts",
   },
 ] as const
 
@@ -115,12 +349,14 @@ export async function ensureDashboardFixtures(
     grade8: await ensureClass(tx, context.schoolTenantId, context.academicYearId, "8", "Grade 8 A"),
     grade9: await ensureClass(tx, context.schoolTenantId, context.academicYearId, "9", "Grade 9 A"),
   } as const
-  const subjectId = await ensureSubject(
-    tx,
-    context.schoolTenantId,
-    DASHBOARD_SUBJECT.code,
-    DASHBOARD_SUBJECT.name
-  )
+  const subjectIds = {
+    arts: await ensureSubject(tx, context.schoolTenantId, "ART", "Arts"),
+    language: await ensureSubject(tx, context.schoolTenantId, "LANG", "Language"),
+    mathematics: await ensureSubject(tx, context.schoolTenantId, "MATH", "Mathematics"),
+    physicalEducation: await ensureSubject(tx, context.schoolTenantId, "PE", "Physical Education"),
+    science: await ensureSubject(tx, context.schoolTenantId, "SCI", "Science"),
+    social: await ensureSubject(tx, context.schoolTenantId, "SOC", "Social"),
+  } as const
   const termIds = {
     term1: await ensureTerm(
       tx,
@@ -142,7 +378,8 @@ export async function ensureDashboardFixtures(
     ),
   } as const
   const primaryTeacherId = await ensureTeacherProfile(tx, {
-    employeeId: "MEZ-TEA-001",
+    employeeId: "TEA-001",
+    employmentType: "full_time",
     gender: "male",
     id: fixtureUuid("teacher-profile-main"),
     joinDate: "2025-09-01",
@@ -154,18 +391,22 @@ export async function ensureDashboardFixtures(
   })
 
   const assistantTeacherUserId = await upsertUser(tx, {
+    address: "54 Westminster Road, London, United Kingdom",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/blue.jpg",
     email: "teacher.assistant@mezana.talimy.space",
     firstName: "Saida",
     genderScope: "all",
     isActive: true,
     lastName: "Tursunova",
     passwordHash: context.teacherPasswordHash,
+    phone: "+62 818 2345 6789",
     role: "teacher",
     tenantId: context.schoolTenantId,
   })
 
-  await ensureTeacherProfile(tx, {
-    employeeId: "MEZ-TEA-002",
+  const assistantTeacherId = await ensureTeacherProfile(tx, {
+    employeeId: "TEA-002",
+    employmentType: "part_time",
     gender: "female",
     id: fixtureUuid("teacher-profile-assistant"),
     joinDate: "2025-09-01",
@@ -175,6 +416,69 @@ export async function ensureDashboardFixtures(
     tenantId: context.schoolTenantId,
     userId: assistantTeacherUserId,
   })
+
+  const extraTeacherRecords = await Promise.all(
+    DASHBOARD_TEACHER_FIXTURES.map(async (fixture) => {
+      const userId = await upsertUser(tx, {
+        address: fixture.address,
+        avatar: fixture.avatar,
+        email: fixture.email,
+        firstName: fixture.firstName,
+        genderScope: "all",
+        isActive: true,
+        lastName: fixture.lastName,
+        passwordHash: context.teacherPasswordHash,
+        phone: fixture.phone,
+        role: "teacher",
+        tenantId: context.schoolTenantId,
+      })
+
+      const teacherId = await ensureTeacherProfile(tx, {
+        employeeId: fixture.employeeId,
+        employmentType: fixture.employmentType,
+        gender: fixture.gender,
+        id: fixtureUuid(`teacher-profile:${fixture.key}`),
+        joinDate: "2025-09-01",
+        qualification: fixture.qualification,
+        specialization: fixture.specialization,
+        status: "active",
+        tenantId: context.schoolTenantId,
+        userId,
+      })
+
+      return {
+        employeeId: fixture.employeeId,
+        firstName: fixture.firstName,
+        id: teacherId,
+        lastName: fixture.lastName,
+        scienceWeeklyClasses: fixture.scienceWeeklyClasses,
+        scienceWeeklyHours: fixture.scienceWeeklyHours,
+        specialization: fixture.specialization,
+      }
+    })
+  )
+
+  const teacherRecords = [
+    {
+      firstName: "Main",
+      id: primaryTeacherId,
+      lastName: "Teacher",
+      employeeId: "TEA-001",
+      scienceWeeklyClasses: 16,
+      scienceWeeklyHours: 10,
+      specialization: "Mathematics",
+    },
+    {
+      firstName: "Saida",
+      id: assistantTeacherId,
+      lastName: "Tursunova",
+      employeeId: "TEA-002",
+      scienceWeeklyClasses: 18,
+      scienceWeeklyHours: 9,
+      specialization: "Science",
+    },
+    ...extraTeacherRecords,
+  ] as const
 
   const studentRecords = await Promise.all(
     DASHBOARD_STUDENT_FIXTURES.map(async (fixture) => {
@@ -216,10 +520,11 @@ export async function ensureDashboardFixtures(
     tx,
     context.schoolTenantId,
     primaryTeacherId,
-    subjectId,
+    subjectIds.mathematics,
     termIds,
     studentRecords
   )
+  await upsertTeacherSchedules(tx, context.schoolTenantId, classIds, subjectIds, teacherRecords)
   await upsertDashboardAttendance(tx, context.schoolTenantId, primaryTeacherId, studentRecords)
   await upsertDashboardPayments(tx, context.schoolTenantId, studentRecords)
   await upsertDashboardNotices(tx, context.schoolTenantId, context.schoolAdminUserId)
@@ -230,6 +535,7 @@ export async function ensureDashboardFixtures(
     context.schoolAdminUserId,
     context.teacherUserId
   )
+  await upsertTeacherDetailFixtures(tx, context.schoolTenantId, teacherRecords)
 }
 
 async function upsertUser(tx: DatabaseTransaction, payload: UserInsert): Promise<string> {
@@ -239,11 +545,14 @@ async function upsertUser(tx: DatabaseTransaction, payload: UserInsert): Promise
     .onConflictDoUpdate({
       target: users.email,
       set: {
+        address: payload.address ?? null,
+        avatar: payload.avatar ?? null,
         firstName: payload.firstName,
         genderScope: payload.genderScope ?? "all",
         isActive: true,
         lastName: payload.lastName,
         passwordHash: payload.passwordHash,
+        phone: payload.phone ?? null,
         role: payload.role,
         tenantId: payload.tenantId,
         updatedAt: new Date(),
@@ -264,7 +573,23 @@ async function ensureTeacherProfile(
     .from(teachers)
     .where(and(eq(teachers.userId, payload.userId), isNull(teachers.deletedAt)))
     .limit(1)
-  if (existing) return existing.id
+  if (existing) {
+    await tx
+      .update(teachers)
+      .set({
+        employeeId: payload.employeeId,
+        employmentType: payload.employmentType,
+        gender: payload.gender,
+        joinDate: payload.joinDate,
+        qualification: payload.qualification,
+        specialization: payload.specialization,
+        status: payload.status,
+        updatedAt: new Date(),
+        deletedAt: null,
+      })
+      .where(eq(teachers.id, existing.id))
+    return existing.id
+  }
   const [created] = await tx.insert(teachers).values(payload).returning({ id: teachers.id })
   if (!created) throw new Error(`Failed to create teacher profile ${payload.employeeId}`)
   return created.id
@@ -372,6 +697,154 @@ async function ensureTerm(
     .returning({ id: terms.id })
   if (!created) throw new Error(`Failed to create term ${name}`)
   return created.id
+}
+
+async function upsertTeacherSchedules(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  classIds: { grade7: string; grade8: string; grade9: string },
+  subjectIds: {
+    arts: string
+    language: string
+    mathematics: string
+    physicalEducation: string
+    science: string
+    social: string
+  },
+  teacherRecords: ReadonlyArray<{
+    firstName: string
+    id: string
+    lastName: string
+    scienceWeeklyClasses: number
+    scienceWeeklyHours: number
+    specialization: string
+  }>
+): Promise<void> {
+  for (const teacher of teacherRecords) {
+    await upsertWeeklyScheduleSet(tx, {
+      classIds,
+      seedKey: `${teacher.id}:science`,
+      subjectId: subjectIds.science,
+      teacherId: teacher.id,
+      tenantId,
+      totalClasses: teacher.scienceWeeklyClasses,
+      totalHours: teacher.scienceWeeklyHours,
+    })
+
+    await upsertWeeklyScheduleSet(tx, {
+      classIds,
+      seedKey: `${teacher.id}:mathematics`,
+      subjectId: subjectIds.mathematics,
+      teacherId: teacher.id,
+      tenantId,
+      totalClasses: Math.max(10, teacher.scienceWeeklyClasses - 6),
+      totalHours: Math.max(6, teacher.scienceWeeklyHours - 2),
+    })
+
+    const specializationSubjectId = resolveSpecializationSubjectId(
+      subjectIds,
+      teacher.specialization
+    )
+    if (
+      specializationSubjectId !== subjectIds.science &&
+      specializationSubjectId !== subjectIds.mathematics
+    ) {
+      await upsertWeeklyScheduleSet(tx, {
+        classIds,
+        seedKey: `${teacher.id}:specialization`,
+        subjectId: specializationSubjectId,
+        teacherId: teacher.id,
+        tenantId,
+        totalClasses: 6,
+        totalHours: 4,
+      })
+    }
+  }
+}
+
+async function upsertWeeklyScheduleSet(
+  tx: DatabaseTransaction,
+  payload: {
+    classIds: { grade7: string; grade8: string; grade9: string }
+    seedKey: string
+    subjectId: string
+    teacherId: string
+    tenantId: string
+    totalClasses: number
+    totalHours: number
+  }
+): Promise<void> {
+  const classSequence = [
+    payload.classIds.grade7,
+    payload.classIds.grade8,
+    payload.classIds.grade9,
+  ] as const
+  const slotSequence = [
+    { dayOfWeek: "monday", startMinutes: 540 },
+    { dayOfWeek: "wednesday", startMinutes: 540 },
+    { dayOfWeek: "friday", startMinutes: 540 },
+    { dayOfWeek: "tuesday", startMinutes: 600 },
+    { dayOfWeek: "thursday", startMinutes: 600 },
+    { dayOfWeek: "wednesday", startMinutes: 660 },
+    { dayOfWeek: "monday", startMinutes: 810 },
+    { dayOfWeek: "thursday", startMinutes: 810 },
+    { dayOfWeek: "friday", startMinutes: 810 },
+    { dayOfWeek: "tuesday", startMinutes: 540 },
+    { dayOfWeek: "wednesday", startMinutes: 600 },
+    { dayOfWeek: "thursday", startMinutes: 540 },
+    { dayOfWeek: "friday", startMinutes: 600 },
+    { dayOfWeek: "monday", startMinutes: 600 },
+    { dayOfWeek: "tuesday", startMinutes: 810 },
+    { dayOfWeek: "monday", startMinutes: 660 },
+    { dayOfWeek: "tuesday", startMinutes: 660 },
+    { dayOfWeek: "wednesday", startMinutes: 810 },
+    { dayOfWeek: "thursday", startMinutes: 660 },
+    { dayOfWeek: "friday", startMinutes: 660 },
+    { dayOfWeek: "monday", startMinutes: 870 },
+    { dayOfWeek: "tuesday", startMinutes: 870 },
+    { dayOfWeek: "wednesday", startMinutes: 870 },
+    { dayOfWeek: "thursday", startMinutes: 870 },
+    { dayOfWeek: "friday", startMinutes: 870 },
+  ] as const
+  const durationMinutes = Math.max(25, Math.round((payload.totalHours * 60) / payload.totalClasses))
+
+  for (let index = 0; index < payload.totalClasses; index += 1) {
+    const slot = slotSequence[index % slotSequence.length] ?? slotSequence[0]
+    const dayOfWeek = slot?.dayOfWeek ?? "monday"
+    const startMinutes = slot?.startMinutes ?? 540
+    const endMinutes = startMinutes + durationMinutes
+    const classId = classSequence[index % classSequence.length] ?? classSequence[0]
+    const scheduleId = fixtureUuid(`schedule:${payload.seedKey}:${index}`)
+    const roomLabel = `R-${(index % 6) + 1}`
+
+    await tx
+      .insert(schedules)
+      .values({
+        classId,
+        dayOfWeek,
+        endTime: formatScheduleTime(endMinutes),
+        id: scheduleId,
+        room: roomLabel,
+        startTime: formatScheduleTime(startMinutes),
+        subjectId: payload.subjectId,
+        teacherId: payload.teacherId,
+        tenantId: payload.tenantId,
+      })
+      .onConflictDoUpdate({
+        target: schedules.id,
+        set: {
+          classId,
+          dayOfWeek,
+          endTime: formatScheduleTime(endMinutes),
+          room: roomLabel,
+          startTime: formatScheduleTime(startMinutes),
+          subjectId: payload.subjectId,
+          teacherId: payload.teacherId,
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
+      })
+  }
 }
 
 async function upsertDashboardGrades(
@@ -801,9 +1274,589 @@ async function upsertDashboardActivity(
   }
 }
 
+async function upsertTeacherDetailFixtures(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  teacherRecords: ReadonlyArray<{
+    employeeId: string
+    firstName: string
+    id: string
+    lastName: string
+    scienceWeeklyClasses: number
+    scienceWeeklyHours: number
+    specialization: string
+  }>
+): Promise<void> {
+  for (const [index, teacher] of teacherRecords.entries()) {
+    await upsertTeacherDocumentsSet(tx, tenantId, teacher)
+    await upsertTeacherWorkloadSnapshotsSet(tx, tenantId, teacher, index)
+    await upsertTeacherTrainingSet(tx, tenantId, teacher, index)
+    await upsertTeacherAttendanceCalendarSet(tx, tenantId, teacher.id)
+    await upsertTeacherLeaveRequestsSet(tx, tenantId, teacher.id)
+    await upsertTeacherPerformanceSet(tx, tenantId, teacher.id, index)
+  }
+}
+
+async function upsertTeacherDocumentsSet(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  teacher: {
+    employeeId: string
+    firstName: string
+    id: string
+    lastName: string
+    specialization: string
+  }
+): Promise<void> {
+  const compactName = `${teacher.firstName}${teacher.lastName}`.replace(/\s+/g, "")
+  const subjectKey = teacher.specialization.replace(/\s+/g, "")
+  const items = [
+    {
+      fileName: `Employment_Contract_${compactName}_${teacher.employeeId}.pdf`,
+      key: "employment-contract",
+      sizeBytes: 2_400_000,
+    },
+    {
+      fileName: `Certification_${subjectKey}_${compactName}.pdf`,
+      key: "certification",
+      sizeBytes: 1_800_000,
+    },
+    {
+      fileName: `ID_Passport_${compactName}_${teacher.employeeId}.pdf`,
+      key: "passport",
+      sizeBytes: 2_200_000,
+    },
+  ] as const
+
+  for (const item of items) {
+    await tx
+      .insert(teacherDocuments)
+      .values({
+        fileName: item.fileName,
+        id: fixtureUuid(`teacher-document:${teacher.id}:${item.key}`),
+        mimeType: "application/pdf",
+        sizeBytes: item.sizeBytes,
+        storageKey: `teachers/${teacher.id}/documents/${item.fileName}`,
+        teacherId: teacher.id,
+        tenantId,
+      })
+      .onConflictDoUpdate({
+        target: teacherDocuments.id,
+        set: {
+          fileName: item.fileName,
+          mimeType: "application/pdf",
+          sizeBytes: item.sizeBytes,
+          storageKey: `teachers/${teacher.id}/documents/${item.fileName}`,
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
+      })
+  }
+}
+
+async function upsertTeacherWorkloadSnapshotsSet(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  teacher: {
+    id: string
+    scienceWeeklyClasses: number
+    scienceWeeklyHours: number
+  },
+  teacherIndex: number
+): Promise<void> {
+  const extraOffset = teacherIndex % 4
+  const datasets = [
+    {
+      dataset: "last_8_months",
+      seed: [
+        {
+          extraDuties: 32,
+          label: "Jul",
+          periodDate: "2034-07-01",
+          teachingHours: 104,
+          totalClasses: 122,
+        },
+        {
+          extraDuties: 36,
+          label: "Aug",
+          periodDate: "2034-08-01",
+          teachingHours: 96,
+          totalClasses: 136,
+        },
+        {
+          extraDuties: 24,
+          label: "Sep",
+          periodDate: "2034-09-01",
+          teachingHours: 98,
+          totalClasses: 118,
+        },
+        {
+          extraDuties: 32,
+          label: "Oct",
+          periodDate: "2034-10-01",
+          teachingHours: 134,
+          totalClasses: 149,
+        },
+        {
+          extraDuties: 18,
+          label: "Nov",
+          periodDate: "2034-11-01",
+          teachingHours: 110,
+          totalClasses: 109,
+        },
+        {
+          extraDuties: 28,
+          label: "Dec",
+          periodDate: "2034-12-01",
+          teachingHours: 104,
+          totalClasses: 123,
+        },
+        {
+          extraDuties: 42,
+          label: "Jan",
+          periodDate: "2035-01-01",
+          teachingHours: 128,
+          totalClasses: 134,
+        },
+        {
+          extraDuties: 38,
+          label: "Feb",
+          periodDate: "2035-02-01",
+          teachingHours: 96,
+          totalClasses: 142,
+        },
+      ] as const,
+    },
+    {
+      dataset: "this_semester",
+      seed: [
+        {
+          extraDuties: 26,
+          label: "Sep",
+          periodDate: "2034-09-01",
+          teachingHours: 102,
+          totalClasses: 118,
+        },
+        {
+          extraDuties: 32,
+          label: "Oct",
+          periodDate: "2034-10-01",
+          teachingHours: 134,
+          totalClasses: 149,
+        },
+        {
+          extraDuties: 24,
+          label: "Nov",
+          periodDate: "2034-11-01",
+          teachingHours: 116,
+          totalClasses: 128,
+        },
+        {
+          extraDuties: 22,
+          label: "Dec",
+          periodDate: "2034-12-01",
+          teachingHours: 108,
+          totalClasses: 121,
+        },
+        {
+          extraDuties: 37,
+          label: "Jan",
+          periodDate: "2035-01-01",
+          teachingHours: 126,
+          totalClasses: 138,
+        },
+        {
+          extraDuties: 34,
+          label: "Feb",
+          periodDate: "2035-02-01",
+          teachingHours: 118,
+          totalClasses: 132,
+        },
+        {
+          extraDuties: 36,
+          label: "Mar",
+          periodDate: "2035-03-01",
+          teachingHours: 122,
+          totalClasses: 140,
+        },
+        {
+          extraDuties: 31,
+          label: "Apr",
+          periodDate: "2035-04-01",
+          teachingHours: 120,
+          totalClasses: 136,
+        },
+      ] as const,
+    },
+  ] as const
+
+  for (const dataset of datasets) {
+    for (const [sortOrder, item] of dataset.seed.entries()) {
+      await tx
+        .insert(teacherWorkloadSnapshots)
+        .values({
+          dataset: dataset.dataset,
+          extraDuties: Math.max(12, item.extraDuties - extraOffset),
+          id: fixtureUuid(`teacher-workload:${teacher.id}:${dataset.dataset}:${item.periodDate}`),
+          label: item.label,
+          periodDate: item.periodDate,
+          sortOrder,
+          teacherId: teacher.id,
+          teachingHours: Math.max(
+            teacher.scienceWeeklyHours * 8,
+            item.teachingHours - extraOffset * 2
+          ),
+          tenantId,
+          totalClasses: Math.max(
+            teacher.scienceWeeklyClasses * 6,
+            item.totalClasses - extraOffset * 3
+          ),
+        })
+        .onConflictDoUpdate({
+          target: teacherWorkloadSnapshots.id,
+          set: {
+            dataset: dataset.dataset,
+            extraDuties: Math.max(12, item.extraDuties - extraOffset),
+            label: item.label,
+            periodDate: item.periodDate,
+            sortOrder,
+            teachingHours: Math.max(
+              teacher.scienceWeeklyHours * 8,
+              item.teachingHours - extraOffset * 2
+            ),
+            totalClasses: Math.max(
+              teacher.scienceWeeklyClasses * 6,
+              item.totalClasses - extraOffset * 3
+            ),
+            updatedAt: new Date(),
+            deletedAt: null,
+          },
+        })
+    }
+  }
+}
+
+async function upsertTeacherTrainingSet(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  teacher: {
+    id: string
+    specialization: string
+  },
+  teacherIndex: number
+): Promise<void> {
+  const currentSemesterRecords = [
+    {
+      eventDate: "2035-04-02",
+      locationLabel: "Zoom - International Education Network",
+      status: "upcoming",
+      subtitle: "Training",
+      title: `${teacher.specialization} Digital Learning Tools Training`,
+    },
+    {
+      eventDate: "2035-02-08",
+      locationLabel: "Cambridge University Online (UK)",
+      status: "completed",
+      subtitle: "Certification",
+      title: "Classroom Management Certification",
+    },
+    {
+      eventDate: "2035-01-12",
+      locationLabel: "London, UK - British Council",
+      status: "completed",
+      subtitle: "Workshop",
+      title: `Advanced ${teacher.specialization} Teaching Methods`,
+    },
+  ] as const
+
+  const previousSemesterRecords = [
+    {
+      eventDate: "2034-11-19",
+      locationLabel: "Singapore - Teaching Future Forum",
+      status: "completed",
+      subtitle: "Conference",
+      title: "Inclusive Classroom Strategies",
+    },
+    {
+      eventDate: "2034-10-02",
+      locationLabel: "Oxford Online Campus",
+      status: "completed",
+      subtitle: "Certification",
+      title: "Assessment Design Fundamentals",
+    },
+    {
+      eventDate: "2034-09-15",
+      locationLabel: "Talimy Academy Hub",
+      status: teacherIndex % 3 === 0 ? "cancelled" : "completed",
+      subtitle: "Workshop",
+      title: "STEM Lesson Planning Intensive",
+    },
+  ] as const
+
+  for (const [semester, records] of [
+    ["current", currentSemesterRecords],
+    ["previous", previousSemesterRecords],
+  ] as const) {
+    for (const [index, record] of records.entries()) {
+      await tx
+        .insert(teacherTrainingRecords)
+        .values({
+          eventDate: record.eventDate,
+          id: fixtureUuid(`teacher-training:${teacher.id}:${semester}:${index}`),
+          locationLabel: record.locationLabel,
+          semester,
+          status: record.status,
+          subtitle: record.subtitle,
+          teacherId: teacher.id,
+          tenantId,
+          title: record.title,
+        })
+        .onConflictDoUpdate({
+          target: teacherTrainingRecords.id,
+          set: {
+            eventDate: record.eventDate,
+            locationLabel: record.locationLabel,
+            semester,
+            status: record.status,
+            subtitle: record.subtitle,
+            title: record.title,
+            updatedAt: new Date(),
+            deletedAt: null,
+          },
+        })
+    }
+  }
+}
+
+async function upsertTeacherAttendanceCalendarSet(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  teacherId: string
+): Promise<void> {
+  const attendanceByMonth = {
+    "2035-02": {
+      3: "present",
+      6: "late",
+      8: "present",
+      11: "present",
+      13: "on_leave",
+      14: "present",
+      18: "late",
+      19: "present",
+      20: "present",
+      24: "present",
+      26: "late",
+    },
+    "2035-03": {
+      1: "present",
+      2: "on_leave",
+      5: "late",
+      6: "present",
+      7: "late",
+      8: "present",
+      9: "present",
+      12: "late",
+      13: "present",
+      14: "on_leave",
+      15: "present",
+      16: "present",
+      19: "present",
+      20: "present",
+      21: "present",
+      22: "late",
+      23: "present",
+    },
+    "2035-04": {
+      2: "present",
+      4: "present",
+      5: "late",
+      10: "present",
+      12: "on_leave",
+      15: "late",
+      18: "present",
+      21: "present",
+      22: "present",
+      24: "late",
+      29: "present",
+    },
+  } as const
+
+  for (const [monthKey, records] of Object.entries(attendanceByMonth)) {
+    for (const [day, status] of Object.entries(records)) {
+      const isoDate = `${monthKey}-${String(day).padStart(2, "0")}`
+      await tx
+        .insert(teacherAttendanceRecords)
+        .values({
+          date: isoDate,
+          id: fixtureUuid(`teacher-attendance:${teacherId}:${isoDate}`),
+          note: `${DASHBOARD_FIXTURE_PREFIX}: teacher-attendance`,
+          status,
+          teacherId,
+          tenantId,
+        })
+        .onConflictDoUpdate({
+          target: teacherAttendanceRecords.id,
+          set: {
+            note: `${DASHBOARD_FIXTURE_PREFIX}: teacher-attendance`,
+            status,
+            updatedAt: new Date(),
+            deletedAt: null,
+          },
+        })
+    }
+  }
+}
+
+async function upsertTeacherLeaveRequestsSet(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  teacherId: string
+): Promise<void> {
+  const entries = [
+    {
+      endDate: "2035-03-13",
+      key: "pending-sick",
+      reason: "Fever and medical rest advised by doctor",
+      requestType: "sick_leave",
+      startDate: "2035-03-11",
+      status: "pending",
+    },
+    {
+      endDate: "2035-02-22",
+      key: "approved-personal",
+      reason: "Family event and travel arrangements",
+      requestType: "personal_leave",
+      startDate: "2035-02-20",
+      status: "approved",
+    },
+  ] as const
+
+  for (const entry of entries) {
+    await tx
+      .insert(teacherLeaveRequests)
+      .values({
+        endDate: entry.endDate,
+        id: fixtureUuid(`teacher-leave-request:${teacherId}:${entry.key}`),
+        reason: entry.reason,
+        requestType: entry.requestType,
+        startDate: entry.startDate,
+        status: entry.status,
+        teacherId,
+        tenantId,
+      })
+      .onConflictDoUpdate({
+        target: teacherLeaveRequests.id,
+        set: {
+          endDate: entry.endDate,
+          reason: entry.reason,
+          requestType: entry.requestType,
+          startDate: entry.startDate,
+          status: entry.status,
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
+      })
+  }
+}
+
+async function upsertTeacherPerformanceSet(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  teacherId: string,
+  teacherIndex: number
+): Promise<void> {
+  const offset = teacherIndex % 4
+  const entries = [
+    {
+      gradingTimelinessTarget: 90,
+      gradingTimelinessValue: 95 - offset,
+      period: "last_month",
+      studentAverageGradeTarget: 90,
+      studentAverageGradeValue: 85 - offset,
+      studentFeedbackTarget: 85,
+      studentFeedbackValue: 78 - offset,
+    },
+    {
+      gradingTimelinessTarget: 90,
+      gradingTimelinessValue: 93 - offset,
+      period: "last_quarter",
+      studentAverageGradeTarget: 90,
+      studentAverageGradeValue: 84 - offset,
+      studentFeedbackTarget: 85,
+      studentFeedbackValue: 79 - offset,
+    },
+  ] as const
+
+  for (const entry of entries) {
+    await tx
+      .insert(teacherPerformanceSnapshots)
+      .values({
+        gradingTimelinessTarget: entry.gradingTimelinessTarget,
+        gradingTimelinessValue: entry.gradingTimelinessValue,
+        id: fixtureUuid(`teacher-performance:${teacherId}:${entry.period}`),
+        period: entry.period,
+        studentAverageGradeTarget: entry.studentAverageGradeTarget,
+        studentAverageGradeValue: entry.studentAverageGradeValue,
+        studentFeedbackTarget: entry.studentFeedbackTarget,
+        studentFeedbackValue: entry.studentFeedbackValue,
+        teacherId,
+        tenantId,
+      })
+      .onConflictDoUpdate({
+        target: teacherPerformanceSnapshots.id,
+        set: {
+          gradingTimelinessTarget: entry.gradingTimelinessTarget,
+          gradingTimelinessValue: entry.gradingTimelinessValue,
+          period: entry.period,
+          studentAverageGradeTarget: entry.studentAverageGradeTarget,
+          studentAverageGradeValue: entry.studentAverageGradeValue,
+          studentFeedbackTarget: entry.studentFeedbackTarget,
+          studentFeedbackValue: entry.studentFeedbackValue,
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
+      })
+  }
+}
+
 function fixtureUuid(seed: string): string {
   const hex = createHash("sha1").update(`talimy:${seed}`).digest("hex").slice(0, 32)
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-5${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`
+}
+
+function formatScheduleTime(totalMinutes: number): string {
+  const hours = Math.floor(totalMinutes / 60)
+  const minutes = totalMinutes % 60
+  return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:00`
+}
+
+function resolveSpecializationSubjectId(
+  subjectIds: {
+    arts: string
+    language: string
+    mathematics: string
+    physicalEducation: string
+    science: string
+    social: string
+  },
+  specialization: string
+): string {
+  switch (specialization) {
+    case "Arts":
+      return subjectIds.arts
+    case "Language":
+      return subjectIds.language
+    case "Mathematics":
+      return subjectIds.mathematics
+    case "Physical Education":
+      return subjectIds.physicalEducation
+    case "Science":
+      return subjectIds.science
+    case "Social":
+      return subjectIds.social
+    default:
+      return subjectIds.science
+  }
 }
 
 function defaultScoresForGrade(grade: "7" | "8" | "9"): readonly number[] {

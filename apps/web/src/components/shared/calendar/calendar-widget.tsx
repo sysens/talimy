@@ -143,10 +143,8 @@ export function CalendarWidget({
   return (
     <div
       className={[
-        "w-full text-[#2d5877]",
-        variant === "attendance"
-          ? "rounded-[24px] bg-white p-4"
-          : "rounded-[20px] bg-[#d9f3ff] p-4",
+        "w-full text-[#2d5877] mb-0 rounded-b-none",
+        variant === "attendance" ? "rounded-[24px] bg-white p-4" : "rounded-4xl bg-[#d9f3ff] p-4",
         className ?? "",
       ].join(" ")}
     >

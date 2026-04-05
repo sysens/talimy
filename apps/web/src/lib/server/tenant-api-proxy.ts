@@ -8,6 +8,7 @@ type TenantApiProxyOptions = {
   allowedHostScopes?: Array<"api" | "platform" | "public" | "school">
   extraSearchParams?: Record<string, string | undefined>
   forbiddenMessage?: string
+  includeGenderScope?: boolean
   targetPath: string
 }
 
@@ -33,6 +34,15 @@ export async function proxyTenantApiRequest(
 
   const searchParams = new URLSearchParams(request.nextUrl.search)
   searchParams.set("tenantId", tenantId)
+
+  if (options.includeGenderScope === true) {
+    const genderScope =
+      typeof session?.user?.genderScope === "string" ? session.user.genderScope : undefined
+
+    if (typeof genderScope === "string" && genderScope.length > 0) {
+      searchParams.set("genderScope", genderScope)
+    }
+  }
 
   for (const [key, value] of Object.entries(options.extraSearchParams ?? {})) {
     if (typeof value === "string" && value.length > 0) {

@@ -1027,5 +1027,332 @@
         }
       }
     }
+  },
+  "adminTeachers": {
+    "overview": {
+      "stats": {
+        "totalTeachers": "Total Teachers",
+        "fullTimeTeachers": "Full-Time Teacher",
+        "partTimeTeachers": "Part-Time Teacher",
+        "substituteTeachers": "Substitute Teacher"
+      },
+      "attendance": {
+        "title": "Attendance Overview",
+        "filterAriaLabel": "Teacher attendance period",
+        "periods": {
+          "weekly": "Weekly",
+          "monthly": "Monthly"
+        },
+        "days": {
+          "mon": "Mon",
+          "tue": "Tue",
+          "wed": "Wed",
+          "thu": "Thu",
+          "fri": "Fri"
+        }
+      },
+      "workload": {
+        "title": "Workload Distribution",
+        "subjectFilterAriaLabel": "Subject filter",
+        "periodFilterAriaLabel": "Workload period",
+        "periods": {
+          "weekly": "Weekly",
+          "monthly": "Monthly"
+        },
+        "legend": {
+          "totalClasses": "Total Classes",
+          "teachingHours": "Teaching Hours",
+          "extraDuties": "Extra Duties"
+        },
+        "departments": {
+          "science": "Science",
+          "mathematics": "Mathematics",
+          "language": "Language",
+          "social": "Social",
+          "arts": "Arts",
+          "physicalEducation": "Physical Education",
+          "other": "Other"
+        }
+      },
+      "department": {
+        "title": "Department",
+        "centerLabel": "Total Teachers",
+        "actionsAriaLabel": "Department chart actions",
+        "items": {
+          "science": "Science",
+          "mathematics": "Mathematics",
+          "language": "Language",
+          "social": "Social",
+          "arts": "Arts",
+          "physicalEducation": "Physical Education",
+          "other": "Other"
+        }
+      }
+    },
+    "list": {
+      "title": "Teachers",
+      "addTeacher": "Add",
+      "searchPlaceholder": "Search teacher",
+      "sortLabel": "Sort by:",
+      "message": "View",
+      "filterButton": "Filter",
+      "filterTitle": "Filter teachers",
+      "filters": {
+        "department": "Department",
+        "statusLabel": "Status",
+        "genderLabel": "Gender",
+        "status": {
+          "active": "Active",
+          "inactive": "Inactive",
+          "onLeave": "On Leave"
+        },
+        "gender": {
+          "male": "Male",
+          "female": "Female"
+        },
+        "actions": {
+          "clear": "Clear",
+          "apply": "Apply"
+        }
+      },
+      "sort": {
+        "latest": "Latest",
+        "oldest": "Oldest",
+        "nameAsc": "Name A-Z"
+      },
+      "pagination": {
+        "show": "Show",
+        "of": "of",
+        "results": "results",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "states": {
+        "empty": "No teachers found.",
+        "error": "Failed to load teachers list."
+      }
+    },
+    "detail": {
+      "header": {
+        "title": "Teacher Details"
+      },
+      "subject": "Subject",
+      "class": "Class",
+      "notAssigned": "Not assigned",
+      "states": {
+        "error": "Failed to load teacher details.",
+        "empty": "Teacher not found."
+      },
+      "employment": {
+        "fullTime": "Full-Time",
+        "partTime": "Part-Time",
+        "substitute": "Substitute"
+      },
+      "toastErrorTitle": "Teacher details",
+      "toastErrorDescription": "An error occurred while loading teacher details.",
+      "weeklyHours": "{hours}h",
+      "employmentCompact": {
+        "fullTime": "Full-Time",
+        "partTime": "Part-Time",
+        "substitute": "Substitute"
+      },
+      "schedule": {
+        "title": "Schedule",
+        "periodOptions": {
+          "weekly": "Weekly",
+          "today": "Today"
+        }
+      },
+      "workload": {
+        "title": "Workload Summary",
+        "filterAriaLabel": "Workload period",
+        "periodOptions": {
+          "last8Months": "Last 8 months",
+          "thisSemester": "This semester"
+        }
+      },
+      "training": {
+        "title": "Development & Training",
+        "filterAriaLabel": "Training period",
+        "periodOptions": {
+          "thisSemester": "This Semester",
+          "lastSemester": "Last Semester"
+        },
+        "columns": {
+          "event": "Event",
+          "date": "Date",
+          "location": "Loc/Platform",
+          "status": "Status"
+        },
+        "statusMap": {
+          "completed": "Completed",
+          "upcoming": "Upcoming",
+          "cancelled": "Cancelled"
+        }
+      },
+      "documents": {
+        "title": "Documents & Compliance",
+        "actionLabel": "Documents actions"
+      },
+      "personalInfo": {
+        "title": "Personal Info",
+        "actionLabel": "Personal info actions",
+        "fields": {
+          "gender": "Gender",
+          "dateOfBirth": "Date of Birth",
+          "emailAddress": "Email Address",
+          "phoneNumber": "Phone Number",
+          "address": "Address"
+        },
+        "states": {
+          "male": "Male",
+          "female": "Female"
+        }
+      },
+      "leaveRequest": {
+        "title": "Leave Request",
+        "toastUpdateError": "Leave request update failed.",
+        "toastUpdateSuccess": "Leave request status updated.",
+        "approve": "Approve",
+        "decline": "Decline"
+      },
+      "performance": {
+        "title": "Performance",
+        "filterAriaLabel": "Performance period",
+        "periodOptions": {
+          "lastMonth": "Last Month",
+          "lastQuarter": "Last Quarter"
+        }
+      }
+    },
+    "create": {
+      "header": {
+        "title": "Add New Teacher",
+        "backLabel": "Teachers",
+        "breadcrumbs": {
+          "dashboard": "Dashboard",
+          "teachers": "Teachers",
+          "addTeacher": "Add New Teacher"
+        }
+      },
+      "loading": "Loading teacher form data...",
+      "loadError": "Could not load teacher create form data.",
+      "retry": "Retry",
+      "personal": {
+        "title": "Personal Information",
+        "firstNameLabel": "First Name",
+        "firstNamePlaceholder": "Enter first name",
+        "lastNameLabel": "Last Name",
+        "lastNamePlaceholder": "Enter last name",
+        "middleNameLabel": "Middle Name",
+        "middleNamePlaceholder": "Enter middle name",
+        "dateOfBirthLabel": "Date of Birth",
+        "genderLabel": "Gender",
+        "genderPlaceholder": "Select gender",
+        "genderOptions": {
+          "male": "Male",
+          "female": "Female"
+        },
+        "avatar": {
+          "label": "Avatar",
+          "uploadLabel": "Upload image",
+          "changeLabel": "Change image",
+          "removeLabel": "Remove",
+          "emptyLabel": "No image attached",
+          "previewLabel": "Uploaded image preview",
+          "uploadErrorTitle": "Avatar upload failed"
+        },
+        "nationalityLabel": "Nationality",
+        "nationalityPlaceholder": "Select nationality",
+        "nationalityOptions": {
+          "uzbek": "Uzbek",
+          "kazakh": "Kazakh",
+          "kyrgyz": "Kyrgyz",
+          "russian": "Russian",
+          "tajik": "Tajik",
+          "turkish": "Turkish",
+          "other": "Other"
+        },
+        "statusLabel": "Status",
+        "statusPlaceholder": "Select status",
+        "statusOptions": {
+          "active": "Active",
+          "inactive": "Inactive"
+        }
+      },
+      "contact": {
+        "title": "Contact Information",
+        "emailLabel": "Email Address",
+        "emailPlaceholder": "teacher@school.uz",
+        "phoneLabel": "Phone Number",
+        "telegramLabel": "Telegram username",
+        "telegramPlaceholder": "@username",
+        "addressLabel": "Address",
+        "addressPlaceholder": "Enter city, district, address"
+      },
+      "academic": {
+        "title": "Academic Information",
+        "subjectsLabel": "Specialization",
+        "subjectsPlaceholder": "Select specializations",
+        "subjectsEmpty": "No subjects found.",
+        "classesLabel": "Classes",
+        "classesPlaceholder": "Select classes",
+        "classesEmpty": "No classes found.",
+        "classesSearchPlaceholder": "Search classes",
+        "employmentTypeLabel": "Employment Type",
+        "employmentTypePlaceholder": "Select employment type",
+        "employmentTypeOptions": {
+          "fullTime": "Full-Time",
+          "partTime": "Part-Time",
+          "hourly": "Hourly"
+        },
+        "joinDateLabel": "Join Date"
+      },
+      "documents": {
+        "title": "Documents",
+        "emptyState": "No documents attached.",
+        "addLabel": "Add document",
+        "removeLabel": "Remove",
+        "fileLabel": "File",
+        "filePlaceholder": "Select a PDF or image file",
+        "fileReadyLabel": "File is ready to be saved.",
+        "uploadLabel": "Upload",
+        "documentTypeLabel": "Document Type",
+        "documentTypePlaceholder": "Select type",
+        "documentTypeOptions": {
+          "diploma": "Diploma",
+          "certificate": "Certificate",
+          "idCard": "ID Card",
+          "other": "Other"
+        }
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "submit": "Save & Add Teacher",
+        "submitting": "Saving..."
+      },
+      "validation": {
+        "classIdsRequired": "Select at least one class.",
+        "dateOfBirthRequired": "Date of birth is required.",
+        "documentFileRequired": "Select a document file.",
+        "emailInvalid": "Enter a valid email address.",
+        "emailRequired": "Email is required.",
+        "firstNameRequired": "First name is required.",
+        "joinDateRequired": "Join date is required.",
+        "lastNameRequired": "Last name is required.",
+        "nationalityRequired": "Select a nationality.",
+        "phoneInvalid": "Enter a valid phone number.",
+        "subjectIdsRequired": "Select at least one subject.",
+        "telegramInvalid": "Telegram username is invalid."
+      },
+      "toasts": {
+        "formOptionsMissing": "Required form options are missing.",
+        "documentUploadMissing": "Document upload is missing.",
+        "createErrorTitle": "Could not add teacher",
+        "createErrorDescription": "Check the entered data and try again.",
+        "createSuccessTitle": "Teacher added",
+        "createSuccessDescription": "The new teacher was created successfully."
+      }
+    }
   }
 }

@@ -5,10 +5,11 @@ import { webApiFetch } from "@/lib/api"
 export type UploadSignedUrlResponse = {
   success: boolean
   data?: {
-    url: string
     key: string
-    publicUrl?: string | null
-    headers?: Record<string, string>
+    method: "PUT"
+    signedUrl: string
+    expiresInSeconds: number
+    url: string | null
   }
 }
 

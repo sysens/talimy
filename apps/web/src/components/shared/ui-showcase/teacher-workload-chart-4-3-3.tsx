@@ -72,9 +72,7 @@ export function TeacherWorkloadChartShowcase433() {
 
       <div className="max-w-3xl rounded-3xl bg-card p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
-          <h4 className="text-base font-semibold text-[var(--talimy-color-navy)]">
-            Workload Distribution
-          </h4>
+          <h4 className="text-base font-semibold text-talimy-navy">Workload Distribution</h4>
 
           <div className="flex flex-wrap gap-2">
             <ChartFilterSelect

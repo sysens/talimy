@@ -1027,5 +1027,332 @@
         }
       }
     }
+  },
+  "adminTeachers": {
+    "overview": {
+      "stats": {
+        "totalTeachers": "Jami o'qituvchilar",
+        "fullTimeTeachers": "To'liq stavka",
+        "partTimeTeachers": "Yarim stavka",
+        "substituteTeachers": "O'rinbosar o'qituvchi"
+      },
+      "attendance": {
+        "title": "Davomat ko'rinishi",
+        "filterAriaLabel": "O'qituvchilar davomat davri",
+        "periods": {
+          "weekly": "Haftalik",
+          "monthly": "Oylik"
+        },
+        "days": {
+          "mon": "Du",
+          "tue": "Se",
+          "wed": "Cho",
+          "thu": "Pa",
+          "fri": "Ju"
+        }
+      },
+      "workload": {
+        "title": "Yuklama taqsimoti",
+        "subjectFilterAriaLabel": "Fan filtri",
+        "periodFilterAriaLabel": "Yuklama davri",
+        "periods": {
+          "weekly": "Haftalik",
+          "monthly": "Oylik"
+        },
+        "legend": {
+          "totalClasses": "Jami darslar",
+          "teachingHours": "Dars soatlari",
+          "extraDuties": "Qo'shimcha vazifalar"
+        },
+        "departments": {
+          "science": "Science",
+          "mathematics": "Mathematics",
+          "language": "Language",
+          "social": "Social",
+          "arts": "Arts",
+          "physicalEducation": "Physical Education",
+          "other": "Boshqa"
+        }
+      },
+      "department": {
+        "title": "Bo'limlar",
+        "centerLabel": "Jami o'qituvchilar",
+        "actionsAriaLabel": "Bo'lim diagrammasi amallari",
+        "items": {
+          "science": "Science",
+          "mathematics": "Mathematics",
+          "language": "Language",
+          "social": "Social",
+          "arts": "Arts",
+          "physicalEducation": "Physical Education",
+          "other": "Boshqa"
+        }
+      }
+    },
+    "list": {
+      "title": "O'qituvchilar",
+      "addTeacher": "Qo'shish",
+      "searchPlaceholder": "O'qituvchini qidirish",
+      "sortLabel": "Saralash:",
+      "message": "Ko'rish",
+      "filterButton": "Filtr",
+      "filterTitle": "O'qituvchilarni filtrlash",
+      "filters": {
+        "department": "Bo'lim",
+        "statusLabel": "Holat",
+        "genderLabel": "Jins",
+        "status": {
+          "active": "Faol",
+          "inactive": "Faol emas",
+          "onLeave": "Ta'tilda"
+        },
+        "gender": {
+          "male": "Erkak",
+          "female": "Ayol"
+        },
+        "actions": {
+          "clear": "Tozalash",
+          "apply": "Qo'llash"
+        }
+      },
+      "sort": {
+        "latest": "Eng yangi",
+        "oldest": "Eng eski",
+        "nameAsc": "Nom A-Z"
+      },
+      "pagination": {
+        "show": "Ko'rsatish",
+        "of": "dan",
+        "results": "natija",
+        "previous": "Oldingi",
+        "next": "Keyingi"
+      },
+      "states": {
+        "empty": "O'qituvchilar topilmadi.",
+        "error": "O'qituvchilar ro'yxatini yuklab bo'lmadi."
+      }
+    },
+    "detail": {
+      "header": {
+        "title": "O'qituvchi tafsilotlari"
+      },
+      "subject": "Fan",
+      "class": "Sinf",
+      "notAssigned": "Biriktirilmagan",
+      "states": {
+        "error": "O'qituvchi ma'lumotlarini yuklab bo'lmadi.",
+        "empty": "O'qituvchi topilmadi."
+      },
+      "employment": {
+        "fullTime": "To'liq stavka",
+        "partTime": "Yarim stavka",
+        "substitute": "O'rinbosar"
+      },
+      "toastErrorTitle": "O'qituvchi ma'lumotlari",
+      "toastErrorDescription": "Ma'lumotlarni yuklashda xatolik yuz berdi.",
+      "weeklyHours": "{hours}-soat",
+      "employmentCompact": {
+        "fullTime": "To'liq",
+        "partTime": "Yarim",
+        "substitute": "O'rinbosar"
+      },
+      "schedule": {
+        "title": "Dars jadvali",
+        "periodOptions": {
+          "weekly": "Haftalik",
+          "today": "Bugun"
+        }
+      },
+      "workload": {
+        "title": "Yuklama xulosasi",
+        "filterAriaLabel": "Yuklama davri",
+        "periodOptions": {
+          "last8Months": "So'nggi 8 oy",
+          "thisSemester": "Joriy semestr"
+        }
+      },
+      "training": {
+        "title": "Malaka va ta'lim",
+        "filterAriaLabel": "Ta'lim davri",
+        "periodOptions": {
+          "thisSemester": "Joriy semestr",
+          "lastSemester": "O'tgan semestr"
+        },
+        "columns": {
+          "event": "Tadbir",
+          "date": "Sana",
+          "location": "Manzil/Platforma",
+          "status": "Holati"
+        },
+        "statusMap": {
+          "completed": "Tugallangan",
+          "upcoming": "Tez kunda",
+          "cancelled": "Bekor qilingan"
+        }
+      },
+      "documents": {
+        "title": "Hujjatlar",
+        "actionLabel": "Hujjat amallari"
+      },
+      "personalInfo": {
+        "title": "Shaxsiy ma'lumotlar",
+        "actionLabel": "Amallar",
+        "fields": {
+          "gender": "Jinsi",
+          "dateOfBirth": "Tug'ilgan sanasi",
+          "emailAddress": "Email manzili",
+          "phoneNumber": "Telefon raqami",
+          "address": "Yashash manzili"
+        },
+        "states": {
+          "male": "Erkak",
+          "female": "Ayol"
+        }
+      },
+      "leaveRequest": {
+        "title": "Ta'til so'rovi",
+        "toastUpdateError": "Ta'til holatini o'zgartirib bo'lmadi.",
+        "toastUpdateSuccess": "Ta'til holati yangilandi.",
+        "approve": "Tasdiqlash",
+        "decline": "Rad etish"
+      },
+      "performance": {
+        "title": "Samaradorlik",
+        "filterAriaLabel": "Samaradorlik davri",
+        "periodOptions": {
+          "lastMonth": "O'tgan oy",
+          "lastQuarter": "O'tgan chorak"
+        }
+      }
+    },
+    "create": {
+      "header": {
+        "title": "O'qituvchi qo'shish",
+        "backLabel": "O'qituvchilar",
+        "breadcrumbs": {
+          "dashboard": "Dashboard",
+          "teachers": "O'qituvchilar",
+          "addTeacher": "O'qituvchi qo'shish"
+        }
+      },
+      "loading": "Form ma'lumotlari yuklanmoqda...",
+      "loadError": "O'qituvchi qo'shish formasi ma'lumotlarini yuklab bo'lmadi.",
+      "retry": "Qayta urinish",
+      "personal": {
+        "title": "Shaxsiy ma'lumotlar",
+        "firstNameLabel": "Ism",
+        "firstNamePlaceholder": "Ismni kiriting",
+        "lastNameLabel": "Familiya",
+        "lastNamePlaceholder": "Familiyani kiriting",
+        "middleNameLabel": "Sharif",
+        "middleNamePlaceholder": "Sharifni kiriting",
+        "dateOfBirthLabel": "Tug'ilgan sana",
+        "genderLabel": "Jinsi",
+        "genderPlaceholder": "Jinsni tanlang",
+        "genderOptions": {
+          "male": "Erkak",
+          "female": "Ayol"
+        },
+        "avatar": {
+          "label": "Avatar",
+          "uploadLabel": "Rasm yuklash",
+          "changeLabel": "Rasmni almashtirish",
+          "removeLabel": "Olib tashlash",
+          "emptyLabel": "Rasm biriktirilmagan",
+          "previewLabel": "Yuklangan rasm previewi",
+          "uploadErrorTitle": "Avatar yuklanmadi"
+        },
+        "nationalityLabel": "Millati",
+        "nationalityPlaceholder": "Millatni tanlang",
+        "nationalityOptions": {
+          "uzbek": "O'zbek",
+          "kazakh": "Qozoq",
+          "kyrgyz": "Qirg'iz",
+          "russian": "Rus",
+          "tajik": "Tojik",
+          "turkish": "Turk",
+          "other": "Boshqa"
+        },
+        "statusLabel": "Holat",
+        "statusPlaceholder": "Holatni tanlang",
+        "statusOptions": {
+          "active": "Faol",
+          "inactive": "Faol emas"
+        }
+      },
+      "contact": {
+        "title": "Kontakt ma'lumotlar",
+        "emailLabel": "Email",
+        "emailPlaceholder": "teacher@school.uz",
+        "phoneLabel": "Telefon raqami",
+        "telegramLabel": "Telegram username",
+        "telegramPlaceholder": "@username",
+        "addressLabel": "Yashash manzili",
+        "addressPlaceholder": "Viloyat, tuman, manzilni kiriting"
+      },
+      "academic": {
+        "title": "Akademik ma'lumotlar",
+        "subjectsLabel": "Mutaxassisligi",
+        "subjectsPlaceholder": "Mutaxassislikni tanlang",
+        "subjectsEmpty": "Fanlar topilmadi.",
+        "classesLabel": "Guruhlari",
+        "classesPlaceholder": "Guruhlarni tanlang",
+        "classesEmpty": "Guruhlar topilmadi.",
+        "classesSearchPlaceholder": "Guruhni qidirish",
+        "employmentTypeLabel": "Ish holati",
+        "employmentTypePlaceholder": "Ish holatini tanlang",
+        "employmentTypeOptions": {
+          "fullTime": "To'liq",
+          "partTime": "Yarim",
+          "hourly": "Soatbay"
+        },
+        "joinDateLabel": "Ishga kirgan sana"
+      },
+      "documents": {
+        "title": "Hujjatlar",
+        "emptyState": "Hujjat biriktirilmagan.",
+        "addLabel": "Hujjat qo'shish",
+        "removeLabel": "O'chirish",
+        "fileLabel": "Fayl",
+        "filePlaceholder": "PDF yoki rasm faylini tanlang",
+        "fileReadyLabel": "Fayl saqlash uchun tayyor.",
+        "uploadLabel": "Yuklash",
+        "documentTypeLabel": "Hujjat turi",
+        "documentTypePlaceholder": "Turni tanlang",
+        "documentTypeOptions": {
+          "diploma": "Diplom",
+          "certificate": "Sertifikat",
+          "idCard": "ID karta",
+          "other": "Boshqa"
+        }
+      },
+      "actions": {
+        "cancel": "Bekor qilish",
+        "submit": "Saqlash va qo'shish",
+        "submitting": "Saqlanmoqda..."
+      },
+      "validation": {
+        "classIdsRequired": "Kamida bitta guruh tanlang.",
+        "dateOfBirthRequired": "Tug'ilgan sana majburiy.",
+        "documentFileRequired": "Hujjat faylini tanlang.",
+        "emailInvalid": "Email formatini to'g'ri kiriting.",
+        "emailRequired": "Email majburiy.",
+        "firstNameRequired": "Ism majburiy.",
+        "joinDateRequired": "Ishga kirgan sanani kiriting.",
+        "lastNameRequired": "Familiya majburiy.",
+        "nationalityRequired": "Millatni tanlang.",
+        "phoneInvalid": "Telefon raqamini to'g'ri kiriting.",
+        "subjectIdsRequired": "Kamida bitta fan tanlang.",
+        "telegramInvalid": "Telegram username noto'g'ri."
+      },
+      "toasts": {
+        "formOptionsMissing": "Form uchun kerakli ma'lumotlar topilmadi.",
+        "documentUploadMissing": "Hujjat fayli yuklanmadi.",
+        "createErrorTitle": "O'qituvchini qo'shib bo'lmadi",
+        "createErrorDescription": "Ma'lumotlarni tekshirib qayta urinib ko'ring.",
+        "createSuccessTitle": "O'qituvchi qo'shildi",
+        "createSuccessDescription": "Yangi o'qituvchi muvaffaqiyatli yaratildi."
+      }
+    }
   }
 }

@@ -8,6 +8,7 @@ declare module "next-auth" {
       tenantSlug?: string | null
       roles?: string[]
       genderScope?: "male" | "female" | "all" | null
+      rememberMe?: boolean | null
     }
     accessToken?: string | null
     refreshToken?: string | null
@@ -22,6 +23,7 @@ declare module "next-auth" {
     tenantSlug?: string | null
     roles: string[]
     genderScope: "male" | "female" | "all"
+    rememberMe: boolean
     accessToken: string
     refreshToken: string
     expiresAt: number
@@ -34,6 +36,7 @@ declare module "next-auth/jwt" {
     tenantSlug?: string | null
     roles?: string[]
     genderScope?: "male" | "female" | "all"
+    rememberMe?: boolean
     accessToken?: string
     refreshToken?: string
     expiresAt?: number

@@ -11,9 +11,13 @@ export class AuthTokenService {
   private readonly cfg = getAuthConfig()
 
   createSession(identity: AuthIdentity): AuthSession {
+    const refreshTokenTtlSec = identity.rememberMe
+      ? this.cfg.rememberMeRefreshTokenTtlSec
+      : this.cfg.refreshTokenTtlSec
+
     return {
       accessToken: this.signToken(identity, "access"),
-      refreshToken: this.signToken(identity, "refresh"),
+      refreshToken: this.signToken(identity, "refresh", refreshTokenTtlSec),
       expiresIn: this.cfg.accessTokenTtlSec,
     }
   }
@@ -42,12 +46,20 @@ export class AuthTokenService {
       tenantSlug: payload.tenantSlug ?? undefined,
       roles: payload.roles,
       genderScope: payload.genderScope,
+      rememberMe: payload.rememberMe === true,
     }
   }
 
-  private signToken(identity: AuthIdentity, type: "access" | "refresh"): string {
+  private signToken(
+    identity: AuthIdentity,
+    type: "access" | "refresh",
+    refreshTokenTtlSec?: number
+  ): string {
     const now = Math.floor(Date.now() / 1000)
-    const ttl = type === "access" ? this.cfg.accessTokenTtlSec : this.cfg.refreshTokenTtlSec
+    const ttl =
+      type === "access"
+        ? this.cfg.accessTokenTtlSec
+        : (refreshTokenTtlSec ?? this.cfg.refreshTokenTtlSec)
     const payload: TokenPayload = {
       ...identity,
       type,

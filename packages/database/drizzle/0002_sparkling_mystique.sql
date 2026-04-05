@@ -1,0 +1,2 @@
+CREATE TYPE "public"."teacher_employment_type" AS ENUM('full_time', 'part_time', 'substitute');--> statement-breakpoint
+ALTER TABLE "teachers" ADD COLUMN "employment_type" "teacher_employment_type" DEFAULT 'full_time' NOT NULL;

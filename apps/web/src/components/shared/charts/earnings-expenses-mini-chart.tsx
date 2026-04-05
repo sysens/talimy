@@ -115,7 +115,7 @@ export function EarningsExpensesMiniChart({
   return (
     <MiniChart
       className={className}
-      chartClassName="min-h-[220px]"
+      chartClassName="min-h-55"
       bottomLabels={{
         className: "mt-2",
         values: bottomLabels,
@@ -144,14 +144,14 @@ export function EarningsExpensesMiniChart({
       }}
     >
       <div
-        className="h-[220px] transition-all duration-200 ease-out"
+        className="h-55 transition-all duration-200 ease-out"
         style={{
           opacity: isTransitioning ? 0.58 : 1,
           transform: isTransitioning ? "translateY(4px)" : "translateY(0)",
         }}
       >
         <MirroredComparisonChart
-          className="h-[220px]"
+          className="h-55"
           data={visibleData}
           formatTooltipLabel={(month) => `${month} ${activeYearLabel}`}
           formatValue={(value) => `$${value.toLocaleString()}`}

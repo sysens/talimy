@@ -45,7 +45,7 @@ export function AppShell({
       <AppShellSidebar data={data} userMenuSlot={sidebarFooter} linkComponent={linkComponent} />
       <SidebarInset className="min-w-0 bg-[var(--app-shell-surface)] transition-colors duration-300">
         <AppShellHeader data={data} actions={headerActions} linkComponent={linkComponent} />
-        <div className="flex min-w-0 flex-1 flex-col gap-4 bg-[var(--app-shell-surface)] px-4 text-foreground transition-colors duration-300">
+        <div className="flex min-w-0 flex-1 flex-col gap-4 bg-[var(--app-shell-surface)] px-4 pb-4 text-foreground transition-colors duration-300">
           {children}
         </div>
       </SidebarInset>

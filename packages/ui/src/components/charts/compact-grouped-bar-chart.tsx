@@ -7,12 +7,7 @@ import { cn } from "../../lib/utils"
 import type { ChartFilterSelectProps } from "../chart-filter-select"
 import { ChartFilterSelect } from "../chart-filter-select"
 import { Card } from "../ui/card"
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "../ui/chart"
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "../ui/chart"
 
 export type CompactGroupedBarChartDatum = Record<string, number | string | null | undefined>
 
@@ -82,7 +77,7 @@ export function CompactGroupedBarChart<
           <div className="space-y-2">
             <h3
               className={cn(
-                "text-[13px] leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200",
+                "text-[13px] leading-none font-semibold tracking-tight text-talimy-navy dark:text-sky-200",
                 titleClassName
               )}
             >
@@ -99,7 +94,9 @@ export function CompactGroupedBarChart<
             </div>
           </div>
 
-          {filter ? <ChartFilterSelect {...filter} className={cn("shrink-0", filterClassName)} /> : null}
+          {filter ? (
+            <ChartFilterSelect {...filter} className={cn("shrink-0", filterClassName)} />
+          ) : null}
         </header>
 
         <div
@@ -108,7 +105,11 @@ export function CompactGroupedBarChart<
             frameClassName
           )}
         >
-          <ChartContainer className="w-full !aspect-auto" config={chartConfig} style={{ height: chartHeight }}>
+          <ChartContainer
+            className="w-full !aspect-auto"
+            config={chartConfig}
+            style={{ height: chartHeight }}
+          >
             <ResponsiveContainer>
               <BarChart
                 barCategoryGap={barCategoryGap}
@@ -150,7 +151,7 @@ export function CompactGroupedBarChart<
                         return (
                           <div className="flex w-full items-center justify-between gap-3">
                             <span className="text-muted-foreground">{label}</span>
-                            <span className="font-semibold text-[var(--talimy-color-navy)] dark:text-sky-200">
+                            <span className="font-semibold text-talimy-navy dark:text-sky-200">
                               {valueFormatter(numericValue, key)}
                             </span>
                           </div>

@@ -23,9 +23,9 @@ export type StatCardProps = Omit<React.ComponentPropsWithoutRef<typeof Card>, "c
 }
 
 const toneMap: Record<StatCardTone, string> = {
-  navy: "bg-[var(--talimy-color-navy)] text-white dark:bg-[var(--talimy-color-navy)] dark:text-white",
-  pink: "bg-[var(--talimy-color-pink)] text-[var(--talimy-color-navy)] dark:bg-[var(--talimy-color-pink)] dark:text-[var(--talimy-color-navy)]",
-  sky: "bg-[var(--talimy-color-sky)] text-[var(--talimy-color-navy)] dark:bg-[var(--talimy-color-sky)] dark:text-[var(--talimy-color-navy)]",
+  navy: "bg-talimy-navy text-white dark:bg-talimy-navy dark:text-white",
+  pink: "bg-[var(--talimy-color-pink)] text-talimy-navy dark:bg-[var(--talimy-color-pink)] dark:text-talimy-navy",
+  sky: "bg-[var(--talimy-color-sky)] text-talimy-navy dark:bg-[var(--talimy-color-sky)] dark:text-talimy-navy",
   gray: "bg-[var(--talimy-color-gray)] text-white dark:bg-[var(--talimy-color-gray)] dark:text-white",
 }
 
@@ -78,7 +78,7 @@ export function StatCard({
           >
             {renderIcon(icon, "size-5")}
           </span>
-          <p className="text-3xl leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200">
+          <p className="text-3xl leading-none font-semibold tracking-tight text-talimy-navy dark:text-sky-200">
             {value}
           </p>
           <p className="mt-1 text-[1rem] leading-tight text-muted-foreground">{title}</p>
@@ -105,7 +105,7 @@ export function StatCard({
             {renderIcon(icon, "size-4")}
           </span>
           <p className="truncate text-[1rem] font-medium text-foreground">{title}</p>
-          <p className="ml-auto text-xl leading-none font-semibold text-[var(--talimy-color-navy)] dark:text-sky-200">
+          <p className="ml-auto text-xl leading-none font-semibold text-talimy-navy dark:text-sky-200">
             {value}
           </p>
         </div>
@@ -123,7 +123,7 @@ export function StatCard({
             {renderIcon(icon, "size-5")}
           </span>
           <div className="min-w-0">
-            <p className="truncate text-2xl leading-none font-semibold text-[var(--talimy-color-navy)] dark:text-sky-200">
+            <p className="truncate text-2xl leading-none font-semibold text-talimy-navy dark:text-sky-200">
               {value}
             </p>
             <p className="mt-1 text-sm text-muted-foreground">{title}</p>
@@ -144,7 +144,7 @@ export function StatCard({
           <p className="truncate text-[1rem] leading-tight text-[var(--talimy-color-gray)] dark:text-muted-foreground">
             {title}
           </p>
-          <p className="mt-1 text-2xl leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200">
+          <p className="mt-1 text-2xl leading-none font-semibold tracking-tight text-talimy-navy dark:text-sky-200">
             {value}
           </p>
           {trend ? <p className="mt-2 text-xs font-medium text-muted-foreground">{trend}</p> : null}

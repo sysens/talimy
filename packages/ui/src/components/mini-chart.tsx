@@ -95,7 +95,7 @@ export function MiniChart({
           <div className="space-y-1">
             <h3
               className={cn(
-                "text-base leading-none font-semibold tracking-tight text-[var(--talimy-color-navy)] dark:text-sky-200",
+                "text-base leading-none font-semibold tracking-tight text-talimy-navy dark:text-sky-200",
                 titleClassName
               )}
             >
@@ -143,7 +143,7 @@ export function MiniChart({
             {topLabels ? (
               <div
                 className={cn(
-                  "grid text-center text-[11px] font-semibold text-[var(--talimy-color-navy)] dark:text-sky-200",
+                  "grid text-center text-[11px] font-semibold text-talimy-navy dark:text-sky-200",
                   hasLeftScale ? "pl-8" : "",
                   hasRightScale ? "pr-8" : "",
                   topLabels.className
@@ -247,7 +247,7 @@ export function MiniChart({
                     />
                     <span className="truncate">{metric.label}</span>
                   </div>
-                  <span className="font-semibold tabular-nums text-[var(--talimy-color-navy)] dark:text-sky-200">
+                  <span className="font-semibold tabular-nums text-talimy-navy dark:text-sky-200">
                     {metric.value}
                   </span>
                 </div>

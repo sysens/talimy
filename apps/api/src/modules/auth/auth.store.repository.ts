@@ -138,11 +138,11 @@ export class AuthStoreRepository {
   }
 
   async revokeRefreshJti(jti: string): Promise<void> {
-    await this.cacheService.setJson(
-      this.revocationKey(jti),
-      { revoked: true },
-      this.refreshTokenTtlSec
-    )
+    await this.revokeRefreshJtiWithTtl(jti, this.refreshTokenTtlSec)
+  }
+
+  async revokeRefreshJtiWithTtl(jti: string, ttlSec: number): Promise<void> {
+    await this.cacheService.setJson(this.revocationKey(jti), { revoked: true }, ttlSec)
   }
 
   async isRefreshJtiRevoked(jti: string): Promise<boolean> {
