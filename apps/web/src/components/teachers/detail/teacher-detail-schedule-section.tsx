@@ -4,6 +4,7 @@ import * as React from "react"
 import { Skeleton } from "@talimy/ui"
 import { useTranslations } from "next-intl"
 
+import type { TeacherDetailScheduleRecord } from "@/components/teachers/detail/teacher-detail-api.types"
 import { useTeacherDetailOverviewQuery } from "@/components/teachers/detail/use-teacher-detail-overview-query"
 import { TimetableGridCard } from "@/components/shared/schedule/timetable-grid-card"
 import type { TimetableGridEntry } from "@/components/shared/schedule/timetable-grid-card.types"
@@ -12,15 +13,15 @@ type TeacherDetailScheduleSectionProps = {
   teacherId: string
 }
 
-const mapScheduleRecords = (records: readonly any[]): TimetableGridEntry[] => {
+const mapScheduleRecords = (
+  records: readonly TeacherDetailScheduleRecord[]
+): TimetableGridEntry[] => {
   return records.map((record) => ({
     id: record.id,
     day: record.dayOfWeek,
     startTime: record.startTime,
     endTime: record.endTime,
-    title: record.subject,
-    type: "lecture",
-    room: record.room,
+    title: record.className,
   }))
 }
 

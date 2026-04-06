@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Patch, Query, UseGuards } from "@nestjs/common"
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Query,
+  UseGuards,
+} from "@nestjs/common"
 import {
   teacherAttendanceCalendarQuerySchema,
   teacherDocumentsQuerySchema,
@@ -37,7 +46,7 @@ export class TeachersDetailController {
 
   @Get(":id/documents")
   getDocuments(
-    @Param("id") teacherId: string,
+    @Param("id", new ParseUUIDPipe()) teacherId: string,
     @Query(new ZodValidationPipe(teacherDocumentsQuerySchema)) queryInput: unknown
   ) {
     const query = queryInput as TeacherDetailDocumentsQueryDto
@@ -46,7 +55,7 @@ export class TeachersDetailController {
 
   @Get(":id/workload")
   getWorkload(
-    @Param("id") teacherId: string,
+    @Param("id", new ParseUUIDPipe()) teacherId: string,
     @Query(new ZodValidationPipe(teacherWorkloadDetailQuerySchema)) queryInput: unknown
   ) {
     const query = queryInput as TeacherDetailWorkloadQueryDto
@@ -55,7 +64,7 @@ export class TeachersDetailController {
 
   @Get(":id/training")
   getTraining(
-    @Param("id") teacherId: string,
+    @Param("id", new ParseUUIDPipe()) teacherId: string,
     @Query(new ZodValidationPipe(teacherTrainingQuerySchema)) queryInput: unknown
   ) {
     const query = queryInput as TeacherDetailTrainingQueryDto
@@ -64,7 +73,7 @@ export class TeachersDetailController {
 
   @Get(":id/attendance-calendar")
   getAttendanceCalendar(
-    @Param("id") teacherId: string,
+    @Param("id", new ParseUUIDPipe()) teacherId: string,
     @Query(new ZodValidationPipe(teacherAttendanceCalendarQuerySchema)) queryInput: unknown
   ) {
     const query = queryInput as TeacherDetailAttendanceCalendarQueryDto
@@ -73,7 +82,7 @@ export class TeachersDetailController {
 
   @Get(":id/leave-requests")
   getLeaveRequests(
-    @Param("id") teacherId: string,
+    @Param("id", new ParseUUIDPipe()) teacherId: string,
     @Query(new ZodValidationPipe(teacherLeaveRequestsQuerySchema)) queryInput: unknown
   ) {
     const query = queryInput as TeacherDetailLeaveRequestsQueryDto
@@ -83,8 +92,8 @@ export class TeachersDetailController {
   @Patch(":id/leave-requests/:requestId")
   updateLeaveRequest(
     @CurrentUser() currentUser: CurrentUserType | null,
-    @Param("id") teacherId: string,
-    @Param("requestId") requestId: string,
+    @Param("id", new ParseUUIDPipe()) teacherId: string,
+    @Param("requestId", new ParseUUIDPipe()) requestId: string,
     @Query(new ZodValidationPipe(teacherLeaveRequestsQuerySchema)) queryInput: unknown,
     @Body(new ZodValidationPipe(updateTeacherLeaveRequestSchema)) payloadInput: unknown
   ) {
@@ -101,7 +110,7 @@ export class TeachersDetailController {
 
   @Get(":id/performance")
   getPerformance(
-    @Param("id") teacherId: string,
+    @Param("id", new ParseUUIDPipe()) teacherId: string,
     @Query(new ZodValidationPipe(teacherPerformanceQuerySchema)) queryInput: unknown
   ) {
     const query = queryInput as TeacherDetailPerformanceQueryDto

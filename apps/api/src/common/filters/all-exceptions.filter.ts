@@ -31,10 +31,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const normalized = this.normalizeException(exception)
     const routeLabel = [request?.method, request?.url].filter(Boolean).join(" ")
-    this.logger.error(
-      routeLabel ? `${routeLabel} :: ${normalized.error.message}` : normalized.error.message,
-      exception instanceof Error ? exception.stack : undefined
-    )
+    const logMessage = routeLabel
+      ? `${routeLabel} :: ${normalized.error.message}`
+      : normalized.error.message
+
+    if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
+      this.logger.error(logMessage, exception instanceof Error ? exception.stack : undefined)
+    } else {
+      this.logger.warn(logMessage)
+    }
 
     response.status(status).json({
       success: false,

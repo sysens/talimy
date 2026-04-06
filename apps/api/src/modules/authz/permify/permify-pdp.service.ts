@@ -128,7 +128,9 @@ export class PermifyPdpService {
     } catch (error) {
       const reason = error instanceof Error ? error.message : String(error)
       if (this.isSchemaMissingError(reason) || this.isPermissionCheckNotFoundError(reason)) {
-        this.logger.warn(`Permify schema missing for tenant ${input.tenantId}; bootstrapping schema`)
+        this.logger.warn(
+          `Permify schema missing for tenant ${input.tenantId}; bootstrapping schema`
+        )
         await this.ensureTenantSchema(input.tenantId)
         return this.checkPermission(
           input,
@@ -257,47 +259,18 @@ export class PermifyPdpService {
   }
 
   private async bootstrapTenantSchema(tenantId: string): Promise<void> {
-    const client = this.getClient()
+    let writeResponse: PermifySchemaWriteResponse
 
     try {
-      await this.withTimeout(
-        client.tenancy.create({
-          id: tenantId,
-          name: `Tenant ${tenantId}`,
-        })
-      )
+      writeResponse = await this.writeSchemaWithRetry(tenantId)
     } catch (error) {
-      // Tenancy may already exist; schema write below remains authoritative.
       const reason = error instanceof Error ? error.message : String(error)
-      this.logger.debug(`Permify tenancy.create skipped for tenant ${tenantId}: ${reason}`)
-    }
-
-    let writeResponse: PermifySchemaWriteResponse | null = null
-    let writeError: unknown = null
-    for (let attempt = 1; attempt <= 2; attempt += 1) {
-      try {
-        writeResponse = await this.withTimeout(
-          client.schema.write({
-            tenantId,
-            schema: PERMIFY_GENDER_SCHEMA,
-          })
-        )
-        break
-      } catch (error) {
-        writeError = error
-        if (attempt >= 2) {
-          throw error
-        }
-        const reason = error instanceof Error ? error.message : String(error)
-        this.logger.warn(
-          `Permify schema.write retry for tenant ${tenantId} (attempt=${attempt + 1}) after: ${reason}`
-        )
-        await this.sleep(150)
+      if (!this.isTenantMissingError(reason)) {
+        throw error
       }
-    }
 
-    if (!writeResponse) {
-      throw (writeError as Error) ?? new Error(`Permify schema write failed for tenant ${tenantId}`)
+      await this.ensureTenancy(tenantId)
+      writeResponse = await this.writeSchemaWithRetry(tenantId)
     }
 
     const schemaVersion = this.extractSchemaVersion(writeResponse)
@@ -310,12 +283,62 @@ export class PermifyPdpService {
     )
   }
 
+  private async ensureTenancy(tenantId: string): Promise<void> {
+    const client = this.getClient()
+
+    try {
+      await this.withTimeout(
+        client.tenancy.create({
+          id: tenantId,
+          name: `Tenant ${tenantId}`,
+        })
+      )
+    } catch (error) {
+      const reason = error instanceof Error ? error.message : String(error)
+      this.logger.debug(`Permify tenancy.create skipped for tenant ${tenantId}: ${reason}`)
+    }
+  }
+
+  private async writeSchemaWithRetry(tenantId: string): Promise<PermifySchemaWriteResponse> {
+    const client = this.getClient()
+    let lastError: Error | null = null
+
+    for (let attempt = 1; attempt <= 2; attempt += 1) {
+      try {
+        return await this.withTimeout(
+          client.schema.write({
+            tenantId,
+            schema: PERMIFY_GENDER_SCHEMA,
+          })
+        )
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error))
+        if (attempt >= 2) {
+          break
+        }
+
+        this.logger.warn(
+          `Permify schema.write retry for tenant ${tenantId} (attempt=${attempt + 1}) after: ${lastError.message}`
+        )
+        await this.sleep(150)
+      }
+    }
+
+    throw lastError ?? new Error(`Permify schema write failed for tenant ${tenantId}`)
+  }
+
   private extractSchemaVersion(response: PermifySchemaWriteResponse): string {
     return (
-      response?.schemaVersion ??
-      response?.schema_version ??
-      response?.metadata?.schemaVersion ??
-      ""
+      response?.schemaVersion ?? response?.schema_version ?? response?.metadata?.schemaVersion ?? ""
+    )
+  }
+
+  private isTenantMissingError(reason: string): boolean {
+    const normalized = reason.toLowerCase()
+    return (
+      normalized.includes("tenant_not_found") ||
+      (normalized.includes("tenant") &&
+        (normalized.includes("not found") || normalized.includes("not_found")))
     )
   }
 

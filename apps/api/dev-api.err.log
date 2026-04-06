@@ -1,0 +1,17 @@
+$ bun run scripts/dev-start.ts
+Error: Cannot find module './app.module'
+Require stack:
+- C:\Users\Zx\Desktop\Talimy\apps\api\dist\main.js
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1225:15)
+    at Function._load (node:internal/modules/cjs/loader:1055:27)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:220:24)
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1311:12)
+    at Module.patchedRequire (C:\Users\Zx\Desktop\Talimy\node_modules\.bun\require-in-the-middle@8.0.1\node_modules\require-in-the-middle\index.js:186:34)
+    at Hook._require.Module.require (C:\Users\Zx\Desktop\Talimy\node_modules\.bun\require-in-the-middle@8.0.1\node_modules\require-in-the-middle\index.js:134:27)
+    at require (node:internal/modules/helpers:136:16)
+    at Object.<anonymous> (C:\Users\Zx\Desktop\Talimy\apps\api\dist\main.js:6:22)
+    at Module._compile (node:internal/modules/cjs/loader:1554:14) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [ 'C:\\Users\\Zx\\Desktop\\Talimy\\apps\\api\\dist\\main.js' ]
+}

@@ -17,7 +17,7 @@
     "permify:schema:publish": "node scripts/permify-publish-gender-schema.js",
     "start": "node dist/main.js",
     "start:dev": "bun run scripts/dev-start.ts",
-    "start:prod": "node dist/main.js",
+    "start:prod": "bun run scripts/start-prod.ts",
     "start:worker": "nest start --entryFile worker.main",
     "start:worker:prod": "node dist/worker.main.js"
   },

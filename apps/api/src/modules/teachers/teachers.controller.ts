@@ -5,6 +5,7 @@ import {
   ForbiddenException,
   Get,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -145,7 +146,7 @@ export class TeachersController {
   @Get(":id/schedule")
   schedule(
     @Query(new ZodValidationPipe(userTenantQuerySchema)) query: unknown,
-    @Param("id") id: string
+    @Param("id", new ParseUUIDPipe()) id: string
   ) {
     const tenantQuery = query as { tenantId: string }
     return this.teachersService.getSchedule(tenantQuery.tenantId, id)
@@ -154,7 +155,7 @@ export class TeachersController {
   @Get(":id/classes")
   classes(
     @Query(new ZodValidationPipe(userTenantQuerySchema)) query: unknown,
-    @Param("id") id: string
+    @Param("id", new ParseUUIDPipe()) id: string
   ) {
     const tenantQuery = query as { tenantId: string }
     return this.teachersService.getClasses(tenantQuery.tenantId, id)
@@ -163,7 +164,7 @@ export class TeachersController {
   @Get(":id/subjects")
   subjects(
     @Query(new ZodValidationPipe(userTenantQuerySchema)) query: unknown,
-    @Param("id") id: string
+    @Param("id", new ParseUUIDPipe()) id: string
   ) {
     const tenantQuery = query as { tenantId: string }
     return this.teachersService.getSubjects(tenantQuery.tenantId, id)
@@ -172,7 +173,7 @@ export class TeachersController {
   @Get(":id")
   getById(
     @Query(new ZodValidationPipe(userTenantQuerySchema)) query: unknown,
-    @Param("id") id: string
+    @Param("id", new ParseUUIDPipe()) id: string
   ) {
     const tenantQuery = query as { tenantId: string }
     return this.teachersService.getById(tenantQuery.tenantId, id)
@@ -207,7 +208,7 @@ export class TeachersController {
   async update(
     @CurrentUser() currentUser: CurrentUserType | null,
     @Query(new ZodValidationPipe(userTenantQuerySchema)) query: unknown,
-    @Param("id") id: string,
+    @Param("id", new ParseUUIDPipe()) id: string,
     @Body(new ZodValidationPipe(updateTeacherSchema)) payload: unknown
   ) {
     const tenantQuery = query as { tenantId: string }
@@ -234,7 +235,7 @@ export class TeachersController {
   @Delete(":id")
   delete(
     @Query(new ZodValidationPipe(userTenantQuerySchema)) query: unknown,
-    @Param("id") id: string
+    @Param("id", new ParseUUIDPipe()) id: string
   ) {
     const tenantQuery = query as { tenantId: string }
     return this.teachersService.delete(tenantQuery.tenantId, id)
