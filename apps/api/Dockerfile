@@ -49,12 +49,14 @@ COPY --from=deps-prod /app/package.json ./package.json
 COPY --from=deps-prod /app/bun.lock ./bun.lock
 COPY --from=deps-prod /app/node_modules ./node_modules
 COPY --from=deps-prod /app/apps/api/package.json ./apps/api/package.json
+COPY --from=deps-prod /app/apps/api/scripts ./apps/api/scripts
 COPY --from=deps-prod /app/apps/api/node_modules ./apps/api/node_modules
 COPY --from=build /app/apps/api/dist ./apps/api/dist
 COPY --from=deps-prod /app/packages ./packages
 COPY --from=build /app/packages/shared/dist ./packages/shared/dist
 COPY --from=build /app/packages/database/dist ./packages/database/dist
 RUN test -d /app/apps/api/node_modules/@nestjs/common \
+  && test -f /app/apps/api/scripts/start-prod.ts \
   && test -f /app/apps/api/dist/main.js \
   && test -f /app/apps/api/dist/worker.main.js \
   && test -f /app/packages/shared/dist/index.js \
