@@ -3,8 +3,8 @@ import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 
 import { AuthShell } from "@/components/auth/auth-shell"
-import { auth } from "@/lib/nextauth"
 import { resolveDashboardDestination } from "@/lib/server/dashboard-destination"
+import { getOptionalSession } from "@/lib/server/get-optional-session"
 import { resolveHostScopeFromHeaders } from "@/lib/server/request-host"
 import { ToastProvider } from "@/providers/toast-provider"
 
@@ -13,7 +13,7 @@ type LayoutProps = {
 }
 
 export default async function Layout({ children }: LayoutProps) {
-  const session = await auth()
+  const session = await getOptionalSession()
   const requestHeaders = await headers()
   const currentScope = resolveHostScopeFromHeaders(requestHeaders)
   const roles = session?.user?.roles ?? []

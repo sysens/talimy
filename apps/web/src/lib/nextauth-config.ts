@@ -60,7 +60,18 @@ const NEXTAUTH_SESSION_MAX_AGE_SEC = Number(
 
 const pendingRefreshPromises = new Map<string, Promise<AuthSession | null>>()
 
+const authLogger: Pick<Console, "error"> = {
+  error(error: Error) {
+    if (error.name === "JWTSessionError") {
+      return
+    }
+
+    console.error(error)
+  },
+}
+
 export const nextAuthConfig: NextAuthConfig = {
+  logger: authLogger,
   secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   trustHost: true,
   session: {

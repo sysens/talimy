@@ -7,6 +7,8 @@ import {
   CartesianGrid,
   LabelList,
   ResponsiveContainer,
+  Tooltip,
+  type TooltipProps,
   XAxis,
   YAxis,
 } from "recharts"
@@ -19,11 +21,25 @@ import { ChartContainer, type ChartConfig } from "../ui/chart"
 
 export type CappedProgressBarChartDatum = {
   accent?: number
+  details?: readonly CappedProgressBarChartDetail[]
   label: string
   value: number
 }
 
+export type CappedProgressBarChartDetail = {
+  label: string
+  meta?: string
+  value?: number
+}
+
 export type CappedProgressBarChartProps = {
+  barSize?: number
+  chartMargin?: {
+    bottom?: number
+    left?: number
+    right?: number
+    top?: number
+  }
   className?: string
   data: CappedProgressBarChartDatum[]
   filter?: Omit<ChartFilterSelectProps, "className">
@@ -31,6 +47,18 @@ export type CappedProgressBarChartProps = {
   subtitle?: React.ReactNode
   title: React.ReactNode
   valueFormatter?: (value: number) => string
+}
+
+type CappedProgressTooltipDatum = {
+  details?: readonly CappedProgressBarChartDetail[]
+  label: string
+  value: number
+}
+
+type CappedProgressTooltipPayloadItem = {
+  dataKey?: string | number
+  payload?: CappedProgressTooltipDatum
+  value?: number | string
 }
 
 const CHART_CONFIG = {
@@ -44,7 +72,58 @@ const CHART_CONFIG = {
   },
 } satisfies ChartConfig
 
+function CappedProgressTooltipContent({
+  active,
+  payload,
+  valueFormatter,
+}: Pick<TooltipProps<number, string>, "active"> & {
+  payload?: readonly CappedProgressTooltipPayloadItem[]
+  valueFormatter: (value: number) => string
+}) {
+  if (!active || !payload?.length) {
+    return null
+  }
+
+  const valueItem = payload.find((item) => item.dataKey === "value")
+  const label = valueItem?.payload?.label
+  const details = valueItem?.payload?.details ?? []
+  const value = typeof valueItem?.value === "number" ? valueItem.value : valueItem?.payload?.value
+
+  if (typeof label !== "string" || typeof value !== "number") {
+    return null
+  }
+
+  if (details.length > 0) {
+    return (
+      <div className="grid min-w-[180px] gap-2 rounded-lg border border-border/50 bg-background px-2.5 py-2 text-xs shadow-xl">
+        <div className="font-medium text-foreground">
+          {label} · {valueFormatter(value)}
+        </div>
+        <div className="grid gap-2">
+          {details.map((item) => (
+            <div key={`${label}-${item.label}-${item.meta ?? ""}`} className="grid gap-0.5">
+              <div className="text-foreground font-medium">{item.label}</div>
+              {item.meta ? <div className="text-muted-foreground">{item.meta}</div> : null}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="grid min-w-[96px] gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl">
+      <div className="font-medium text-foreground">{label}</div>
+      <div className="font-mono font-semibold tabular-nums text-talimy-navy">
+        {valueFormatter(value)}
+      </div>
+    </div>
+  )
+}
+
 export function CappedProgressBarChart({
+  barSize = 56,
+  chartMargin,
   className,
   data,
   filter,
@@ -57,6 +136,7 @@ export function CappedProgressBarChart({
     () =>
       data.map((item) => ({
         accent: item.accent ?? Math.min(item.value * 0.03, 22),
+        details: item.details ?? [],
         label: item.label,
         remainder: Math.max(maxValue - item.value, 0),
         value: item.value,
@@ -87,7 +167,15 @@ export function CappedProgressBarChart({
         <div className="rounded-[18px] bg-card px-1 pb-1 pt-1">
           <ChartContainer className="h-[235px] w-full !aspect-auto" config={CHART_CONFIG}>
             <ResponsiveContainer>
-              <BarChart data={chartData} margin={{ bottom: 18, left: -20, right: 8, top: 18 }}>
+              <BarChart
+                data={chartData}
+                margin={{
+                  bottom: chartMargin?.bottom ?? 18,
+                  left: chartMargin?.left ?? -20,
+                  right: chartMargin?.right ?? 8,
+                  top: chartMargin?.top ?? 18,
+                }}
+              >
                 <defs>
                   <linearGradient id="talimy-capped-progress-fill" x1="0" x2="0" y1="0" y2="1">
                     <stop
@@ -112,16 +200,22 @@ export function CappedProgressBarChart({
                   tickLine={false}
                   tickMargin={14}
                 />
+                <Tooltip
+                  content={<CappedProgressTooltipContent valueFormatter={valueFormatter} />}
+                  cursor={{
+                    fill: "color-mix(in srgb, var(--talimy-color-pink) 8%, transparent 92%)",
+                  }}
+                />
 
                 <Bar
                   background={{
                     fill: "color-mix(in srgb, var(--talimy-color-pink) 18%, white 82%)",
                     radius: 10,
                   }}
-                  barSize={56}
+                  barSize={barSize}
                   dataKey="value"
                   fill="url(#talimy-capped-progress-fill)"
-                  radius={[10, 10, 0, 0]}
+                  radius={[0, 0, 10, 10]}
                   stackId="attendance"
                 >
                   <LabelList
@@ -158,7 +252,7 @@ export function CappedProgressBarChart({
                   />
                 </Bar>
                 <Bar
-                  barSize={56}
+                  barSize={barSize}
                   dataKey="accent"
                   fill="var(--talimy-color-navy)"
                   radius={[0, 0, 0, 0]}

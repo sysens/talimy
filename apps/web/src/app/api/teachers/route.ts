@@ -2,8 +2,8 @@ import type { NextRequest } from "next/server"
 import { NextResponse } from "next/server"
 import { createTeacherSchema } from "@talimy/shared"
 
-import { auth } from "@/lib/nextauth"
 import { proxyToBackendApi } from "@/lib/server/api-proxy"
+import { getOptionalSession } from "@/lib/server/get-optional-session"
 import { proxyTenantApiRequest } from "@/lib/server/tenant-api-proxy"
 
 const createTeacherClientPayloadSchema = createTeacherSchema.omit({ tenantId: true })
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const session = await auth()
+  const session = await getOptionalSession()
   const tenantId = typeof session?.user?.tenantId === "string" ? session.user.tenantId : null
 
   if (!tenantId) {

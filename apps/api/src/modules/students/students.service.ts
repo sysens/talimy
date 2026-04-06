@@ -1,7 +1,6 @@
 import { Injectable } from "@nestjs/common"
 
 import { CreateStudentDto } from "./dto/create-student.dto"
-import { ListStudentsQueryDto } from "./dto/list-students-query.dto"
 import { UpdateStudentDto } from "./dto/update-student.dto"
 import { StudentsRepository } from "./students.repository"
 import { StudentsSummaryRepository } from "./students.summary.repository"
@@ -12,10 +11,6 @@ export class StudentsService {
     private readonly repository: StudentsRepository,
     private readonly summaryRepository: StudentsSummaryRepository
   ) {}
-
-  list(query: ListStudentsQueryDto) {
-    return this.repository.list(query)
-  }
 
   getById(tenantId: string, id: string) {
     return this.repository.getById(tenantId, id)

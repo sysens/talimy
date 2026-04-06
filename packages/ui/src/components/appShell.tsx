@@ -37,7 +37,7 @@ export function AppShell({
     <SidebarProvider
       dir="ltr"
       className={cn(
-        "bg-[var(--app-shell-sidebar-bg)] transition-colors duration-300 [&_[data-slot=sidebar-gap]]:bg-[var(--app-shell-sidebar-bg)] [&_[data-slot=sidebar-gap]]:transition-[width,background-color] [&_[data-slot=sidebar-gap]]:duration-200 [&_[data-slot=sidebar-gap]]:ease-linear",
+        "bg-[var(--app-shell-sidebar-bg)] transition-colors duration-300 [&_[data-slot=sidebar-gap]]:bg-[var(--app-shell-sidebar-bg)] [&_[data-slot=sidebar-gap]]:transition-[width,background-color] [&_[data-slot=sidebar-gap]]:duration-400 [&_[data-slot=sidebar-gap]]:ease-[cubic-bezier(0.7,-0.15,0.25,1.15)] [&_[data-slot=sidebar-container]]:transition-[left,right,width] [&_[data-slot=sidebar-container]]:duration-400 [&_[data-slot=sidebar-container]]:ease-[cubic-bezier(0.75,0,0.25,1)] [&_[data-slot=sidebar-menu-button]]:transition-[width,height,padding,gap,background-color,color] [&_[data-slot=sidebar-menu-button]]:duration-300 [&_[data-slot=sidebar-menu-button]]:ease-out [&_[data-slot=sidebar-menu-sub-button]]:transition-[padding,background-color,color] [&_[data-slot=sidebar-menu-sub-button]]:duration-300 [&_[data-slot=sidebar-menu-sub-button]]:ease-out",
         className
       )}
       style={APP_SHELL_SIDEBAR_STYLE}

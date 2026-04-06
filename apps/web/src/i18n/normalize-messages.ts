@@ -7,9 +7,16 @@ const EXACT_MESSAGE_FIXES: Partial<Record<AppLocale, Record<string, string>>> = 
     "shell.searchPlaceholder::Her ?eyi ara": "Her şeyi ara",
   },
   ar: {
+    "shell.mainMenu::??????? ????????": "القائمة الرئيسية",
+    "shell.updates::????????? ????????": "آخر التحديثات",
+    "shell.account::??????": "الحساب",
+    "shell.logout::????? ??????": "تسجيل الخروج",
+    "shell.breadcrumbSchoolAdmin::????? ???????": "إدارة المدرسة",
+    "shell.workspace::????? ??? {schoolName}": "مساحة عمل {schoolName}",
     "shell.searchPlaceholder::???? ?? ?? ???": "ابحث عن أي شيء",
     "shell.settings::?????????": "الإعدادات",
     "shell.notifications::?????????": "الإشعارات",
+    "shell.theme::????? ??????": "الوضع الداكن",
   },
 }
 
@@ -20,11 +27,7 @@ export function normalizeMessages(
   return walkMessages(messages, locale) as AbstractIntlMessages
 }
 
-function walkMessages(
-  input: unknown,
-  locale: AppLocale,
-  path = ""
-): unknown {
+function walkMessages(input: unknown, locale: AppLocale, path = ""): unknown {
   if (Array.isArray(input)) {
     return input.map((entry, index) => {
       if (typeof entry === "string") {

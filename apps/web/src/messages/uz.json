@@ -1028,6 +1028,84 @@
       }
     }
   },
+  "adminStudents": {
+    "overview": {
+      "stats": {
+        "totalStudents": "Jami o'quvchilar",
+        "grade7Students": "7-sinf o'quvchilari",
+        "grade8Students": "8-sinf o'quvchilari",
+        "grade9Students": "9-sinf o'quvchilari"
+      },
+      "academicPerformance": {
+        "title": "Akademik ko'rsatkichlar",
+        "filterAriaLabel": "Akademik ko'rsatkich davri",
+        "periods": {
+          "lastSemester": "O'tgan semestr",
+          "thisSemester": "Joriy semestr"
+        },
+        "legend": {
+          "grade7": "7-sinf",
+          "grade8": "8-sinf",
+          "grade9": "9-sinf"
+        }
+      },
+      "enrollmentTrends": {
+        "title": "Qabul trendlari",
+        "filterAriaLabel": "Qabul trendi davri",
+        "periods": {
+          "lastFiveYears": "So'nggi 5 yil"
+        }
+      },
+      "attendanceOverview": {
+        "title": "Davomat ko'rinishi",
+        "filterAriaLabel": "Davomat davri",
+        "periods": {
+          "thisWeek": "Shu hafta"
+        }
+      },
+      "specialPrograms": {
+        "title": "Maxsus dasturlar",
+        "actionLabel": "Maxsus dasturlar amallari"
+      }
+    },
+    "list": {
+      "title": "O'quvchilar",
+      "addStudent": "Qo'shish",
+      "searchPlaceholder": "O'quvchini qidirish",
+      "filters": {
+        "status": {
+          "all": "Barchasi",
+          "active": "Faol",
+          "onLeave": "Ta'tilda",
+          "suspended": "Cheklangan"
+        }
+      },
+      "performance": {
+        "good": "Yaxshi",
+        "needsSupport": "Qo'llab-quvvatlash kerak",
+        "atRisk": "Xavf ostida"
+      },
+      "table": {
+        "student": "O'quvchi",
+        "class": "Sinf",
+        "gpa": "GPA",
+        "performance": "Ko'rsatkich",
+        "attendance": "Davomat",
+        "status": "Holati"
+      },
+      "pagination": {
+        "show": "Ko'rsatish",
+        "of": "dan",
+        "results": "natija",
+        "previous": "Oldingi",
+        "next": "Keyingi"
+      },
+      "states": {
+        "empty": "O'quvchilar topilmadi.",
+        "error": "O'quvchilar ro'yxatini yuklab bo'lmadi."
+      }
+    }
+  },
   "adminTeachers": {
     "overview": {
       "stats": {

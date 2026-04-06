@@ -41,7 +41,12 @@ export function AppShellNavItemView({
         >
           <LinkComponent href={item.href}>
             <Icon className="size-4" />
-            <span>{item.label}</span>
+            <span
+              data-slot="app-shell-nav-copy"
+              className="inline-block min-w-0 overflow-hidden whitespace-nowrap"
+            >
+              {item.label}
+            </span>
           </LinkComponent>
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -57,7 +62,12 @@ export function AppShellNavItemView({
             className="h-auto py-1.5 text-[var(--app-shell-sidebar-fg)] transition-colors duration-300 hover:bg-[var(--app-shell-hover-bg)] hover:text-[var(--app-shell-sidebar-fg)] data-[active=true]:bg-[var(--app-shell-active-bg)] data-[active=true]:text-[var(--app-shell-active-fg)]"
           >
             <Icon className="size-4" />
-            <span>{item.label}</span>
+            <span
+              data-slot="app-shell-nav-copy"
+              className="inline-block min-w-0 overflow-hidden whitespace-nowrap"
+            >
+              {item.label}
+            </span>
             <ChevronRight className="ml-auto size-4 transition-transform duration-300 ease-out group-data-[state=open]/collapsible:rotate-90" />
           </SidebarMenuButton>
         </CollapsibleTrigger>
@@ -70,7 +80,14 @@ export function AppShellNavItemView({
                   isActive={isItemActive(child, pathname)}
                   className="h-auto py-1.5 text-[var(--app-shell-sidebar-fg)] transition-colors duration-300 hover:bg-[var(--app-shell-hover-bg)] hover:text-[var(--app-shell-sidebar-fg)] data-[active=true]:bg-[var(--app-shell-active-bg)] data-[active=true]:text-[var(--app-shell-active-fg)]"
                 >
-                  <LinkComponent href={child.href}>{child.label}</LinkComponent>
+                  <LinkComponent href={child.href}>
+                    <span
+                      data-slot="app-shell-nav-sub-copy"
+                      className="inline-block min-w-0 overflow-hidden whitespace-nowrap"
+                    >
+                      {child.label}
+                    </span>
+                  </LinkComponent>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>
             ))}
@@ -86,10 +103,7 @@ type AppShellNavGroupProps = {
   linkComponent?: AppShellLinkComponent
 }
 
-export function AppShellNavGroupView({
-  group,
-  linkComponent,
-}: AppShellNavGroupProps) {
+export function AppShellNavGroupView({ group, linkComponent }: AppShellNavGroupProps) {
   return (
     <>
       <SidebarMenu>

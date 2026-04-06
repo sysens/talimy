@@ -1028,6 +1028,84 @@
       }
     }
   },
+  "adminStudents": {
+    "overview": {
+      "stats": {
+        "totalStudents": "Toplam Öğrenciler",
+        "grade7Students": "7. Sınıf Öğrencileri",
+        "grade8Students": "8. Sınıf Öğrencileri",
+        "grade9Students": "9. Sınıf Öğrencileri"
+      },
+      "academicPerformance": {
+        "title": "Akademik Performans",
+        "filterAriaLabel": "Akademik performans dönemi",
+        "periods": {
+          "lastSemester": "Geçen Dönem",
+          "thisSemester": "Bu Dönem"
+        },
+        "legend": {
+          "grade7": "7. Sınıf",
+          "grade8": "8. Sınıf",
+          "grade9": "9. Sınıf"
+        }
+      },
+      "enrollmentTrends": {
+        "title": "Kayıt Trendleri",
+        "filterAriaLabel": "Kayıt trend dönemi",
+        "periods": {
+          "lastFiveYears": "Son 5 Yıl"
+        }
+      },
+      "attendanceOverview": {
+        "title": "Devam Durumu",
+        "filterAriaLabel": "Devam dönemi",
+        "periods": {
+          "thisWeek": "Bu Hafta"
+        }
+      },
+      "specialPrograms": {
+        "title": "Özel Programlar",
+        "actionLabel": "Özel program işlemleri"
+      }
+    },
+    "list": {
+      "title": "Öğrenciler",
+      "addStudent": "Öğrenci Ekle",
+      "searchPlaceholder": "Bir öğrenci ara",
+      "filters": {
+        "status": {
+          "all": "Tüm Durumlar",
+          "active": "Aktif",
+          "onLeave": "İzinde",
+          "suspended": "Askıda"
+        }
+      },
+      "performance": {
+        "good": "İyi",
+        "needsSupport": "Destek Gerekli",
+        "atRisk": "Riskli"
+      },
+      "table": {
+        "student": "Öğrenci",
+        "class": "Sınıf",
+        "gpa": "GPA",
+        "performance": "Performans",
+        "attendance": "Devam",
+        "status": "Durum"
+      },
+      "pagination": {
+        "show": "Göster",
+        "of": "/",
+        "results": "sonuç",
+        "previous": "Önceki",
+        "next": "Sonraki"
+      },
+      "states": {
+        "empty": "Öğrenci bulunamadı.",
+        "error": "Öğrenciler yüklenemedi."
+      }
+    }
+  },
   "adminTeachers": {
     "overview": {
       "stats": {

@@ -13,6 +13,7 @@ export type TeachersFilterBarProps = {
   addTeacherLabel?: string
   applyFiltersLabel?: string
   clearFiltersLabel?: string
+  addButtonClassName?: string
   departmentOptions: readonly TeachersFilterOption[]
   filters: TeachersFilterState
   filterButtonLabel?: string
@@ -23,8 +24,10 @@ export type TeachersFilterBarProps = {
   onFiltersChange: (filters: TeachersFilterState) => void
   onSearchChange: (value: string) => void
   onSortChange: (value: string) => void
+  searchContainerClassName?: string
   searchPlaceholder?: string
   searchValue: string
+  showFilterButton?: boolean
   statusLabel?: string
   sortLabel?: string
   sortOptions: readonly TeachersFilterOption[]

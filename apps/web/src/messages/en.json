@@ -1028,6 +1028,84 @@
       }
     }
   },
+  "adminStudents": {
+    "overview": {
+      "stats": {
+        "totalStudents": "Total Students",
+        "grade7Students": "Grade 7 Students",
+        "grade8Students": "Grade 8 Students",
+        "grade9Students": "Grade 9 Students"
+      },
+      "academicPerformance": {
+        "title": "Academic Performance",
+        "filterAriaLabel": "Academic performance period",
+        "periods": {
+          "lastSemester": "Last Semester",
+          "thisSemester": "This Semester"
+        },
+        "legend": {
+          "grade7": "Grade 7",
+          "grade8": "Grade 8",
+          "grade9": "Grade 9"
+        }
+      },
+      "enrollmentTrends": {
+        "title": "Enrollment Trends",
+        "filterAriaLabel": "Enrollment trend period",
+        "periods": {
+          "lastFiveYears": "Last 5 Years"
+        }
+      },
+      "attendanceOverview": {
+        "title": "Attendance Overview",
+        "filterAriaLabel": "Attendance overview period",
+        "periods": {
+          "thisWeek": "This Week"
+        }
+      },
+      "specialPrograms": {
+        "title": "Special Programs",
+        "actionLabel": "Special programs actions"
+      }
+    },
+    "list": {
+      "title": "Students",
+      "addStudent": "Add Student",
+      "searchPlaceholder": "Search for a student",
+      "filters": {
+        "status": {
+          "all": "All Status",
+          "active": "Active",
+          "onLeave": "On Leave",
+          "suspended": "Suspended"
+        }
+      },
+      "performance": {
+        "good": "Good",
+        "needsSupport": "Needs Support",
+        "atRisk": "At Risk"
+      },
+      "table": {
+        "student": "Student",
+        "class": "Class",
+        "gpa": "GPA",
+        "performance": "Performance",
+        "attendance": "Attendance",
+        "status": "Status"
+      },
+      "pagination": {
+        "show": "Show",
+        "of": "of",
+        "results": "results",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "states": {
+        "empty": "No students found.",
+        "error": "Failed to load students."
+      }
+    }
+  },
   "adminTeachers": {
     "overview": {
       "stats": {

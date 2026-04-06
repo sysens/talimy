@@ -9,6 +9,7 @@ import type { DashboardStudentAttendancePeriod } from "@/components/dashboard/ad
 export type AttendancePoint = {
   absentBreakdown: Array<{
     label: string
+    meta?: string
     value: number
   }>
   label: string

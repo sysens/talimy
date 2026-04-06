@@ -10,12 +10,7 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common"
-import {
-  createStudentSchema,
-  listStudentsQuerySchema,
-  updateStudentSchema,
-  userTenantQuerySchema,
-} from "@talimy/shared"
+import { createStudentSchema, updateStudentSchema, userTenantQuerySchema } from "@talimy/shared"
 
 import { Roles } from "@/common/decorators/roles.decorator"
 import {
@@ -30,7 +25,6 @@ import { ZodValidationPipe } from "@/common/pipes/zod-validation.pipe"
 import { PermifyPdpService } from "../authz/permify/permify-pdp.service"
 
 import { CreateStudentDto } from "./dto/create-student.dto"
-import { ListStudentsQueryDto } from "./dto/list-students-query.dto"
 import { UpdateStudentDto } from "./dto/update-student.dto"
 import { StudentsService } from "./students.service"
 
@@ -42,28 +36,6 @@ export class StudentsController {
     private readonly studentsService: StudentsService,
     private readonly permifyPdpService: PermifyPdpService
   ) {}
-
-  @Get()
-  async list(
-    @CurrentUser() currentUser: CurrentUserType | null,
-    @Query(new ZodValidationPipe(listStudentsQuerySchema)) queryInput: unknown
-  ) {
-    const query = queryInput as ListStudentsQueryDto
-    if (currentUser && currentUser.roles?.includes("school_admin")) {
-      await this.permifyPdpService.assertGenderAccess({
-        tenantId: query.tenantId,
-        userId: currentUser.id,
-        roles: currentUser.roles ?? [],
-        userGenderScope: currentUser.genderScope ?? "all",
-        entity: "student",
-        action: "list",
-      })
-    }
-    if (currentUser?.genderScope && currentUser.genderScope !== "all") {
-      query.gender = currentUser.genderScope
-    }
-    return this.studentsService.list(query)
-  }
 
   @Get(":id")
   getById(

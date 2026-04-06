@@ -9,7 +9,10 @@ type AppShellLogoProps = {
   linkComponent?: AppShellLinkComponent
 }
 
-export function AppShellLogo({ logo, linkComponent: LinkComponent = AppShellAnchorLink }: AppShellLogoProps) {
+export function AppShellLogo({
+  logo,
+  linkComponent: LinkComponent = AppShellAnchorLink,
+}: AppShellLogoProps) {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -23,12 +26,20 @@ export function AppShellLogo({ logo, linkComponent: LinkComponent = AppShellAnch
                   className="size-6 text-primary-foreground invert dark:invert-0"
                 />
               ) : (
-                <span className="text-sm font-semibold text-primary-foreground">{logo.title.slice(0, 1)}</span>
+                <span className="text-sm font-semibold text-primary-foreground">
+                  {logo.title.slice(0, 1)}
+                </span>
               )}
             </div>
-            <div data-slot="app-shell-logo-copy" className="flex flex-col gap-0.5 leading-none">
-              <span className="font-medium text-[var(--app-shell-sidebar-fg)] transition-colors duration-300">{logo.title}</span>
-              <span className="text-xs text-[var(--app-shell-sidebar-muted)] transition-colors duration-300">{logo.description}</span>
+            <div data-slot="app-shell-logo-copy" className="min-w-0 overflow-hidden">
+              <div className="flex flex-col gap-0.5 leading-none">
+                <span className="font-medium text-[var(--app-shell-sidebar-fg)] transition-colors duration-300">
+                  {logo.title}
+                </span>
+                <span className="text-xs text-[var(--app-shell-sidebar-muted)] transition-colors duration-300">
+                  {logo.description}
+                </span>
+              </div>
             </div>
           </LinkComponent>
         </SidebarMenuButton>

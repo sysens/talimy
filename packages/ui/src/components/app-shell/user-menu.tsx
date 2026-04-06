@@ -30,9 +30,14 @@ export function AppShellUserMenu({ user, labels }: AppShellUserMenuProps) {
             >
               <Avatar className="size-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">{resolveUserInitials(user.name)}</AvatarFallback>
+                <AvatarFallback className="rounded-lg">
+                  {resolveUserInitials(user.name)}
+                </AvatarFallback>
               </Avatar>
-              <div data-slot="app-shell-user-copy" className="grid flex-1 text-left text-sm leading-tight">
+              <div
+                data-slot="app-shell-user-copy"
+                className="grid min-w-0 flex-1 overflow-hidden text-left text-sm leading-tight"
+              >
                 <span className="truncate font-medium">{user.name}</span>
                 <span className="truncate text-xs text-muted-foreground">{user.email}</span>
               </div>
@@ -49,9 +54,14 @@ export function AppShellUserMenu({ user, labels }: AppShellUserMenuProps) {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="size-8 rounded-lg">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">{resolveUserInitials(user.name)}</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">
+                    {resolveUserInitials(user.name)}
+                  </AvatarFallback>
                 </Avatar>
-                <div data-slot="app-shell-user-copy" className="grid flex-1 text-left text-sm leading-tight">
+                <div
+                  data-slot="app-shell-user-copy"
+                  className="grid min-w-0 flex-1 overflow-hidden text-left text-sm leading-tight"
+                >
                   <span className="truncate font-medium">{user.name}</span>
                   <span className="truncate text-xs text-muted-foreground">{user.email}</span>
                 </div>

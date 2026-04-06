@@ -1,7 +1,7 @@
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 
-import { auth } from "@/lib/nextauth"
+import { getOptionalSession } from "@/lib/server/get-optional-session"
 import { resolveHostScopeFromHeaders } from "@/lib/server/request-host"
 
 export default async function Page() {
@@ -9,7 +9,7 @@ export default async function Page() {
   const scope = resolveHostScopeFromHeaders(requestHeaders)
 
   if (scope.kind === "school") {
-    const session = await auth()
+    const session = await getOptionalSession()
     const roles = session?.user?.roles ?? []
 
     if (roles.includes("school_admin")) {

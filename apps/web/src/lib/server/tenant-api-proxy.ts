@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
 
-import { auth } from "@/lib/nextauth"
 import { proxyToBackendApi } from "@/lib/server/api-proxy"
+import { getOptionalSession } from "@/lib/server/get-optional-session"
 
 type TenantApiProxyOptions = {
   allowedHostScopes?: Array<"api" | "platform" | "public" | "school">
@@ -16,7 +16,7 @@ export async function proxyTenantApiRequest(
   request: NextRequest,
   options: TenantApiProxyOptions
 ): Promise<NextResponse> {
-  const session = await auth()
+  const session = await getOptionalSession()
   const tenantId = typeof session?.user?.tenantId === "string" ? session.user.tenantId : null
 
   if (!tenantId) {

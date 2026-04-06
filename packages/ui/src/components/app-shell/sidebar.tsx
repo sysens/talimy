@@ -33,7 +33,7 @@ export function AppShellSidebar({
   return (
     <Sidebar
       collapsible="icon"
-      className="text-[var(--app-shell-sidebar-fg)] transition-colors [&_[data-sidebar=sidebar-inner]]:bg-[var(--app-shell-sidebar-bg)] [&_[data-sidebar=sidebar-inner]]:text-[var(--app-shell-sidebar-fg)] [&_[data-sidebar=content]]:overflow-x-hidden [&_[data-sidebar=group-label]]:text-[var(--app-shell-sidebar-muted)] [&_[data-slot=sidebar-group-label]]:transition-none [&_[data-slot=sidebar-menu-button]]:transition-colors [&_[data-slot=sidebar-menu-sub-button]]:transition-colors [&_[data-slot=sidebar-menu-button]]:[&>span]:whitespace-nowrap [&_[data-slot=sidebar-menu-sub-button]]:[&>span]:whitespace-nowrap group-data-[collapsible=icon]:[&_[data-slot=app-shell-logo-copy]]:hidden group-data-[collapsible=icon]:[&_[data-slot=app-shell-user-copy]]:hidden group-data-[collapsible=icon]:[&_[data-slot=sidebar-group-label]]:hidden group-data-[collapsible=icon]:[&_[data-slot=sidebar-menu-button]>span:last-child]:hidden"
+      className="text-[var(--app-shell-sidebar-fg)] transition-colors [&_[data-sidebar=sidebar-inner]]:bg-[var(--app-shell-sidebar-bg)] [&_[data-sidebar=sidebar-inner]]:text-[var(--app-shell-sidebar-fg)] [&_[data-sidebar=content]]:overflow-x-hidden [&_[data-sidebar=group-label]]:text-[var(--app-shell-sidebar-muted)] [&_[data-slot=sidebar-group-label]]:duration-300 [&_[data-slot=sidebar-group-label]]:ease-out [&_[data-slot=sidebar-menu-button]]:transition-colors [&_[data-slot=sidebar-menu-sub-button]]:transition-colors [&_[data-slot=sidebar-menu-button]]:[&>span]:whitespace-nowrap [&_[data-slot=sidebar-menu-sub-button]]:[&>span]:whitespace-nowrap [&_[data-slot=app-shell-logo-copy]]:transition-[width] [&_[data-slot=app-shell-logo-copy]]:duration-300 [&_[data-slot=app-shell-logo-copy]]:ease-out [&_[data-slot=app-shell-user-copy]]:transition-[width] [&_[data-slot=app-shell-user-copy]]:duration-300 [&_[data-slot=app-shell-user-copy]]:ease-out [&_[data-slot=app-shell-nav-copy]]:transition-[width] [&_[data-slot=app-shell-nav-copy]]:duration-300 [&_[data-slot=app-shell-nav-copy]]:ease-out [&_[data-slot=app-shell-nav-sub-copy]]:transition-[width] [&_[data-slot=app-shell-nav-sub-copy]]:duration-300 [&_[data-slot=app-shell-nav-sub-copy]]:ease-out group-data-[collapsible=icon]:[&_[data-slot=sidebar-menu-button]]:gap-0 group-data-[collapsible=icon]:[&_[data-slot=app-shell-logo-copy]]:w-0 group-data-[collapsible=icon]:[&_[data-slot=app-shell-logo-copy]]:overflow-hidden group-data-[collapsible=icon]:[&_[data-slot=app-shell-user-copy]]:w-0 group-data-[collapsible=icon]:[&_[data-slot=app-shell-user-copy]]:overflow-hidden group-data-[collapsible=icon]:[&_[data-slot=app-shell-nav-copy]]:w-0 group-data-[collapsible=icon]:[&_[data-slot=app-shell-nav-copy]]:overflow-hidden group-data-[collapsible=icon]:[&_[data-slot=app-shell-nav-sub-copy]]:w-0 group-data-[collapsible=icon]:[&_[data-slot=app-shell-nav-sub-copy]]:overflow-hidden"
       {...props}
     >
       <SidebarHeader>
@@ -60,7 +60,8 @@ export function AppShellSidebar({
         </ScrollArea>
       </SidebarContent>
       <SidebarFooter>
-        {userMenuSlot ?? (data.user ? <AppShellUserMenu user={data.user} labels={data.userMenuLabels} /> : null)}
+        {userMenuSlot ??
+          (data.user ? <AppShellUserMenu user={data.user} labels={data.userMenuLabels} /> : null)}
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

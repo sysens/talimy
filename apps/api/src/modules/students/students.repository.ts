@@ -9,11 +9,10 @@ import {
   subjects,
   users,
 } from "@talimy/database"
-import { and, asc, desc, eq, gte, ilike, isNull, lte, ne, or, type SQL, sql } from "drizzle-orm"
+import { and, asc, desc, eq, isNull, ne, type SQL } from "drizzle-orm"
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 
 import { CreateStudentDto } from "./dto/create-student.dto"
-import { ListStudentsQueryDto } from "./dto/list-students-query.dto"
 import { UpdateStudentDto } from "./dto/update-student.dto"
 import { toStudentGradeItem, toStudentParentItem, toStudentView } from "./students.mapper"
 import type {
@@ -25,65 +24,6 @@ import type {
 
 @Injectable()
 export class StudentsRepository {
-  async list(query: ListStudentsQueryDto): Promise<{
-    data: StudentView[]
-    meta: { page: number; limit: number; total: number; totalPages: number }
-  }> {
-    const filters: SQL[] = [eq(students.tenantId, query.tenantId), isNull(students.deletedAt)]
-    if (query.classId) filters.push(eq(students.classId, query.classId))
-    if (query.gender) filters.push(eq(students.gender, query.gender))
-    if (query.status) filters.push(eq(students.status, query.status))
-    if (query.enrollmentDateFrom) {
-      filters.push(gte(students.enrollmentDate, query.enrollmentDateFrom))
-    }
-    if (query.enrollmentDateTo) {
-      filters.push(lte(students.enrollmentDate, query.enrollmentDateTo))
-    }
-    if (query.search) {
-      const search = query.search.trim()
-      if (search.length > 0) {
-        filters.push(
-          or(
-            ilike(students.studentId, `%${search}%`),
-            ilike(users.firstName, `%${search}%`),
-            ilike(users.lastName, `%${search}%`),
-            ilike(users.email, `%${search}%`)
-          )!
-        )
-      }
-    }
-
-    const whereExpr = and(...filters)
-    const totalRows = await db
-      .select({ total: sql<number>`count(*)::int` })
-      .from(students)
-      .innerJoin(users, eq(users.id, students.userId))
-      .leftJoin(classes, eq(classes.id, students.classId))
-      .where(whereExpr)
-    const total = totalRows[0]?.total ?? 0
-
-    const totalPages = Math.max(1, Math.ceil(total / query.limit))
-    const page = Math.min(query.page, totalPages)
-    const offset = (page - 1) * query.limit
-    const sortColumn = this.resolveSortColumn(query.sort)
-    const orderExpr = query.order === "asc" ? asc(sortColumn) : desc(sortColumn)
-
-    const rows = await db
-      .select({ student: students, user: users, class: classes })
-      .from(students)
-      .innerJoin(users, eq(users.id, students.userId))
-      .leftJoin(classes, eq(classes.id, students.classId))
-      .where(whereExpr)
-      .orderBy(orderExpr)
-      .limit(query.limit)
-      .offset(offset)
-
-    return {
-      data: rows.map((row) => toStudentView(row.student, row.user, row.class)),
-      meta: { page, limit: query.limit, total, totalPages },
-    }
-  }
-
   async getById(tenantId: string, id: string): Promise<StudentView> {
     const row = await this.findStudentRowOrThrow(tenantId, id)
     return toStudentView(row.student, row.user, row.class)
@@ -301,23 +241,5 @@ export class StudentsRepository {
       )
       .limit(1)
     if (row) throw new BadRequestException("User already linked to another student record")
-  }
-
-  private resolveSortColumn(sort: string | undefined) {
-    switch (sort) {
-      case "studentId":
-        return students.studentId
-      case "gender":
-        return students.gender
-      case "status":
-        return students.status
-      case "enrollmentDate":
-        return students.enrollmentDate
-      case "updatedAt":
-        return students.updatedAt
-      case "createdAt":
-      default:
-        return students.createdAt
-    }
   }
 }

@@ -65,6 +65,7 @@ function getActiveFilterCount(filters: TeachersFilterState): number {
 
 export function TeachersFilterBar({
   addTeacherLabel = "Add Teacher",
+  addButtonClassName,
   applyFiltersLabel = "Apply",
   clearFiltersLabel = "Clear",
   departmentOptions,
@@ -78,8 +79,10 @@ export function TeachersFilterBar({
   onFiltersChange,
   onSearchChange,
   onSortChange,
+  searchContainerClassName,
   searchPlaceholder = "Search teacher",
   searchValue,
+  showFilterButton = true,
   statusLabel = "Status",
   sortOptions,
   sortValue,
@@ -121,8 +124,13 @@ export function TeachersFilterBar({
   }
 
   return (
-    <div className="flex w-full flex-wrap items-center justify-end gap-3 xl:flex-nowrap">
-      <div className="relative w-full min-w-0 md:w-[220px] md:flex-none">
+    <div className="flex w-full flex-col gap-3 lg:flex-row lg:items-center lg:justify-end lg:flex-nowrap">
+      <div
+        className={[
+          "relative w-full min-w-0 md:w-[220px] md:flex-none",
+          searchContainerClassName ?? "",
+        ].join(" ")}
+      >
         <Search className="pointer-events-none absolute left-4 top-1/2 size-[15px] -translate-y-1/2 text-slate-400" />
         <Input
           className="h-11 rounded-[18px] border-0 bg-white pl-11 pr-4 text-sm text-slate-700 shadow-none placeholder:text-slate-400"
@@ -133,81 +141,86 @@ export function TeachersFilterBar({
         />
       </div>
 
-      <div className="flex flex-wrap items-center gap-3">
-        <Popover onOpenChange={setIsFilterOpen} open={isFilterOpen}>
-          <PopoverTrigger asChild>
-            <Button
-              className="h-11 rounded-[18px] bg-[var(--talimy-color-sky)]/70 px-4 text-sm font-medium text-talimy-navy hover:bg-[var(--talimy-color-sky)]/80"
-              type="button"
-              variant="ghost"
-            >
-              <Filter className="size-[15px]" />
-              <span>{filterButtonLabel}</span>
-              {activeFilterCount > 0 ? (
-                <span className="rounded-full bg-white/80 px-2 py-0.5 text-xs font-semibold text-talimy-navy">
-                  {activeFilterCount}
-                </span>
-              ) : null}
-              <ChevronDown className="size-[15px]" />
-            </Button>
-          </PopoverTrigger>
-
-          <PopoverContent align="end" className="w-[440px] rounded-[24px] border-slate-100 p-4">
-            <PopoverHeader className="mb-1">
-              <PopoverTitle className="text-sm font-semibold text-slate-700">
-                {filterTitle}
-              </PopoverTitle>
-            </PopoverHeader>
-
-            <div className="grid grid-cols-2 gap-5">
-              <FilterGroup
-                label={departmentLabel}
-                onToggle={(value) => toggleFilter("departments", value)}
-                options={departmentOptions}
-                selectedValues={draftFilters.departments}
-              />
-              <FilterGroup
-                label={statusLabel}
-                onToggle={(value) => toggleFilter("statuses", value)}
-                options={statusOptions}
-                selectedValues={draftFilters.statuses}
-              />
-              <FilterGroup
-                label={genderLabel}
-                onToggle={(value) => toggleFilter("genders", value)}
-                options={genderOptions}
-                selectedValues={draftFilters.genders}
-              />
-            </div>
-
-            <div className="mt-2 flex items-center justify-end gap-2">
-              <Button onClick={clearFilters} size="sm" type="button" variant="ghost">
-                {clearFiltersLabel}
-              </Button>
+      <div className="flex flex-wrap items-center gap-3 lg:flex-nowrap">
+        {showFilterButton ? (
+          <Popover onOpenChange={setIsFilterOpen} open={isFilterOpen}>
+            <PopoverTrigger asChild>
               <Button
-                className="rounded-xl bg-talimy-navy text-white hover:bg-talimy-navy/90"
-                onClick={applyFilters}
-                size="sm"
+                className="h-11 rounded-[18px] bg-[var(--talimy-color-sky)]/70 px-4 text-sm font-medium text-talimy-navy hover:bg-[var(--talimy-color-sky)]/80"
                 type="button"
+                variant="ghost"
               >
-                {applyFiltersLabel}
+                <Filter className="size-[15px]" />
+                <span>{filterButtonLabel}</span>
+                {activeFilterCount > 0 ? (
+                  <span className="rounded-full bg-white/80 px-2 py-0.5 text-xs font-semibold text-talimy-navy">
+                    {activeFilterCount}
+                  </span>
+                ) : null}
+                <ChevronDown className="size-[15px]" />
               </Button>
-            </div>
-          </PopoverContent>
-        </Popover>
+            </PopoverTrigger>
+
+            <PopoverContent align="end" className="w-[440px] rounded-[24px] border-slate-100 p-4">
+              <PopoverHeader className="mb-1">
+                <PopoverTitle className="text-sm font-semibold text-slate-700">
+                  {filterTitle}
+                </PopoverTitle>
+              </PopoverHeader>
+
+              <div className="grid grid-cols-2 gap-5">
+                <FilterGroup
+                  label={departmentLabel}
+                  onToggle={(value) => toggleFilter("departments", value)}
+                  options={departmentOptions}
+                  selectedValues={draftFilters.departments}
+                />
+                <FilterGroup
+                  label={statusLabel}
+                  onToggle={(value) => toggleFilter("statuses", value)}
+                  options={statusOptions}
+                  selectedValues={draftFilters.statuses}
+                />
+                <FilterGroup
+                  label={genderLabel}
+                  onToggle={(value) => toggleFilter("genders", value)}
+                  options={genderOptions}
+                  selectedValues={draftFilters.genders}
+                />
+              </div>
+
+              <div className="mt-2 flex items-center justify-end gap-2">
+                <Button onClick={clearFilters} size="sm" type="button" variant="ghost">
+                  {clearFiltersLabel}
+                </Button>
+                <Button
+                  className="rounded-xl bg-talimy-navy text-white hover:bg-talimy-navy/90"
+                  onClick={applyFilters}
+                  size="sm"
+                  type="button"
+                >
+                  {applyFiltersLabel}
+                </Button>
+              </div>
+            </PopoverContent>
+          </Popover>
+        ) : null}
 
         <div className="flex items-center gap-2">
           <ChartFilterSelect
             ariaLabel="Sort teachers"
             onValueChange={onSortChange}
             options={[...sortOptions]}
-            triggerClassName="h-11 min-w-[120px] rounded-[18px] bg-[var(--talimy-color-sky)]/70 px-4 text-sm font-medium text-talimy-navy"
+            triggerClassName="inline-flex h-11 min-w-[120px] items-center rounded-[18px] bg-[var(--talimy-color-sky)]/70 px-4 text-sm font-medium text-talimy-navy"
             value={sortValue}
           />
         </div>
 
         <Button
-          className="h-11 rounded-[18px] bg-[var(--talimy-color-pink)]/70 px-5 text-sm font-semibold text-talimy-navy hover:bg-[var(--talimy-color-pink)]/85"
+          className={[
+            "inline-flex h-11 items-center rounded-[18px] bg-[var(--talimy-color-pink)]/70 px-5 text-sm font-semibold text-talimy-navy hover:bg-[var(--talimy-color-pink)]/85",
+            addButtonClassName ?? "",
+          ].join(" ")}
           onClick={onAddTeacher}
           type="button"
         >

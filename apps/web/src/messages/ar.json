@@ -126,16 +126,16 @@
     }
   },
   "shell": {
-    "mainMenu": "??????? ????????",
-    "updates": "????????? ????????",
-    "account": "??????",
-    "logout": "????? ??????",
-    "breadcrumbSchoolAdmin": "????? ???????",
-    "workspace": "????? ??? {schoolName}",
-    "searchPlaceholder": "???? ?? ?? ???",
-    "settings": "?????????",
-    "notifications": "?????????",
-    "theme": "????? ??????"
+    "mainMenu": "القائمة الرئيسية",
+    "updates": "آخر التحديثات",
+    "account": "الحساب",
+    "logout": "تسجيل الخروج",
+    "breadcrumbSchoolAdmin": "إدارة المدرسة",
+    "workspace": "مساحة عمل {schoolName}",
+    "searchPlaceholder": "ابحث عن أي شيء",
+    "settings": "الإعدادات",
+    "notifications": "الإشعارات",
+    "theme": "الوضع الداكن"
   },
   "schoolAdminProfile": {
     "title": "الملف الشخصي ونطاق الوصول",
@@ -426,6 +426,84 @@
           "paymentsVerified": "تم التحقق من الرسوم الشهرية لطلاب الصف التاسع.",
           "examUpdated": "تم تحديث جدول امتحانات الفصل الثاني بواسطة المنسق الأكاديمي."
         }
+      }
+    }
+  },
+  "adminStudents": {
+    "overview": {
+      "stats": {
+        "totalStudents": "إجمالي الطلاب",
+        "grade7Students": "طلاب الصف السابع",
+        "grade8Students": "طلاب الصف الثامن",
+        "grade9Students": "طلاب الصف التاسع"
+      },
+      "academicPerformance": {
+        "title": "الأداء الأكاديمي",
+        "filterAriaLabel": "فترة الأداء الأكاديمي",
+        "periods": {
+          "lastSemester": "الفصل الماضي",
+          "thisSemester": "الفصل الحالي"
+        },
+        "legend": {
+          "grade7": "الصف السابع",
+          "grade8": "الصف الثامن",
+          "grade9": "الصف التاسع"
+        }
+      },
+      "enrollmentTrends": {
+        "title": "اتجاهات التسجيل",
+        "filterAriaLabel": "فترة اتجاهات التسجيل",
+        "periods": {
+          "lastFiveYears": "آخر 5 سنوات"
+        }
+      },
+      "attendanceOverview": {
+        "title": "نظرة عامة على الحضور",
+        "filterAriaLabel": "فترة الحضور",
+        "periods": {
+          "thisWeek": "هذا الأسبوع"
+        }
+      },
+      "specialPrograms": {
+        "title": "البرامج الخاصة",
+        "actionLabel": "إجراءات البرامج الخاصة"
+      }
+    },
+    "list": {
+      "title": "الطلاب",
+      "addStudent": "إضافة طالب",
+      "searchPlaceholder": "ابحث عن طالب",
+      "filters": {
+        "status": {
+          "all": "كل الحالات",
+          "active": "نشط",
+          "onLeave": "في إجازة",
+          "suspended": "موقوف"
+        }
+      },
+      "performance": {
+        "good": "جيد",
+        "needsSupport": "يحتاج دعماً",
+        "atRisk": "معرض للخطر"
+      },
+      "table": {
+        "student": "الطالب",
+        "class": "الصف",
+        "gpa": "GPA",
+        "performance": "الأداء",
+        "attendance": "الحضور",
+        "status": "الحالة"
+      },
+      "pagination": {
+        "show": "عرض",
+        "of": "من",
+        "results": "نتيجة",
+        "previous": "السابق",
+        "next": "التالي"
+      },
+      "states": {
+        "empty": "لم يتم العثور على طلاب.",
+        "error": "تعذر تحميل الطلاب."
       }
     }
   },
