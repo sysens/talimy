@@ -205,5 +205,4 @@ function startCompilerWatchProcess(): ChildProcess {
 
 ensureBuiltEntry()
 wireSignals()
-startRuntimeProcess()
 compilerWatchProcess = startCompilerWatchProcess()
