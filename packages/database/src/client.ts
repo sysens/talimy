@@ -1,10 +1,24 @@
+import { existsSync } from "node:fs"
 import { resolve } from "node:path"
 import { config } from "dotenv"
 import { Pool } from "pg"
 import { resolveDatabaseSsl } from "./ssl"
 
-config({ path: resolve(process.cwd(), ".env") })
-config({ path: resolve(process.cwd(), "../../.env"), override: false })
+const packageRoot = resolve(__dirname, "..")
+const repoRoot = resolve(packageRoot, "..", "..")
+const envCandidates = [
+  resolve(process.cwd(), ".env"),
+  resolve(repoRoot, "apps", "api", ".env"),
+  resolve(repoRoot, ".env"),
+] as const
+
+for (const path of envCandidates) {
+  if (!existsSync(path)) {
+    continue
+  }
+
+  config({ override: false, path })
+}
 
 const databaseUrl = process.env.DATABASE_URL
 

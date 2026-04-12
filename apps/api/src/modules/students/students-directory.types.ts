@@ -78,5 +78,6 @@ export type StudentAttendanceOverviewPoint = {
 
 export type StudentAttendanceOverviewView = {
   points: readonly StudentAttendanceOverviewPoint[]
+  totalStudents: number
   week: "current"
 }

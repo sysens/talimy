@@ -31,6 +31,7 @@ export function HeroDatePicker({
         name={name}
         value={value}
         onChange={onChange}
+        aria-label={label}
       >
         <Label className="text-sm font-medium text-foreground">{label}</Label>
         <DateField.Group
@@ -43,7 +44,12 @@ export function HeroDatePicker({
           )}
         >
           <DateField.Input className="flex-1">
-            {(segment) => <DateField.Segment segment={segment} />}
+            {(segment) => (
+              <DateField.Segment
+                segment={segment}
+                className="data-[focused]:bg-slate-200 data-[focused]:text-slate-900 focus:bg-slate-200 focus:text-slate-900 outline-none"
+              />
+            )}
           </DateField.Input>
           <DateField.Suffix>
             <DatePicker.Trigger>
@@ -51,7 +57,7 @@ export function HeroDatePicker({
             </DatePicker.Trigger>
           </DateField.Suffix>
         </DateField.Group>
-        <DatePicker.Popover>
+        <DatePicker.Popover className="z-[100]">
           <Calendar aria-label={label}>
             <Calendar.Header>
               <Calendar.YearPickerTrigger>

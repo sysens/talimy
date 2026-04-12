@@ -1,4 +1,14 @@
-export type CalendarEventType = "academic" | "exam" | "holiday" | "sports" | "other"
+export type CalendarEventType =
+  | "academic"
+  | "events"
+  | "finance"
+  | "administration"
+  | "exam"
+  | "holiday"
+  | "sports"
+  | "other"
+
+export type CalendarEventVisibility = "all" | "admin" | "teachers" | "students"
 
 export type CalendarEventView = {
   id: string
@@ -9,6 +19,7 @@ export type CalendarEventView = {
   endDate: string
   location: string | null
   type: CalendarEventType
+  visibility: CalendarEventVisibility
   createdAt: string
   updatedAt: string
 }

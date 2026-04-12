@@ -1,0 +1,15 @@
+[32m✔[0m [33mConsole Ninja[0m extension is connected to [33mNext.js[0m, see [36mhttps://tinyurl.com/2vt8jxzw[0m
+▲ Next.js 16.2.2 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://10.88.0.2:3000
+- Environments: .env.local
+✓ Ready in 4.6s
+- Experiments (use with caution):
+  · optimizePackageImports
+
+○ Compiling /admin/students/new ...
+ GET /admin/students/new 200 in 50s (next.js: 41s, application-code: 9.0s)
+ GET /login 200 in 1873ms (next.js: 275ms, application-code: 1598ms)
+ GET /login 200 in 550ms (next.js: 11ms, application-code: 539ms)
+ GET /login 200 in 153ms (next.js: 8ms, application-code: 145ms)
+[?25h

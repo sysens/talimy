@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Logger,
 } from "@nestjs/common"
+import * as Sentry from "@sentry/nestjs"
 import { ZodError } from "zod"
 import type { ZodIssue } from "zod"
 
@@ -36,6 +37,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       : normalized.error.message
 
     if (status >= HttpStatus.INTERNAL_SERVER_ERROR) {
+      Sentry.captureException(exception)
       this.logger.error(logMessage, exception instanceof Error ? exception.stack : undefined)
     } else {
       this.logger.warn(logMessage)

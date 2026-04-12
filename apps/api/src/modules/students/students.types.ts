@@ -1,20 +1,29 @@
 export type StudentView = {
+  address: string | null
+  avatar: string | null
+  bloodGroup: string | null
   id: string
-  tenantId: string
-  userId: string
   classId: string | null
   className: string | null
-  fullName: string
-  email: string
-  studentId: string
-  gender: "male" | "female"
-  dateOfBirth: string | null
-  enrollmentDate: string
-  status: "active" | "inactive" | "graduated" | "transferred"
-  bloodGroup: string | null
-  address: string | null
   createdAt: Date
+  dateOfBirth: string | null
+  email: string
+  enrollmentDate: string
+  fullName: string
+  gender: "male" | "female"
+  phone: string | null
   updatedAt: Date
+  status: "active" | "inactive" | "graduated" | "transferred"
+  studentId: string
+  tenantId: string
+  userId: string
+}
+
+export type StudentCreateResult = {
+  admissionNumber: string
+  fullName: string
+  id: string
+  studentId: string
 }
 
 export type StudentGradeItem = {
@@ -33,9 +42,10 @@ export type StudentAttendanceItem = {
 }
 
 export type StudentParentItem = {
-  id: string
   fullName: string
+  id: string
   phone: string | null
+  relationship: string
 }
 
 export type StudentSummary = {

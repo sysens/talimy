@@ -13,7 +13,7 @@ export function MutedPanelCard({ children, className, contentClassName }: MutedP
   return (
     <Card
       className={[
-        "rounded-3xl border border-[#f1f3f7] bg-[#f8f8f6] shadow-none",
+        "rounded-3xl border p-0 border-[#f1f3f7] bg-[#f8f8f6] shadow-none",
         className ?? "",
       ].join(" ")}
     >

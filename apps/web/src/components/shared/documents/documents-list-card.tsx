@@ -23,8 +23,8 @@ export function DocumentsListCard({
   title,
 }: DocumentsListCardProps) {
   return (
-    <Card className="rounded-[28px] border border-slate-100 bg-white shadow-none">
-      <Card.Content className="gap-5 py-5">
+    <Card className="bg-transparent shadow-none px-0">
+      <Card.Content>
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-[15px] font-semibold leading-none text-talimy-navy">{title}</h3>
 
@@ -41,9 +41,12 @@ export function DocumentsListCard({
           ) : null}
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3 rounded-4xl bg-white p-4">
           {items.map((item) => (
-            <div className="flex items-start gap-3" key={item.fileName}>
+            <div
+              className="flex items-start gap-3 py-5 border-b border-b-gray-100 mb-0 last:border-b-0 last:pb-0 first:pt-0"
+              key={item.fileName}
+            >
               <div className="flex size-10 shrink-0 flex-col items-center justify-center rounded-xl bg-[#f6c9f8] text-[#353535]">
                 <FileText className="size-4" />
                 <span className="text-[8px] font-semibold leading-none tracking-[0.08em]">PDF</span>

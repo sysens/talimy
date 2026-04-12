@@ -7,6 +7,7 @@ import type { EventQueryDto } from "./dto/event-query.dto"
 import type {
   CalendarEventsListResponse,
   CalendarEventType,
+  CalendarEventVisibility,
   CalendarEventView,
 } from "./calendar.types"
 
@@ -36,6 +37,7 @@ export class CalendarRepository {
         endDate: events.endDate,
         location: events.location,
         type: events.type,
+        visibility: events.visibility,
         createdAt: events.createdAt,
         updatedAt: events.updatedAt,
       })
@@ -71,6 +73,7 @@ export class CalendarRepository {
         endDate,
         location: payload.location ?? null,
         type: payload.type ?? "other",
+        visibility: payload.visibility ?? "all",
       })
       .returning()
 
@@ -101,6 +104,7 @@ export class CalendarRepository {
           ? (payload.location ?? null)
           : current.location,
         type: payload.type ?? (current.type as CalendarEventType),
+        visibility: payload.visibility ?? (current.visibility as CalendarEventVisibility),
         updatedAt: new Date(),
       })
       .where(and(eq(events.id, id), eq(events.tenantId, tenantId), isNull(events.deletedAt)))
@@ -123,11 +127,21 @@ export class CalendarRepository {
     if (query.type) {
       filters.push(eq(events.type, query.type))
     }
-    if (query.dateFrom) {
-      filters.push(gte(events.startDate, new Date(query.dateFrom)))
+    if (query.visibility) {
+      filters.push(eq(events.visibility, query.visibility))
     }
-    if (query.dateTo) {
-      filters.push(lte(events.endDate, new Date(query.dateTo)))
+
+    const resolvedDateRange = this.resolveDateRange(query)
+    if (resolvedDateRange) {
+      filters.push(lte(events.startDate, resolvedDateRange.dateTo))
+      filters.push(gte(events.endDate, resolvedDateRange.dateFrom))
+    } else {
+      if (query.dateFrom) {
+        filters.push(gte(events.endDate, new Date(query.dateFrom)))
+      }
+      if (query.dateTo) {
+        filters.push(lte(events.startDate, new Date(query.dateTo)))
+      }
     }
     if (query.search?.trim()) {
       const search = `%${query.search.trim()}%`
@@ -150,6 +164,8 @@ export class CalendarRepository {
         return [direction(events.title), asc(events.startDate)] as const
       case "type":
         return [direction(events.type), asc(events.startDate)] as const
+      case "visibility":
+        return [direction(events.visibility), asc(events.startDate)] as const
       case "endDate":
         return [direction(events.endDate), asc(events.startDate)] as const
       case "updatedAt":
@@ -173,6 +189,7 @@ export class CalendarRepository {
         endDate: events.endDate,
         location: events.location,
         type: events.type,
+        visibility: events.visibility,
         createdAt: events.createdAt,
         updatedAt: events.updatedAt,
       })
@@ -185,6 +202,37 @@ export class CalendarRepository {
     }
 
     return row
+  }
+
+  private resolveDateRange(query: EventQueryDto): { dateFrom: Date; dateTo: Date } | null {
+    if (query.month) {
+      const [yearToken, monthToken] = query.month.split("-")
+      const year = Number(yearToken)
+      const monthIndex = Number(monthToken) - 1
+
+      if (
+        !Number.isInteger(year) ||
+        !Number.isInteger(monthIndex) ||
+        monthIndex < 0 ||
+        monthIndex > 11
+      ) {
+        throw new BadRequestException("Invalid month")
+      }
+
+      return {
+        dateFrom: new Date(Date.UTC(year, monthIndex, 1, 0, 0, 0, 0)),
+        dateTo: new Date(Date.UTC(year, monthIndex + 1, 0, 23, 59, 59, 999)),
+      }
+    }
+
+    if (!query.dateFrom || !query.dateTo) {
+      return null
+    }
+
+    return {
+      dateFrom: new Date(query.dateFrom),
+      dateTo: new Date(query.dateTo),
+    }
   }
 
   private assertDateRange(startDate: Date, endDate: Date) {
@@ -208,6 +256,7 @@ export class CalendarRepository {
     endDate: Date
     location: string | null
     type: string
+    visibility: string
     createdAt: Date
     updatedAt: Date
   }): CalendarEventView {
@@ -220,6 +269,7 @@ export class CalendarRepository {
       endDate: row.endDate.toISOString(),
       location: row.location,
       type: row.type as CalendarEventType,
+      visibility: row.visibility as CalendarEventVisibility,
       createdAt: row.createdAt.toISOString(),
       updatedAt: row.updatedAt.toISOString(),
     }

@@ -36,6 +36,41 @@
       "when": 1775398508589,
       "tag": "0004_superb_goliath",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1775504529985,
+      "tag": "0005_lazy_mauler",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1775592125791,
+      "tag": "0006_little_captain_flint",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1775902800000,
+      "tag": "0007_bright_moonstone",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1775938771970,
+      "tag": "0008_overjoyed_scream",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1775995952689,
+      "tag": "0009_clumsy_songbird",
+      "breakpoints": true
     }
   ]
 }

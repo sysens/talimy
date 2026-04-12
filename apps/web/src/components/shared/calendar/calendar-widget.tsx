@@ -28,6 +28,7 @@ type CalendarWidgetLabels = {
 }
 
 type CalendarWidgetProps = {
+  attendanceSummaryVariant?: "bars" | "cards"
   className?: string
   labels?: CalendarWidgetLabels
   locale?: string
@@ -38,15 +39,21 @@ type CalendarWidgetProps = {
 }
 
 const ATTENDANCE_STATUS_CLASS_NAMES: Record<CalendarAttendanceStatus, string> = {
+  absent: "bg-[#dfe3e6] text-[#6c7a86]",
   late: "bg-[#f6b5ff] text-[#4d4f7d]",
   onLeave: "bg-[#1f4b7b] text-white",
   present: "bg-[#d4f1ff] text-[#476881]",
+  sick: "bg-[#1f4b7b] text-white",
 }
 
 const DEFAULT_ATTENDANCE_STATUS_META: Record<
   CalendarAttendanceStatus,
   { description: string; label: string }
 > = {
+  absent: {
+    description: "Darsga qatnashmagan",
+    label: "Absent",
+  },
   late: {
     description: "Kechikib kelgan",
     label: "Late",
@@ -58,6 +65,10 @@ const DEFAULT_ATTENDANCE_STATUS_META: Record<
   present: {
     description: "Darsda qatnashgan",
     label: "Present",
+  },
+  sick: {
+    description: "Sog‘liq bo‘yicha ruxsatli yo‘q",
+    label: "Sick",
   },
 }
 
@@ -89,7 +100,12 @@ function buildIsoDate(year: number, monthNumber: number, day: number): string {
   return `${year}-${monthNumber.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`
 }
 
+function resolveAttendanceSummaryCardTextClassName(label: string): string {
+  return label === "Sick" || label === "On Leave" ? "text-white" : "text-[#274760]"
+}
+
 export function CalendarWidget({
+  attendanceSummaryVariant = "bars",
   className,
   labels,
   locale = "en",
@@ -144,7 +160,9 @@ export function CalendarWidget({
     <div
       className={[
         "w-full text-[#2d5877] mb-0 rounded-b-none",
-        variant === "attendance" ? "rounded-[24px] bg-white p-4" : "rounded-4xl bg-[#d9f3ff] p-4",
+        variant === "attendance"
+          ? "rounded-[24px] bg-white p-4 pt-6  "
+          : "rounded-4xl bg-[#d9f3ff] p-4",
         className ?? "",
       ].join(" ")}
     >
@@ -203,9 +221,7 @@ export function CalendarWidget({
       <AnimatePresence mode="wait">
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className={["grid grid-cols-7 gap-y-2", variant === "attendance" ? "gap-x-1.5" : ""].join(
-            " "
-          )}
+          className={["grid grid-cols-7 "].join(" ")}
           exit={{ opacity: 0, y: 8 }}
           initial={{ opacity: 0, y: -8 }}
           key={activeMonth.key}
@@ -336,7 +352,9 @@ export function CalendarWidget({
                               ? "bg-[#b8ebff]"
                               : dayStatus === "late"
                                 ? "bg-[#f6b5ff]"
-                                : "bg-[#1f4b7b]",
+                                : dayStatus === "absent"
+                                  ? "bg-[#dfe3e6]"
+                                  : "bg-[#1f4b7b]",
                           ].join(" ")}
                         />
                         <span className="text-xs font-semibold text-[#31516d]">
@@ -357,23 +375,56 @@ export function CalendarWidget({
 
       {activeMonth.kind === "attendance" ? (
         <div className="mt-5 space-y-3">
-          <div className="grid grid-cols-3 gap-4">
-            {activeMonth.summary.map((item) => (
-              <motion.div
-                animate={{ opacity: 1, y: 0 }}
-                className="space-y-2"
-                initial={{ opacity: 0, y: 8 }}
-                key={`${activeMonth.key}-${item.label}`}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-              >
-                <div className={`h-1.5 rounded-full ${item.colorClassName}`} />
-                <div className="flex items-center gap-2 text-[11px] text-[#8195a6]">
-                  <span>{item.label}</span>
-                  <span className="text-[12px] font-semibold text-[#274760]">{item.value}</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          {attendanceSummaryVariant === "cards" ? (
+            <div className="grid grid-cols-4 gap-3">
+              {activeMonth.summary.map((item) => (
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`rounded-[14px] px-3 py-2 ${item.colorClassName}`}
+                  initial={{ opacity: 0, y: 8 }}
+                  key={`${activeMonth.key}-${item.label}`}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  <div className="space-y-1">
+                    <p
+                      className={[
+                        "text-[12px] font-medium",
+                        resolveAttendanceSummaryCardTextClassName(item.label),
+                      ].join(" ")}
+                    >
+                      {item.label}
+                    </p>
+                    <p
+                      className={[
+                        "text-[10px] font-semibold leading-none",
+                        resolveAttendanceSummaryCardTextClassName(item.label),
+                      ].join(" ")}
+                    >
+                      {item.value}
+                    </p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-3 gap-4">
+              {activeMonth.summary.map((item) => (
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  className="space-y-2"
+                  initial={{ opacity: 0, y: 8 }}
+                  key={`${activeMonth.key}-${item.label}`}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                >
+                  <div className={`h-1.5 rounded-full ${item.colorClassName}`} />
+                  <div className="flex items-center gap-2 text-[11px] text-[#8195a6]">
+                    <span>{item.label}</span>
+                    <span className="text-[12px] font-semibold text-[#274760]">{item.value}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
         </div>
       ) : null}
     </div>

@@ -8,10 +8,19 @@ import {
   attendance,
   classes,
   events,
+  financeExpenses,
+  financeReimbursements,
   grades,
   notices,
+  parentStudent,
+  parents,
   payments,
   schedules,
+  studentBehaviorLogs,
+  studentDocuments,
+  studentExtracurricularRecords,
+  studentHealthRecords,
+  studentScholarships,
   students,
   teacherAttendanceRecords,
   teacherDocuments,
@@ -28,9 +37,11 @@ import {
 type UserInsert = InferInsertModel<typeof users>
 type TeacherInsert = InferInsertModel<typeof teachers>
 type StudentInsert = InferInsertModel<typeof students>
+type ParentInsert = InferInsertModel<typeof parents>
 
 type DashboardFixtureContext = {
   academicYearId: string
+  parentPasswordHash: string
   schoolAdminUserId: string
   schoolTenantId: string
   studentPasswordHash: string
@@ -39,11 +50,15 @@ type DashboardFixtureContext = {
 }
 
 type DashboardStudentFixture = {
+  address: string
+  avatar: string
+  dateOfBirth: string
   email: string
   firstName: string
   gender: "female" | "male"
   grade: "7" | "8" | "9"
   lastName: string
+  phone: string
   studentCode: string
 }
 
@@ -80,51 +95,75 @@ const DASHBOARD_EVENT_TITLES = [
 ] as const
 const DASHBOARD_STUDENT_FIXTURES: readonly DashboardStudentFixture[] = [
   {
+    address: "21 Amir Temur Street, Tashkent, Uzbekistan",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/blue.jpg",
+    dateOfBirth: "2022-05-18",
     email: "abdulloh.grade7@mezana.talimy.space",
     firstName: "Abdulloh",
     gender: "male",
     grade: "7",
     lastName: "Jalolov",
+    phone: "+998 90 111 2233",
     studentCode: "7A-101",
   },
   {
+    address: "42 Mustaqillik Avenue, Samarkand, Uzbekistan",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/red.jpg",
+    dateOfBirth: "2022-08-14",
     email: "madina.grade7@mezana.talimy.space",
     firstName: "Madina",
     gender: "female",
     grade: "7",
     lastName: "Karimova",
+    phone: "+998 91 222 3344",
     studentCode: "7A-102",
   },
   {
+    address: "9 Istiqlol Road, Bukhara, Uzbekistan",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/green.jpg",
+    dateOfBirth: "2021-11-06",
     email: "temur.grade8@mezana.talimy.space",
     firstName: "Temur",
     gender: "male",
     grade: "8",
     lastName: "Nasriddinov",
+    phone: "+998 93 333 4455",
     studentCode: "8A-201",
   },
   {
+    address: "18 Alisher Navoiy Street, Khiva, Uzbekistan",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/purple.jpg",
+    dateOfBirth: "2021-03-25",
     email: "aziza.grade8@mezana.talimy.space",
     firstName: "Aziza",
     gender: "female",
     grade: "8",
     lastName: "Rasulova",
+    phone: "+998 94 444 5566",
     studentCode: "8A-202",
   },
   {
+    address: "77 Bobur Street, Andijan, Uzbekistan",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/orange.jpg",
+    dateOfBirth: "2020-09-09",
     email: "javohir.grade9@mezana.talimy.space",
     firstName: "Javohir",
     gender: "male",
     grade: "9",
     lastName: "Sobirov",
+    phone: "+998 95 555 6677",
     studentCode: "9A-301",
   },
   {
+    address: "5 Shahrisabz Avenue, Fergana, Uzbekistan",
+    avatar: "https://heroui-assets.nyc3.cdn.digitaloceanspaces.com/avatars/red.jpg",
+    dateOfBirth: "2020-12-19",
     email: "dilnoza.grade9@mezana.talimy.space",
     firstName: "Dilnoza",
     gender: "female",
     grade: "9",
     lastName: "Hakimova",
+    phone: "+998 97 666 7788",
     studentCode: "9A-302",
   },
 ] as const
@@ -483,12 +522,15 @@ export async function ensureDashboardFixtures(
   const studentRecords = await Promise.all(
     DASHBOARD_STUDENT_FIXTURES.map(async (fixture) => {
       const userId = await upsertUser(tx, {
+        address: fixture.address,
+        avatar: fixture.avatar,
         email: fixture.email,
         firstName: fixture.firstName,
         genderScope: "all",
         isActive: true,
         lastName: fixture.lastName,
         passwordHash: context.studentPasswordHash,
+        phone: fixture.phone,
         role: "student",
         tenantId: context.schoolTenantId,
       })
@@ -501,8 +543,9 @@ export async function ensureDashboardFixtures(
             : classIds.grade9
 
       const studentId = await ensureStudentProfile(tx, {
-        address: "Tashkent",
+        address: fixture.address,
         classId,
+        dateOfBirth: fixture.dateOfBirth,
         enrollmentDate: "2025-09-01",
         gender: fixture.gender,
         id: fixtureUuid(`student-profile:${fixture.studentCode}`),
@@ -512,7 +555,18 @@ export async function ensureDashboardFixtures(
         userId,
       })
 
-      return { classId, email: fixture.email, grade: fixture.grade, studentId }
+      return {
+        avatar: fixture.avatar,
+        classId,
+        email: fixture.email,
+        firstName: fixture.firstName,
+        grade: fixture.grade,
+        lastName: fixture.lastName,
+        phone: fixture.phone,
+        studentCode: fixture.studentCode,
+        studentId,
+        userId,
+      }
     })
   )
 
@@ -527,8 +581,11 @@ export async function ensureDashboardFixtures(
   await upsertTeacherSchedules(tx, context.schoolTenantId, classIds, subjectIds, teacherRecords)
   await upsertDashboardAttendance(tx, context.schoolTenantId, primaryTeacherId, studentRecords)
   await upsertDashboardPayments(tx, context.schoolTenantId, studentRecords)
+  await upsertDashboardFinanceExpenses(tx, context.schoolTenantId)
+  await upsertDashboardFinanceReimbursements(tx, context.schoolTenantId)
   await upsertDashboardNotices(tx, context.schoolTenantId, context.schoolAdminUserId)
   await upsertDashboardEvents(tx, context.schoolTenantId)
+  await upsertAdminCalendarEvents(tx, context.schoolTenantId)
   await upsertDashboardActivity(
     tx,
     context.schoolTenantId,
@@ -536,6 +593,13 @@ export async function ensureDashboardFixtures(
     context.teacherUserId
   )
   await upsertTeacherDetailFixtures(tx, context.schoolTenantId, teacherRecords)
+  await upsertStudentDetailFixtures(
+    tx,
+    context.schoolTenantId,
+    context.parentPasswordHash,
+    primaryTeacherId,
+    studentRecords
+  )
 }
 
 async function upsertUser(tx: DatabaseTransaction, payload: UserInsert): Promise<string> {
@@ -608,6 +672,72 @@ async function ensureStudentProfile(
   const [created] = await tx.insert(students).values(payload).returning({ id: students.id })
   if (!created) throw new Error(`Failed to create student profile ${payload.studentId}`)
   return created.id
+}
+
+async function ensureParentProfile(
+  tx: DatabaseTransaction,
+  payload: ParentInsert
+): Promise<string> {
+  const [existing] = await tx
+    .select({ id: parents.id })
+    .from(parents)
+    .where(and(eq(parents.userId, payload.userId), isNull(parents.deletedAt)))
+    .limit(1)
+
+  if (existing) {
+    await tx
+      .update(parents)
+      .set({
+        address: payload.address ?? null,
+        occupation: payload.occupation ?? null,
+        phone: payload.phone ?? null,
+        relationship: payload.relationship,
+        updatedAt: new Date(),
+        deletedAt: null,
+      })
+      .where(eq(parents.id, existing.id))
+
+    return existing.id
+  }
+
+  const [created] = await tx.insert(parents).values(payload).returning({ id: parents.id })
+
+  if (!created) {
+    throw new Error(`Failed to create parent profile ${payload.userId}`)
+  }
+
+  return created.id
+}
+
+async function ensureParentStudentRelation(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  parentId: string,
+  studentId: string
+): Promise<void> {
+  const [existing] = await tx
+    .select({ id: parentStudent.id })
+    .from(parentStudent)
+    .where(
+      and(
+        eq(parentStudent.tenantId, tenantId),
+        eq(parentStudent.parentId, parentId),
+        eq(parentStudent.studentId, studentId),
+        isNull(parentStudent.deletedAt)
+      )
+    )
+    .limit(1)
+
+  if (existing) {
+    return
+  }
+
+  await tx.insert(parentStudent).values({
+    id: fixtureUuid(`parent-student:${parentId}:${studentId}`),
+    parentId,
+    studentId,
+    tenantId,
+  })
 }
 
 async function ensureClass(
@@ -1202,6 +1332,161 @@ async function upsertDashboardEvents(tx: DatabaseTransaction, tenantId: string):
           title: entry.title,
           type: entry.type,
           updatedAt: new Date(),
+          deletedAt: null,
+        },
+      })
+  }
+}
+
+async function upsertAdminCalendarEvents(tx: DatabaseTransaction, tenantId: string): Promise<void> {
+  const entries = [
+    {
+      description: "Submission deadline for the monthly science project brief.",
+      endDate: "2035-03-01T11:00:00+03:00",
+      location: "Room 204",
+      seed: "science-project-deadline",
+      startDate: "2035-03-01T10:00:00+03:00",
+      title: "Science Project Submission Deadline",
+      type: "academic",
+      visibility: "students",
+    },
+    {
+      description: "Review expense approvals and confirm current month cash flow.",
+      endDate: "2035-03-01T16:00:00+03:00",
+      location: "Admin Office",
+      seed: "monthly-expense-review",
+      startDate: "2035-03-01T15:00:00+03:00",
+      title: "Monthly Expense Review",
+      type: "finance",
+      visibility: "admin",
+    },
+    {
+      description: "Preliminary fixtures for the inter-school sports competition.",
+      endDate: "2035-03-06T12:00:00+03:00",
+      location: "Sports Arena",
+      seed: "sports-competition-preliminary",
+      startDate: "2035-03-06T08:30:00+03:00",
+      title: "Sports Competition (Preliminary Round)",
+      type: "events",
+      visibility: "all",
+    },
+    {
+      description: "Grade-wide midterm assessment for mathematics.",
+      endDate: "2035-03-07T11:00:00+03:00",
+      location: "Hall A",
+      seed: "midterm-mathematics",
+      startDate: "2035-03-07T09:00:00+03:00",
+      title: "Midterm Exam - Mathematics",
+      type: "academic",
+      visibility: "students",
+    },
+    {
+      description: "Weekly staff alignment on school operations and upcoming events.",
+      endDate: "2035-03-07T15:30:00+03:00",
+      location: "Conference Room",
+      seed: "staff-meeting",
+      startDate: "2035-03-07T14:00:00+03:00",
+      title: "Staff Meeting",
+      type: "administration",
+      visibility: "teachers",
+    },
+    {
+      description: "Professional development session for classroom facilitation.",
+      endDate: "2035-03-09T17:00:00+03:00",
+      location: "Staff Lounge",
+      seed: "teacher-development-workshop",
+      startDate: "2035-03-09T13:00:00+03:00",
+      title: "Teacher Development Workshop",
+      type: "administration",
+      visibility: "teachers",
+    },
+    {
+      description: "Written assessment for the English Literature course.",
+      endDate: "2035-03-12T11:00:00+03:00",
+      location: "Room 210",
+      seed: "english-literature-exam",
+      startDate: "2035-03-12T09:00:00+03:00",
+      title: "English Literature Exam",
+      type: "academic",
+      visibility: "students",
+    },
+    {
+      description: "Parents are requested to arrive 15 minutes early for registration.",
+      endDate: "2035-03-12T16:00:00+03:00",
+      location: "School Auditorium",
+      seed: "parent-teacher-meeting",
+      startDate: "2035-03-12T14:00:00+03:00",
+      title: "Parent-Teacher Meeting (Grade 7 & 8)",
+      type: "events",
+      visibility: "all",
+    },
+    {
+      description: "Final reminder for Grade 9 semester fee payments.",
+      endDate: "2035-03-23T18:00:00+03:00",
+      location: "Finance Office",
+      seed: "grade-9-fee-payment-deadline",
+      startDate: "2035-03-23T08:00:00+03:00",
+      title: "Grade 9 Fee Payment Deadline",
+      type: "finance",
+      visibility: "students",
+    },
+    {
+      description: "Showcase of research projects and innovation prototypes.",
+      endDate: "2035-03-26T17:00:00+03:00",
+      location: "Exhibition Hall",
+      seed: "annual-science-fair",
+      startDate: "2035-03-26T09:00:00+03:00",
+      title: "Annual Science Fair",
+      type: "events",
+      visibility: "all",
+    },
+    {
+      description: "Quarterly review of school performance and department action items.",
+      endDate: "2035-03-28T15:00:00+03:00",
+      location: "Board Room",
+      seed: "quarterly-performance-review",
+      startDate: "2035-03-28T13:00:00+03:00",
+      title: "Quarterly Performance Review Meeting",
+      type: "administration",
+      visibility: "admin",
+    },
+    {
+      description: "Chemistry final exam for upper-grade students.",
+      endDate: "2035-03-29T10:30:00+03:00",
+      location: "Lab B",
+      seed: "final-exam-chemistry",
+      startDate: "2035-03-29T08:30:00+03:00",
+      title: "Final Exam - Chemistry",
+      type: "academic",
+      visibility: "students",
+    },
+  ] as const
+
+  for (const entry of entries) {
+    await tx
+      .insert(events)
+      .values({
+        description: entry.description,
+        endDate: new Date(entry.endDate),
+        id: fixtureUuid(`admin-calendar-event:${entry.seed}`),
+        location: entry.location,
+        startDate: new Date(entry.startDate),
+        tenantId,
+        title: entry.title,
+        type: entry.type,
+        visibility: entry.visibility,
+      })
+      .onConflictDoUpdate({
+        target: events.id,
+        set: {
+          description: entry.description,
+          endDate: new Date(entry.endDate),
+          location: entry.location,
+          startDate: new Date(entry.startDate),
+          title: entry.title,
+          type: entry.type,
+          updatedAt: new Date(),
+          visibility: entry.visibility,
           deletedAt: null,
         },
       })
@@ -1819,6 +2104,484 @@ async function upsertTeacherPerformanceSet(
   }
 }
 
+async function upsertStudentDetailFixtures(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  parentPasswordHash: string,
+  teacherId: string,
+  studentRecords: ReadonlyArray<{
+    avatar: string
+    classId: string
+    email: string
+    firstName: string
+    grade: "7" | "8" | "9"
+    lastName: string
+    phone: string
+    studentCode: string
+    studentId: string
+    userId: string
+  }>
+): Promise<void> {
+  for (const [index, student] of studentRecords.entries()) {
+    await upsertStudentParentsSet(tx, tenantId, parentPasswordHash, student, index)
+    await upsertStudentDocumentsSet(tx, tenantId, student)
+    await upsertStudentAttendanceCalendarSet(tx, tenantId, teacherId, student, index)
+    await upsertStudentScholarshipsSet(tx, tenantId, student.studentId, index)
+    await upsertStudentHealthSet(tx, tenantId, student.studentId)
+    await upsertStudentExtracurricularSet(tx, tenantId, student.studentId)
+    await upsertStudentBehaviorLogsSet(tx, tenantId, student.studentId)
+  }
+}
+
+async function upsertStudentParentsSet(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  parentPasswordHash: string,
+  student: {
+    firstName: string
+    lastName: string
+    studentCode: string
+    studentId: string
+  },
+  studentIndex: number
+): Promise<void> {
+  const fatherFirstNames = ["Akmal", "Jasur", "Sardor", "Bekzod", "Rustam", "Anvar"] as const
+  const motherFirstNames = ["Saida", "Nilufar", "Madina", "Shahnoza", "Dilbar", "Malika"] as const
+  const guardianFirstNames = ["Maftuna", "Feruza", "Ozoda", "Lola", "Gulnoza", "Nodira"] as const
+  const fatherFirstName = fatherFirstNames[studentIndex % fatherFirstNames.length] ?? "Akmal"
+  const motherFirstName = motherFirstNames[studentIndex % motherFirstNames.length] ?? "Saida"
+  const guardianFirstName =
+    guardianFirstNames[studentIndex % guardianFirstNames.length] ?? "Maftuna"
+  const compactCode = student.studentCode.toLowerCase()
+  const entries = [
+    {
+      email: `${compactCode}.father@mezana.talimy.space`,
+      firstName: fatherFirstName,
+      phone: `+998 90 70${studentIndex} 110${studentIndex}`,
+      relationship: "father",
+    },
+    {
+      email: `${compactCode}.mother@mezana.talimy.space`,
+      firstName: motherFirstName,
+      phone: `+998 90 80${studentIndex} 220${studentIndex}`,
+      relationship: "mother",
+    },
+    {
+      email: `${compactCode}.guardian@mezana.talimy.space`,
+      firstName: guardianFirstName,
+      phone: `+998 90 90${studentIndex} 330${studentIndex}`,
+      relationship: "aunt",
+    },
+  ] as const
+
+  for (const entry of entries) {
+    const userId = await upsertUser(tx, {
+      address: `${student.lastName} family, ${student.firstName} residence`,
+      email: entry.email,
+      firstName: entry.firstName,
+      genderScope: "all",
+      isActive: true,
+      lastName: student.lastName,
+      passwordHash: parentPasswordHash,
+      phone: entry.phone,
+      role: "parent",
+      tenantId,
+    })
+
+    const parentId = await ensureParentProfile(tx, {
+      address: `${student.lastName} family, ${student.firstName} residence`,
+      id: fixtureUuid(`parent-profile:${student.studentId}:${entry.relationship}`),
+      occupation: entry.relationship === "father" ? "Engineer" : "Teacher",
+      phone: entry.phone,
+      relationship: entry.relationship,
+      tenantId,
+      userId,
+    })
+
+    await ensureParentStudentRelation(tx, tenantId, parentId, student.studentId)
+  }
+}
+
+async function upsertStudentDocumentsSet(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  student: {
+    firstName: string
+    lastName: string
+    studentCode: string
+    studentId: string
+  }
+): Promise<void> {
+  const compactName = `${student.firstName}${student.lastName}`.replace(/\s+/g, "")
+  const items = [
+    {
+      documentType: "report_card",
+      fileName: `ReportCard_${compactName}_${student.studentCode}.pdf`,
+      key: "report-card",
+      sizeBytes: 2_400_000,
+    },
+    {
+      documentType: "certificate",
+      fileName: `Certificate_${compactName}_${student.studentCode}.pdf`,
+      key: "certificate",
+      sizeBytes: 1_800_000,
+    },
+    {
+      documentType: "id_card",
+      fileName: `IDCard_${compactName}_${student.studentCode}.pdf`,
+      key: "id-card",
+      sizeBytes: 1_900_000,
+    },
+  ] as const
+
+  for (const item of items) {
+    await tx
+      .insert(studentDocuments)
+      .values({
+        documentType: item.documentType,
+        fileName: item.fileName,
+        id: fixtureUuid(`student-document:${student.studentId}:${item.key}`),
+        mimeType: "application/pdf",
+        sizeBytes: item.sizeBytes,
+        storageKey: `students/${student.studentId}/documents/${item.fileName}`,
+        studentId: student.studentId,
+        tenantId,
+      })
+      .onConflictDoUpdate({
+        target: studentDocuments.id,
+        set: {
+          documentType: item.documentType,
+          fileName: item.fileName,
+          mimeType: "application/pdf",
+          sizeBytes: item.sizeBytes,
+          storageKey: `students/${student.studentId}/documents/${item.fileName}`,
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
+      })
+  }
+}
+
+async function upsertStudentAttendanceCalendarSet(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  teacherId: string,
+  student: {
+    classId: string
+    studentId: string
+  },
+  studentIndex: number
+): Promise<void> {
+  const attendanceByMonth = [
+    {
+      days: [
+        [1, "present"],
+        [2, "excused"],
+        [5, "late"],
+        [6, "present"],
+        [7, "present"],
+        [8, "present"],
+        [9, "present"],
+        [12, "late"],
+        [13, "present"],
+        [14, "absent"],
+        [15, "present"],
+        [16, "present"],
+        [19, "present"],
+        [20, "present"],
+        [21, "present"],
+        [22, "late"],
+        [23, "present"],
+      ] as const,
+      monthKey: "2035-03",
+    },
+    {
+      days: [
+        [3, "present"],
+        [6, "late"],
+        [8, "present"],
+        [11, "present"],
+        [13, "absent"],
+        [14, "present"],
+        [18, "late"],
+        [19, "present"],
+        [20, "present"],
+        [24, "present"],
+        [26, "excused"],
+      ] as const,
+      monthKey: "2035-02",
+    },
+    {
+      days: [
+        [2, "present"],
+        [4, "present"],
+        [5, "late"],
+        [10, "present"],
+        [12, "excused"],
+        [15, "late"],
+        [18, "present"],
+        [21, "present"],
+        [22, "present"],
+        [24, "late"],
+        [29, "present"],
+      ] as const,
+      monthKey: "2035-04",
+    },
+  ] as const
+  const lateShift = studentIndex % 2
+
+  for (const month of attendanceByMonth) {
+    for (const [day, status] of month.days) {
+      const finalDay = lateShift === 0 ? day : Math.min(day + lateShift, 28)
+      const isoDate = `${month.monthKey}-${String(finalDay).padStart(2, "0")}`
+      await tx
+        .insert(attendance)
+        .values({
+          classId: student.classId,
+          date: isoDate,
+          id: fixtureUuid(`student-detail-attendance:${student.studentId}:${isoDate}`),
+          markedBy: teacherId,
+          note: `${DASHBOARD_FIXTURE_PREFIX}: student-detail-attendance`,
+          status,
+          studentId: student.studentId,
+          tenantId,
+        })
+        .onConflictDoUpdate({
+          target: attendance.id,
+          set: {
+            note: `${DASHBOARD_FIXTURE_PREFIX}: student-detail-attendance`,
+            status,
+            updatedAt: new Date(),
+          },
+        })
+    }
+  }
+}
+
+async function upsertStudentScholarshipsSet(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  studentId: string,
+  studentIndex: number
+): Promise<void> {
+  const scholarshipSets = [
+    [
+      { scholarshipType: "finance", title: "Global Young Achievers Award" },
+      { scholarshipType: "enrichment", title: "STEM for Girls Initiative" },
+    ],
+    [
+      { scholarshipType: "finance", title: "Academic Excellence Grant" },
+      { scholarshipType: "enrichment", title: "Creative Leaders Fellowship" },
+    ],
+  ] as const
+  const items = scholarshipSets[studentIndex % scholarshipSets.length] ?? scholarshipSets[0]
+
+  for (const [index, item] of items.entries()) {
+    await tx
+      .insert(studentScholarships)
+      .values({
+        id: fixtureUuid(`student-scholarship:${studentId}:${index}`),
+        scholarshipType: item.scholarshipType,
+        studentId,
+        tenantId,
+        title: item.title,
+      })
+      .onConflictDoUpdate({
+        target: studentScholarships.id,
+        set: {
+          scholarshipType: item.scholarshipType,
+          title: item.title,
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
+      })
+  }
+}
+
+async function upsertStudentHealthSet(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  studentId: string
+): Promise<void> {
+  const items = [
+    {
+      description: "Routine health check completed. Student is fit for regular activities.",
+      label: "Medical Record",
+      tone: "info",
+    },
+    {
+      description: "Mild pollen allergy. Medication prescribed for seasonal symptoms.",
+      label: "Allergy",
+      tone: "warning",
+    },
+    {
+      description: "Severe peanut allergy. Avoid exposure and keep emergency medication ready.",
+      label: "Peanut Allergy",
+      tone: "danger",
+    },
+  ] as const
+
+  for (const [index, item] of items.entries()) {
+    await tx
+      .insert(studentHealthRecords)
+      .values({
+        description: item.description,
+        id: fixtureUuid(`student-health:${studentId}:${index}`),
+        label: item.label,
+        studentId,
+        tenantId,
+        tone: item.tone,
+      })
+      .onConflictDoUpdate({
+        target: studentHealthRecords.id,
+        set: {
+          description: item.description,
+          label: item.label,
+          tone: item.tone,
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
+      })
+  }
+}
+
+async function upsertStudentExtracurricularSet(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  studentId: string
+): Promise<void> {
+  const items = [
+    {
+      achievement: "Won 2 Silver Medals (City Meet)",
+      advisorName: "Coach Andrea V.",
+      clubName: "Swimming",
+      endDate: null,
+      iconKey: "swimming",
+      roleLabel: "Team Member",
+      startDate: "2029-09-01",
+    },
+    {
+      achievement: "Performed at National Festival",
+      advisorName: "Ms. Clara F.",
+      clubName: "Dance",
+      endDate: null,
+      iconKey: "dance",
+      roleLabel: "Lead Performer",
+      startDate: "2030-09-01",
+    },
+    {
+      achievement: "1st Place in School Robotics Fair",
+      advisorName: "Mr. Daniel K.",
+      clubName: "Robotics",
+      endDate: null,
+      iconKey: "robotics",
+      roleLabel: "Programmer",
+      startDate: "2033-09-01",
+    },
+  ] as const
+
+  for (const [index, item] of items.entries()) {
+    await tx
+      .insert(studentExtracurricularRecords)
+      .values({
+        achievement: item.achievement,
+        advisorName: item.advisorName,
+        clubName: item.clubName,
+        endDate: item.endDate,
+        iconKey: item.iconKey,
+        id: fixtureUuid(`student-extracurricular:${studentId}:${index}`),
+        roleLabel: item.roleLabel,
+        startDate: item.startDate,
+        studentId,
+        tenantId,
+      })
+      .onConflictDoUpdate({
+        target: studentExtracurricularRecords.id,
+        set: {
+          achievement: item.achievement,
+          advisorName: item.advisorName,
+          clubName: item.clubName,
+          endDate: item.endDate,
+          iconKey: item.iconKey,
+          roleLabel: item.roleLabel,
+          startDate: item.startDate,
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
+      })
+  }
+}
+
+async function upsertStudentBehaviorLogsSet(
+  tx: DatabaseTransaction,
+  tenantId: string,
+  studentId: string
+): Promise<void> {
+  const items = [
+    {
+      actionStatus: "record_recognition",
+      details: "Helped classmates during group project and supported coordination.",
+      entryType: "positive_note",
+      recordDate: "2035-01-10",
+      reportedByLabel: "Ms. Lee Record",
+      title: "Positive Note",
+    },
+    {
+      actionStatus: "recognition_recorded",
+      details: "Volunteered in school event organization and guided peers effectively.",
+      entryType: "positive_note",
+      recordDate: "2035-02-02",
+      reportedByLabel: "Admin Office",
+      title: "Positive Note",
+    },
+    {
+      actionStatus: "issue_warning",
+      details: "Late submission of homework in two consecutive assignments.",
+      entryType: "minor_issue",
+      recordDate: "2035-02-18",
+      reportedByLabel: "Mr. Maulie",
+      title: "Minor Issue",
+    },
+    {
+      actionStatus: "parent_notified",
+      details: "Absent without prior notice during the first lesson block.",
+      entryType: "minor_issue",
+      recordDate: "2035-03-05",
+      reportedByLabel: "Homeroom Teacher",
+      title: "Minor Issue",
+    },
+  ] as const
+
+  for (const [index, item] of items.entries()) {
+    await tx
+      .insert(studentBehaviorLogs)
+      .values({
+        actionStatus: item.actionStatus,
+        details: item.details,
+        entryType: item.entryType,
+        id: fixtureUuid(`student-behavior:${studentId}:${index}`),
+        recordDate: item.recordDate,
+        reportedByLabel: item.reportedByLabel,
+        studentId,
+        tenantId,
+        title: item.title,
+      })
+      .onConflictDoUpdate({
+        target: studentBehaviorLogs.id,
+        set: {
+          actionStatus: item.actionStatus,
+          details: item.details,
+          entryType: item.entryType,
+          recordDate: item.recordDate,
+          reportedByLabel: item.reportedByLabel,
+          title: item.title,
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
+      })
+  }
+}
+
 function fixtureUuid(seed: string): string {
   const hex = createHash("sha1").update(`talimy:${seed}`).digest("hex").slice(0, 32)
   return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-5${hex.slice(13, 16)}-a${hex.slice(17, 20)}-${hex.slice(20, 32)}`
@@ -1871,4 +2634,659 @@ function toLetterGrade(score: number): string {
   if (score >= 80) return "B"
   if (score >= 70) return "C"
   return "D"
+}
+function formatMonthValue(date: Date): string {
+  return date.toISOString().slice(0, 7)
+}
+
+function formatMonthDate(month: string, day: number): string {
+  return `${month}-${String(day).padStart(2, "0")}`
+}
+
+type FinanceExpenseSeedCategory = "events" | "maintenance" | "others" | "salaries" | "supplies"
+
+type FinanceExpenseSeedRow = {
+  amount: number
+  category: FinanceExpenseSeedCategory
+  day: number
+  department: string
+  description: string
+  expenseCode: string
+  quantity: string
+}
+
+type FinanceExpenseSeedTemplate = Omit<FinanceExpenseSeedRow, "amount" | "expenseCode">
+
+function splitAmountAcrossRows(total: number, count: number): readonly number[] {
+  if (count <= 0) {
+    return []
+  }
+
+  const normalizedTotal = Math.round(total * 100)
+  const baseAmount = Math.floor(normalizedTotal / count)
+  const rows = Array.from({ length: count }, () => baseAmount)
+  const remainder = normalizedTotal - baseAmount * count
+
+  for (let index = 0; index < remainder; index += 1) {
+    const rowIndex = rows.length - 1 - (index % rows.length)
+    const current = rows[rowIndex]
+
+    if (typeof current === "number") {
+      rows[rowIndex] = current + 1
+    }
+  }
+
+  return rows.map((value) => value / 100)
+}
+
+function formatExpenseSeedCode(sequence: number): string {
+  return `EX-${String(sequence).padStart(4, "0")}`
+}
+
+function buildSupplementalExpenseRows(
+  nextSequence: number,
+  remaindersByCategory: Record<FinanceExpenseSeedCategory, number>
+): readonly FinanceExpenseSeedRow[] {
+  const templatesByCategory: Record<
+    FinanceExpenseSeedCategory,
+    readonly FinanceExpenseSeedTemplate[]
+  > = {
+    events: [
+      {
+        category: "events",
+        day: 7,
+        department: "Student Affairs",
+        description: "Morning assembly staging",
+        quantity: "-",
+      },
+      {
+        category: "events",
+        day: 15,
+        department: "Community",
+        description: "Family engagement materials",
+        quantity: "-",
+      },
+      {
+        category: "events",
+        day: 22,
+        department: "Arts",
+        description: "Exhibition logistics support",
+        quantity: "-",
+      },
+      {
+        category: "events",
+        day: 28,
+        department: "Social",
+        description: "Debate tournament operations",
+        quantity: "-",
+      },
+    ],
+    maintenance: [
+      {
+        category: "maintenance",
+        day: 8,
+        department: "Facilities",
+        description: "Water system maintenance",
+        quantity: "-",
+      },
+      {
+        category: "maintenance",
+        day: 16,
+        department: "Science",
+        description: "Laboratory safety repairs",
+        quantity: "-",
+      },
+      {
+        category: "maintenance",
+        day: 23,
+        department: "Operations",
+        description: "Campus lighting replacement",
+        quantity: "-",
+      },
+      {
+        category: "maintenance",
+        day: 24,
+        department: "Physical Education",
+        description: "Locker room maintenance",
+        quantity: "-",
+      },
+    ],
+    others: [
+      {
+        category: "others",
+        day: 9,
+        department: "Operations",
+        description: "Insurance and compliance fees",
+        quantity: "-",
+      },
+      {
+        category: "others",
+        day: 20,
+        department: "Administration",
+        description: "Banking and processing charges",
+        quantity: "-",
+      },
+      {
+        category: "others",
+        day: 26,
+        department: "Community",
+        description: "Community relations expenses",
+        quantity: "-",
+      },
+    ],
+    salaries: [
+      {
+        category: "salaries",
+        day: 7,
+        department: "Language",
+        description: "Monthly teacher salary",
+        quantity: "-",
+      },
+      {
+        category: "salaries",
+        day: 8,
+        department: "Social",
+        description: "Monthly teacher salary",
+        quantity: "-",
+      },
+      {
+        category: "salaries",
+        day: 9,
+        department: "Arts",
+        description: "Monthly teacher salary",
+        quantity: "-",
+      },
+      {
+        category: "salaries",
+        day: 12,
+        department: "Physical Education",
+        description: "Monthly teacher salary",
+        quantity: "-",
+      },
+      {
+        category: "salaries",
+        day: 13,
+        department: "Student Affairs",
+        description: "Monthly staff salary",
+        quantity: "-",
+      },
+      {
+        category: "salaries",
+        day: 14,
+        department: "Facilities",
+        description: "Monthly operations salary",
+        quantity: "-",
+      },
+      {
+        category: "salaries",
+        day: 17,
+        department: "Administration",
+        description: "Monthly leadership salary",
+        quantity: "-",
+      },
+      {
+        category: "salaries",
+        day: 18,
+        department: "Mathematics",
+        description: "Monthly teacher salary",
+        quantity: "-",
+      },
+      {
+        category: "salaries",
+        day: 19,
+        department: "Science",
+        description: "Monthly teacher salary",
+        quantity: "-",
+      },
+      {
+        category: "salaries",
+        day: 21,
+        department: "Language",
+        description: "Monthly teacher salary",
+        quantity: "-",
+      },
+      {
+        category: "salaries",
+        day: 24,
+        department: "Social",
+        description: "Monthly teacher salary",
+        quantity: "-",
+      },
+      {
+        category: "salaries",
+        day: 27,
+        department: "Operations",
+        description: "Monthly support salary",
+        quantity: "-",
+      },
+    ],
+    supplies: [
+      {
+        category: "supplies",
+        day: 10,
+        department: "Science",
+        description: "Laboratory consumables",
+        quantity: "12 kits",
+      },
+      {
+        category: "supplies",
+        day: 11,
+        department: "Mathematics",
+        description: "Practice workbook sets",
+        quantity: "80 books",
+      },
+      {
+        category: "supplies",
+        day: 15,
+        department: "Language",
+        description: "Reading corner materials",
+        quantity: "35 sets",
+      },
+      {
+        category: "supplies",
+        day: 16,
+        department: "Arts",
+        description: "Canvas and sketch supplies",
+        quantity: "18 packs",
+      },
+      {
+        category: "supplies",
+        day: 17,
+        department: "Science",
+        description: "STEM project kits",
+        quantity: "20 kits",
+      },
+      {
+        category: "supplies",
+        day: 18,
+        department: "Physical Education",
+        description: "Training cone replacement",
+        quantity: "30 units",
+      },
+      {
+        category: "supplies",
+        day: 25,
+        department: "Social",
+        description: "Map and atlas materials",
+        quantity: "25 copies",
+      },
+      {
+        category: "supplies",
+        day: 26,
+        department: "Administration",
+        description: "Printing and office supplies",
+        quantity: "40 packs",
+      },
+      {
+        category: "supplies",
+        day: 28,
+        department: "Community",
+        description: "Parent communication kits",
+        quantity: "50 kits",
+      },
+    ],
+  }
+
+  let sequence = nextSequence
+  const rows: FinanceExpenseSeedRow[] = []
+
+  for (const category of ["salaries", "supplies", "events", "maintenance", "others"] as const) {
+    const templates = templatesByCategory[category]
+    const amounts = splitAmountAcrossRows(remaindersByCategory[category], templates.length)
+
+    templates.forEach((template, index) => {
+      const amount = amounts[index]
+
+      if (typeof amount !== "number" || amount <= 0) {
+        return
+      }
+
+      rows.push({
+        ...template,
+        amount,
+        expenseCode: formatExpenseSeedCode(sequence),
+      })
+      sequence += 1
+    })
+  }
+
+  return rows
+}
+
+async function upsertDashboardFinanceExpenses(
+  tx: DatabaseTransaction,
+  tenantId: string
+): Promise<void> {
+  const monthTotals = [65000, 78250, 69300, 73150, 95000, 88000, 76000, 87350] as const
+  const categoryShares = {
+    events: 0.1,
+    maintenance: 0.12,
+    others: 0.08,
+    salaries: 0.55,
+    supplies: 0.15,
+  } as const
+
+  const currentMonth = formatMonthValue(new Date())
+
+  for (let offset = monthTotals.length - 1; offset >= 0; offset -= 1) {
+    const date = new Date(
+      Date.UTC(new Date().getUTCFullYear(), new Date().getUTCMonth() - offset, 1)
+    )
+    const month = formatMonthValue(date)
+    const total = monthTotals[monthTotals.length - 1 - offset] ?? monthTotals[0]
+
+    const targetByCategory = {
+      events: Math.round(total * categoryShares.events * 100) / 100,
+      maintenance: Math.round(total * categoryShares.maintenance * 100) / 100,
+      others: Math.round(total * categoryShares.others * 100) / 100,
+      salaries: Math.round(total * categoryShares.salaries * 100) / 100,
+      supplies: Math.round(total * categoryShares.supplies * 100) / 100,
+    }
+
+    if (month === currentMonth) {
+      const currentMonthRows = [
+        {
+          amount: 750,
+          category: "supplies",
+          day: 1,
+          department: "Mathematics",
+          description: "Graphing calculators",
+          expenseCode: "EX-5001",
+          quantity: "15",
+        },
+        {
+          amount: 1200,
+          category: "maintenance",
+          day: 1,
+          department: "Science",
+          description: "Lab equipment servicing",
+          expenseCode: "EX-5002",
+          quantity: "-",
+        },
+        {
+          amount: 1000,
+          category: "supplies",
+          day: 2,
+          department: "Language",
+          description: "English literature textbooks",
+          expenseCode: "EX-5003",
+          quantity: "40",
+        },
+        {
+          amount: 900,
+          category: "events",
+          day: 3,
+          department: "Social",
+          description: "Field trip bus rental",
+          expenseCode: "EX-5004",
+          quantity: "2 buses",
+        },
+        {
+          amount: 600,
+          category: "supplies",
+          day: 3,
+          department: "Arts",
+          description: "Paint sets & brushes",
+          expenseCode: "EX-5005",
+          quantity: "25 sets",
+        },
+        {
+          amount: 2500,
+          category: "maintenance",
+          day: 4,
+          department: "Physical Education",
+          description: "Gym floor repairs",
+          expenseCode: "EX-5006",
+          quantity: "-",
+        },
+        {
+          amount: 5000,
+          category: "salaries",
+          day: 5,
+          department: "Mathematics",
+          description: "Monthly teacher salary",
+          expenseCode: "EX-5007",
+          quantity: "-",
+        },
+        {
+          amount: 5000,
+          category: "salaries",
+          day: 6,
+          department: "Science",
+          description: "Monthly teacher salary",
+          expenseCode: "EX-5008",
+          quantity: "-",
+        },
+      ] as const
+
+      const currentSums = { events: 0, maintenance: 0, others: 0, salaries: 0, supplies: 0 }
+
+      for (const row of currentMonthRows) {
+        if (row.category === "events") {
+          currentSums.events += row.amount
+        }
+
+        if (row.category === "maintenance") {
+          currentSums.maintenance += row.amount
+        }
+
+        if (row.category === "salaries") {
+          currentSums.salaries += row.amount
+        }
+
+        if (row.category === "supplies") {
+          currentSums.supplies += row.amount
+        }
+      }
+
+      const supplementalRows = buildSupplementalExpenseRows(5009, {
+        events: Math.max(targetByCategory.events - currentSums.events, 0),
+        maintenance: Math.max(targetByCategory.maintenance - currentSums.maintenance, 0),
+        others: Math.max(targetByCategory.others - currentSums.others, 0),
+        salaries: Math.max(targetByCategory.salaries - currentSums.salaries, 0),
+        supplies: Math.max(targetByCategory.supplies - currentSums.supplies, 0),
+      })
+
+      for (const row of [...currentMonthRows, ...supplementalRows]) {
+        await tx
+          .insert(financeExpenses)
+          .values({
+            amount: String(row.amount),
+            category: row.category,
+            department: row.department,
+            description: row.description,
+            expenseCode: row.expenseCode,
+            expenseDate: formatMonthDate(month, row.day),
+            id: fixtureUuid(`finance-expense:${row.expenseCode}`),
+            quantity: row.quantity,
+            tenantId,
+          })
+          .onConflictDoUpdate({
+            target: financeExpenses.id,
+            set: {
+              amount: String(row.amount),
+              category: row.category,
+              department: row.department,
+              description: row.description,
+              expenseCode: row.expenseCode,
+              expenseDate: formatMonthDate(month, row.day),
+              quantity: row.quantity,
+              updatedAt: new Date(),
+            },
+          })
+      }
+
+      continue
+    }
+
+    const historicalRows = [
+      {
+        amount: targetByCategory.salaries,
+        category: "salaries",
+        department: "Administration",
+        description: `Monthly salary expenses ${month}`,
+        expenseCode: `EX-${month.replace(/-/g, "")}-1`,
+        quantity: "-",
+      },
+      {
+        amount: targetByCategory.supplies,
+        category: "supplies",
+        department: "Academics",
+        description: `Academic supplies ${month}`,
+        expenseCode: `EX-${month.replace(/-/g, "")}-2`,
+        quantity: "-",
+      },
+      {
+        amount: targetByCategory.events,
+        category: "events",
+        department: "Student Affairs",
+        description: `School events ${month}`,
+        expenseCode: `EX-${month.replace(/-/g, "")}-3`,
+        quantity: "-",
+      },
+      {
+        amount: targetByCategory.maintenance,
+        category: "maintenance",
+        department: "Facilities",
+        description: `Maintenance budget ${month}`,
+        expenseCode: `EX-${month.replace(/-/g, "")}-4`,
+        quantity: "-",
+      },
+      {
+        amount: targetByCategory.others,
+        category: "others",
+        department: "Operations",
+        description: `Other expenses ${month}`,
+        expenseCode: `EX-${month.replace(/-/g, "")}-5`,
+        quantity: "-",
+      },
+    ] as const
+
+    for (const [index, row] of historicalRows.entries()) {
+      await tx
+        .insert(financeExpenses)
+        .values({
+          amount: String(row.amount),
+          category: row.category,
+          department: row.department,
+          description: row.description,
+          expenseCode: row.expenseCode,
+          expenseDate: formatMonthDate(month, index + 8),
+          id: fixtureUuid(`finance-expense:${row.expenseCode}`),
+          quantity: row.quantity,
+          tenantId,
+        })
+        .onConflictDoUpdate({
+          target: financeExpenses.id,
+          set: {
+            amount: String(row.amount),
+            category: row.category,
+            department: row.department,
+            description: row.description,
+            expenseCode: row.expenseCode,
+            expenseDate: formatMonthDate(month, index + 8),
+            quantity: row.quantity,
+            updatedAt: new Date(),
+          },
+        })
+    }
+  }
+}
+
+async function upsertDashboardFinanceReimbursements(
+  tx: DatabaseTransaction,
+  tenantId: string
+): Promise<void> {
+  const today = new Date()
+  const monday = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()))
+  const day = monday.getUTCDay()
+  const mondayOffset = day === 0 ? -6 : 1 - day
+  monday.setUTCDate(monday.getUTCDate() + mondayOffset)
+
+  const rows = [
+    {
+      amount: 120,
+      dayOffset: 1,
+      department: "Mathematics",
+      proofLabel: "View File",
+      purpose: "Books Purchase",
+      requestCode: "RQ-3001",
+      staffName: "Argen Maulie",
+      status: "approved",
+    },
+    {
+      amount: 250,
+      dayOffset: 2,
+      department: "Science",
+      proofLabel: "View File",
+      purpose: "Lab Equipment",
+      requestCode: "RQ-3002",
+      staffName: "Bella Cruz",
+      status: "declined",
+    },
+    {
+      amount: 180,
+      dayOffset: 4,
+      department: "Physical Ed.",
+      proofLabel: "View File",
+      purpose: "Sports Supplies",
+      requestCode: "RQ-3003",
+      staffName: "Francesca Gill",
+      status: "approved",
+    },
+    {
+      amount: 300,
+      dayOffset: 5,
+      department: "Social Studies",
+      proofLabel: "View File",
+      purpose: "Seminar Travel",
+      requestCode: "RQ-3004",
+      staffName: "Dariah Ahmed",
+      status: "pending",
+    },
+    {
+      amount: 90,
+      dayOffset: 6,
+      department: "Arts",
+      proofLabel: "View File",
+      purpose: "Art Materials",
+      requestCode: "RQ-3005",
+      staffName: "Esteban Perez",
+      status: "pending",
+    },
+  ] as const
+
+  for (const row of rows) {
+    const submittedDate = new Date(monday)
+    submittedDate.setUTCDate(monday.getUTCDate() + row.dayOffset)
+
+    await tx
+      .insert(financeReimbursements)
+      .values({
+        amount: String(row.amount),
+        department: row.department,
+        id: fixtureUuid(`finance-reimbursement:${row.requestCode}`),
+        proofLabel: row.proofLabel,
+        purpose: row.purpose,
+        requestCode: row.requestCode,
+        staffName: row.staffName,
+        status: row.status,
+        submittedDate: submittedDate.toISOString().slice(0, 10),
+        tenantId,
+      })
+      .onConflictDoUpdate({
+        target: financeReimbursements.id,
+        set: {
+          amount: String(row.amount),
+          department: row.department,
+          proofLabel: row.proofLabel,
+          purpose: row.purpose,
+          requestCode: row.requestCode,
+          staffName: row.staffName,
+          status: row.status,
+          submittedDate: submittedDate.toISOString().slice(0, 10),
+          updatedAt: new Date(),
+        },
+      })
+  }
 }

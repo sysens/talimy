@@ -45,7 +45,10 @@ const NOTICE_AVATARS: Record<NoticePriority, string> = {
 
 const EVENT_ICON_MAP: Record<EventsResponse["data"][number]["type"], CalendarIconKey> = {
   academic: "classroom",
+  administration: "meeting",
   exam: "books",
+  events: "workshop",
+  finance: "announcement",
   holiday: "announcement",
   other: "meeting",
   sports: "workshop",
@@ -53,7 +56,10 @@ const EVENT_ICON_MAP: Record<EventsResponse["data"][number]["type"], CalendarIco
 
 const EVENT_COLOR_MAP: Record<EventsResponse["data"][number]["type"], string> = {
   academic: "text-sky-500",
+  administration: "text-slate-500",
   exam: "text-violet-500",
+  events: "text-cyan-500",
+  finance: "text-blue-500",
   holiday: "text-amber-500",
   other: "text-emerald-500",
   sports: "text-fuchsia-500",

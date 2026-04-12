@@ -10,7 +10,15 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common"
-import { createStudentSchema, updateStudentSchema, userTenantQuerySchema } from "@talimy/shared"
+import {
+  type CreateStudentInput,
+  createStudentSchema,
+  type StudentFormOptionsQueryInput,
+  type UpdateStudentInput,
+  studentFormOptionsQuerySchema,
+  updateStudentSchema,
+  userTenantQuerySchema,
+} from "@talimy/shared"
 
 import { Roles } from "@/common/decorators/roles.decorator"
 import {
@@ -24,8 +32,6 @@ import { TenantGuard } from "@/common/guards/tenant.guard"
 import { ZodValidationPipe } from "@/common/pipes/zod-validation.pipe"
 import { PermifyPdpService } from "../authz/permify/permify-pdp.service"
 
-import { CreateStudentDto } from "./dto/create-student.dto"
-import { UpdateStudentDto } from "./dto/update-student.dto"
 import { StudentsService } from "./students.service"
 
 @Controller("students")
@@ -37,57 +43,81 @@ export class StudentsController {
     private readonly permifyPdpService: PermifyPdpService
   ) {}
 
+  @Get("form-options")
+  @Roles("platform_admin", "school_admin")
+  async getFormOptions(
+    @CurrentUser() currentUser: CurrentUserType | null,
+    @Query(new ZodValidationPipe(studentFormOptionsQuerySchema)) query: StudentFormOptionsQueryInput
+  ) {
+    const resolvedTenantId =
+      typeof currentUser?.tenantId === "string" && currentUser.tenantId.length > 0
+        ? currentUser.tenantId
+        : query.tenantId
+    const resolvedGenderScope =
+      currentUser?.genderScope && currentUser.genderScope !== "all"
+        ? currentUser.genderScope
+        : (query.genderScope ?? "all")
+
+    if (currentUser && currentUser.roles?.includes("school_admin")) {
+      await this.permifyPdpService.assertGenderAccess({
+        tenantId: resolvedTenantId,
+        userId: currentUser.id,
+        roles: currentUser.roles ?? [],
+        userGenderScope: currentUser.genderScope ?? "all",
+        entity: "student",
+        action: "create",
+      })
+    }
+
+    return this.studentsService.getFormOptions(resolvedTenantId, resolvedGenderScope)
+  }
+
   @Get(":id")
   getById(
-    @Query(new ZodValidationPipe(userTenantQuerySchema)) queryInput: unknown,
+    @Query(new ZodValidationPipe(userTenantQuerySchema)) queryInput: { tenantId: string },
     @Param("id") id: string
   ) {
-    const query = queryInput as { tenantId: string }
-    return this.studentsService.getById(query.tenantId, id)
+    return this.studentsService.getById(queryInput.tenantId, id)
   }
 
   @Get(":id/grades")
   grades(
-    @Query(new ZodValidationPipe(userTenantQuerySchema)) queryInput: unknown,
+    @Query(new ZodValidationPipe(userTenantQuerySchema)) queryInput: { tenantId: string },
     @Param("id") id: string
   ) {
-    const query = queryInput as { tenantId: string }
-    return this.studentsService.getGrades(query.tenantId, id)
+    return this.studentsService.getGrades(queryInput.tenantId, id)
   }
 
   @Get(":id/attendance")
   attendance(
-    @Query(new ZodValidationPipe(userTenantQuerySchema)) queryInput: unknown,
+    @Query(new ZodValidationPipe(userTenantQuerySchema)) queryInput: { tenantId: string },
     @Param("id") id: string
   ) {
-    const query = queryInput as { tenantId: string }
-    return this.studentsService.getAttendance(query.tenantId, id)
+    return this.studentsService.getAttendance(queryInput.tenantId, id)
   }
 
   @Get(":id/parents")
   parents(
-    @Query(new ZodValidationPipe(userTenantQuerySchema)) queryInput: unknown,
+    @Query(new ZodValidationPipe(userTenantQuerySchema)) queryInput: { tenantId: string },
     @Param("id") id: string
   ) {
-    const query = queryInput as { tenantId: string }
-    return this.studentsService.getParents(query.tenantId, id)
+    return this.studentsService.getParents(queryInput.tenantId, id)
   }
 
   @Get(":id/summary")
   summary(
-    @Query(new ZodValidationPipe(userTenantQuerySchema)) queryInput: unknown,
+    @Query(new ZodValidationPipe(userTenantQuerySchema)) queryInput: { tenantId: string },
     @Param("id") id: string
   ) {
-    const query = queryInput as { tenantId: string }
-    return this.studentsService.getSummary(query.tenantId, id)
+    return this.studentsService.getSummary(queryInput.tenantId, id)
   }
 
   @Post()
+  @Roles("platform_admin", "school_admin")
   async create(
     @CurrentUser() currentUser: CurrentUserType | null,
-    @Body(new ZodValidationPipe(createStudentSchema)) payloadInput: unknown
+    @Body(new ZodValidationPipe(createStudentSchema)) payload: CreateStudentInput
   ) {
-    const payload = payloadInput as CreateStudentDto
     if (currentUser && currentUser.roles?.includes("school_admin")) {
       await this.permifyPdpService.assertGenderAccess({
         tenantId: payload.tenantId,
@@ -110,12 +140,10 @@ export class StudentsController {
   @Patch(":id")
   async update(
     @CurrentUser() currentUser: CurrentUserType | null,
-    @Query(new ZodValidationPipe(userTenantQuerySchema)) queryInput: unknown,
+    @Query(new ZodValidationPipe(userTenantQuerySchema)) query: { tenantId: string },
     @Param("id") id: string,
-    @Body(new ZodValidationPipe(updateStudentSchema)) payloadInput: unknown
+    @Body(new ZodValidationPipe(updateStudentSchema)) payload: UpdateStudentInput
   ) {
-    const query = queryInput as { tenantId: string }
-    const payload = payloadInput as UpdateStudentDto
     if (currentUser && currentUser.roles?.includes("school_admin")) {
       await this.permifyPdpService.assertGenderAccess({
         tenantId: query.tenantId,
@@ -137,10 +165,9 @@ export class StudentsController {
 
   @Delete(":id")
   delete(
-    @Query(new ZodValidationPipe(userTenantQuerySchema)) queryInput: unknown,
+    @Query(new ZodValidationPipe(userTenantQuerySchema)) query: { tenantId: string },
     @Param("id") id: string
   ) {
-    const query = queryInput as { tenantId: string }
     return this.studentsService.delete(query.tenantId, id)
   }
 }

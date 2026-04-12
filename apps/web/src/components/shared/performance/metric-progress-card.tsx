@@ -29,9 +29,9 @@ export function MetricProgressCard({
   title,
 }: MetricProgressCardProps) {
   return (
-    <Card className={cn("w-full p-0 bg-transparent shadow-none rounded-none", className)}>
-      <Card.Content className="gap-4 bg-transparent ">
-        <div className="flex items-start justify-between gap-3 ">
+    <Card className={cn("w-full bg-transparent shadow-none rounded-none px-0", className)}>
+      <Card.Content className="bg-transparent p-0">
+        <div className="flex items-start justify-between gap-3">
           <h3 className="text-[14px] leading-none font-semibold text-talimy-navy">{title}</h3>
 
           {filter ? (

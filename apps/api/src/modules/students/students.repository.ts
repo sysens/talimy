@@ -12,7 +12,6 @@ import {
 import { and, asc, desc, eq, isNull, ne, type SQL } from "drizzle-orm"
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 
-import { CreateStudentDto } from "./dto/create-student.dto"
 import { UpdateStudentDto } from "./dto/update-student.dto"
 import { toStudentGradeItem, toStudentParentItem, toStudentView } from "./students.mapper"
 import type {
@@ -27,33 +26,6 @@ export class StudentsRepository {
   async getById(tenantId: string, id: string): Promise<StudentView> {
     const row = await this.findStudentRowOrThrow(tenantId, id)
     return toStudentView(row.student, row.user, row.class)
-  }
-
-  async create(payload: CreateStudentDto): Promise<StudentView> {
-    const user = await this.findUserOrThrow(payload.tenantId, payload.userId)
-    await this.assertUniqueStudentCode(payload.tenantId, payload.studentId)
-    await this.assertUserNotStudent(payload.tenantId, payload.userId)
-    if (payload.classId) await this.assertClassInTenant(payload.tenantId, payload.classId)
-
-    const [created] = await db
-      .insert(students)
-      .values({
-        tenantId: payload.tenantId,
-        userId: payload.userId,
-        classId: payload.classId ?? null,
-        studentId: payload.studentId,
-        gender: payload.gender,
-        dateOfBirth: payload.dateOfBirth,
-        enrollmentDate: payload.enrollmentDate,
-        status: payload.status ?? "active",
-        bloodGroup: payload.bloodGroup,
-        address: payload.address,
-      })
-      .returning()
-    if (!created) throw new BadRequestException("Failed to create student")
-
-    const classRow = payload.classId ? await this.findClassOptional(payload.classId) : null
-    return toStudentView(created, user, classRow)
   }
 
   async update(tenantId: string, id: string, payload: UpdateStudentDto): Promise<StudentView> {
@@ -138,6 +110,7 @@ export class StudentsRepository {
         firstName: users.firstName,
         lastName: users.lastName,
         phone: parents.phone,
+        relationship: parents.relationship,
       })
       .from(parentStudent)
       .innerJoin(parents, eq(parents.id, parentStudent.parentId))
@@ -173,19 +146,6 @@ export class StudentsRepository {
       )
       .limit(1)
     if (!row) throw new NotFoundException("Student not found")
-    return row
-  }
-
-  private async findUserOrThrow(
-    tenantId: string,
-    userId: string
-  ): Promise<typeof users.$inferSelect> {
-    const [row] = await db
-      .select()
-      .from(users)
-      .where(and(eq(users.id, userId), eq(users.tenantId, tenantId), isNull(users.deletedAt)))
-      .limit(1)
-    if (!row) throw new NotFoundException("Student user account not found in tenant")
     return row
   }
 
@@ -226,20 +186,5 @@ export class StudentsRepository {
       .where(and(...filters))
       .limit(1)
     if (row) throw new BadRequestException("Student ID already exists")
-  }
-
-  private async assertUserNotStudent(tenantId: string, userId: string): Promise<void> {
-    const [row] = await db
-      .select({ id: students.id })
-      .from(students)
-      .where(
-        and(
-          eq(students.tenantId, tenantId),
-          eq(students.userId, userId),
-          isNull(students.deletedAt)
-        )
-      )
-      .limit(1)
-    if (row) throw new BadRequestException("User already linked to another student record")
   }
 }

@@ -1,5 +1,6 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { ArrowUpDown } from "lucide-react"
 import { Table } from "@heroui/react"
 
@@ -15,11 +16,13 @@ type RecordsTableCardProps<TItem> = {
   columns: readonly RecordsTableCardColumn<TItem>[]
   emptyState?: string
   filterAriaLabel?: string
-  filterOptions: readonly RecordsTableCardFilterOption[]
-  filterValue: string
   getRowKey: (item: TItem) => string
+  headerEnd?: ReactNode
+  filterOptions?: readonly RecordsTableCardFilterOption[]
+  filterValue?: string
   onFilterChange?: (value: string) => void
   rows: readonly TItem[]
+  tableContentClassName?: string
   title: string
 }
 
@@ -42,32 +45,41 @@ export function RecordsTableCard<TItem>({
   columns,
   emptyState = "No records found.",
   filterAriaLabel = "Records table filter",
+  getRowKey,
+  headerEnd,
   filterOptions,
   filterValue,
-  getRowKey,
   onFilterChange,
   rows,
+  tableContentClassName,
   title,
 }: RecordsTableCardProps<TItem>) {
+  const shouldShowFilter =
+    Array.isArray(filterOptions) && filterOptions.length > 0 && typeof filterValue === "string"
+
   return (
     <Card
       className={cn(
-        "w-full rounded-[28px] border border-slate-100 bg-white shadow-none",
+        "w-full rounded-[28px] border border-slate-100 bg-white shadow-none py-0",
         className
       )}
     >
-      <CardContent className="space-y-4 p-5">
+      <CardContent className="space-y-4 p-4">
         <div className="flex items-center justify-between gap-4">
           <h3 className="text-[16px] font-semibold leading-none text-talimy-navy">{title}</h3>
 
-          <ChartFilterSelect
-            ariaLabel={filterAriaLabel}
-            className="shrink-0"
-            onValueChange={onFilterChange}
-            options={[...filterOptions]}
-            triggerClassName="h-10 min-w-[144px] rounded-2xl px-3 text-sm font-semibold"
-            value={filterValue}
-          />
+          {shouldShowFilter ? (
+            <ChartFilterSelect
+              ariaLabel={filterAriaLabel}
+              className="shrink-0"
+              onValueChange={onFilterChange}
+              options={[...filterOptions]}
+              triggerClassName="h-10 min-w-[144px] rounded-2xl px-3 text-sm font-semibold"
+              value={filterValue}
+            />
+          ) : (
+            (headerEnd ?? null)
+          )}
         </div>
 
         <Table className="bg-transparent" variant="secondary">
@@ -79,7 +91,10 @@ export function RecordsTableCard<TItem>({
             ) : (
               <Table.Content
                 aria-label={title}
-                className="min-w-[820px] [&_tbody_tr:last-child_td]:border-b-0"
+                className={cn(
+                  "min-w-[820px] [&_tbody_tr:last-child_td]:border-b-0",
+                  tableContentClassName
+                )}
               >
                 <Table.Header>
                   {columns.map((column, index) => (

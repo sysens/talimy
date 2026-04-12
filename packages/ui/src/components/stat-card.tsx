@@ -64,7 +64,7 @@ export function StatCard({
       <Card
         className={cn(
           "rounded-3xl border-0 p-0 shadow-none",
-          active ? "bg-[var(--talimy-color-sky)] dark:bg-sky-900/40" : "bg-card",
+          active ? "bg-(--talimy-color-sky) dark:bg-sky-900/40" : "bg-card",
           className
         )}
         {...props}
@@ -93,12 +93,12 @@ export function StatCard({
       <Card
         className={cn(
           "rounded-3xl border-0 bg-card p-0 shadow-none",
-          active ? "bg-[var(--talimy-color-sky)] dark:bg-sky-900/40" : "",
+          active ? "bg-(--talimy-color-sky) dark:bg-sky-900/40" : "",
           className
         )}
         {...props}
       >
-        <div className="flex items-center gap-3 px-4 py-4">
+        <div className="flex items-center gap-3 px-4 py-4 ">
           <span
             className={cn("inline-flex size-9 items-center justify-center rounded-full", iconTone)}
           >
@@ -115,8 +115,11 @@ export function StatCard({
 
   if (variant === "finance") {
     return (
-      <Card className={cn("rounded-2xl border-0 bg-card p-0 shadow-none", className)} {...props}>
-        <div className="flex items-center gap-3 px-4 py-4">
+      <Card
+        className={cn("rounded-2xl border-0 bg-card p-0 shadow-none min-h-0! ", className)}
+        {...props}
+      >
+        <div className="flex items-center gap-3 px-4 py-4 ">
           <span
             className={cn("inline-flex size-11 items-center justify-center rounded-xl", iconTone)}
           >

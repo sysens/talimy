@@ -8,7 +8,7 @@ export type CalendarEntry = {
   title: string
 }
 
-export type CalendarAttendanceStatus = "late" | "onLeave" | "present"
+export type CalendarAttendanceStatus = "absent" | "late" | "onLeave" | "present" | "sick"
 
 export type CalendarAttendanceSummary = {
   colorClassName: string

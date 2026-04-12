@@ -5,14 +5,13 @@ import { TrendingUp } from "lucide-react"
 import { Bar, CartesianGrid, ComposedChart, Line, Rectangle, XAxis, YAxis } from "recharts"
 
 import { cn } from "../../lib/utils"
-import { ChartRadialStacked, type StackedRadialChartSegment } from "./stacked-radial"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
 import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-  type ChartConfig,
-} from "../ui/chart"
+  ChartRadialStacked,
+  type ChartRadialStackedProps,
+  type StackedRadialChartSegment,
+} from "./stacked-radial"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card"
+import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "../ui/chart"
 
 export type BarChartPoint = {
   absentBreakdown?: Array<{
@@ -33,6 +32,18 @@ export type BarChartDefaultProps = {
     note?: React.ReactNode
     radialCenterLabel?: React.ReactNode
     radialCenterValue: React.ReactNode
+    radialProps?: Pick<
+      ChartRadialStackedProps,
+      | "centerLabelClassName"
+      | "centerValueClassName"
+      | "chartClassName"
+      | "containerClassName"
+      | "cx"
+      | "cy"
+      | "guideRadius"
+      | "innerRadius"
+      | "outerRadius"
+    >
     radialSegments: StackedRadialChartSegment[]
   }
   footerNote?: React.ReactNode
@@ -275,7 +286,13 @@ function ChartBarBody({
           label={
             insideLabelFormatter
               ? (props: unknown) => {
-                  const { index = 0, value = 0, width = 0, x = 0, y = 0 } = props as {
+                  const {
+                    index = 0,
+                    value = 0,
+                    width = 0,
+                    x = 0,
+                    y = 0,
+                  } = props as {
                     index?: number
                     value?: number
                     width?: number
@@ -365,9 +382,7 @@ export function ChartBarDefault({
   const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null)
 
   const offsetValue =
-    chartType === "line"
-      ? ((valueDomain[1] - valueDomain[0]) / 180) * lineOffsetPx
-      : 0
+    chartType === "line" ? ((valueDomain[1] - valueDomain[0]) / 180) * lineOffsetPx : 0
 
   const chartData = data.map((item) => ({
     absentBreakdown: item.absentBreakdown ?? [],
@@ -395,6 +410,7 @@ export function ChartBarDefault({
                 centerValue={dualConfig.radialCenterValue}
                 hideHeader
                 segments={dualConfig.radialSegments}
+                {...dualConfig.radialProps}
               />
               {dualConfig.note ? (
                 <div className="rounded-2xl bg-[color-mix(in_srgb,var(--talimy-color-gray)_10%,white_90%)] p-2 text-sm leading-6 text-muted-foreground">

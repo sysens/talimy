@@ -14,6 +14,8 @@ import {
   examResults,
   exams,
   feeStructures,
+  financeExpenses,
+  financeReimbursements,
   gradeScales,
   grades,
   invoices,
@@ -29,7 +31,14 @@ import {
   schedules,
   sections,
   sessions,
+  staffAttendanceRecords,
   students,
+  studentBehaviorLogs,
+  studentDocuments,
+  studentExtracurricularRecords,
+  studentHealthRecords,
+  studentProfiles,
+  studentScholarships,
   subjects,
   teachers,
   teacherAttendanceRecords,
@@ -40,6 +49,7 @@ import {
   teacherSubjectAssignments,
   teacherTrainingRecords,
   teacherWorkloadSnapshots,
+  tenantStudentModuleSettings,
   tenants,
   terms,
   users,
@@ -64,7 +74,15 @@ export const tenantsRelations = relations(tenants, ({ many }) => ({
   teacherAttendanceRecords: many(teacherAttendanceRecords),
   teacherLeaveRequests: many(teacherLeaveRequests),
   teacherPerformanceSnapshots: many(teacherPerformanceSnapshots),
+  staffAttendanceRecords: many(staffAttendanceRecords),
   students: many(students),
+  studentProfiles: many(studentProfiles),
+  studentDocuments: many(studentDocuments),
+  studentScholarships: many(studentScholarships),
+  studentHealthRecords: many(studentHealthRecords),
+  studentExtracurricularRecords: many(studentExtracurricularRecords),
+  studentBehaviorLogs: many(studentBehaviorLogs),
+  tenantStudentModuleSettings: many(tenantStudentModuleSettings),
   parents: many(parents),
   parentStudent: many(parentStudent),
   attendance: many(attendance),
@@ -79,6 +97,8 @@ export const tenantsRelations = relations(tenants, ({ many }) => ({
   payments: many(payments),
   paymentPlans: many(paymentPlans),
   invoices: many(invoices),
+  financeExpenses: many(financeExpenses),
+  financeReimbursements: many(financeReimbursements),
   notices: many(notices),
   events: many(events),
   notifications: many(notifications),
@@ -105,6 +125,7 @@ export const usersRelations = relations(users, ({ one, many }) => ({
   aiConversations: many(aiConversations),
   aiReports: many(aiReports),
   teacherLeaveDecisions: many(teacherLeaveRequests),
+  staffAttendanceRecords: many(staffAttendanceRecords),
 }))
 
 export const rolesRelations = relations(roles, ({ one, many }) => ({
@@ -292,10 +313,27 @@ export const teacherPerformanceSnapshotsRelations = relations(
   })
 )
 
+export const staffAttendanceRecordsRelations = relations(staffAttendanceRecords, ({ one }) => ({
+  tenant: one(tenants, {
+    fields: [staffAttendanceRecords.tenantId],
+    references: [tenants.id],
+  }),
+  user: one(users, {
+    fields: [staffAttendanceRecords.userId],
+    references: [users.id],
+  }),
+}))
+
 export const studentsRelations = relations(students, ({ one, many }) => ({
   tenant: one(tenants, { fields: [students.tenantId], references: [tenants.id] }),
   user: one(users, { fields: [students.userId], references: [users.id] }),
   class: one(classes, { fields: [students.classId], references: [classes.id] }),
+  profile: one(studentProfiles, { fields: [students.id], references: [studentProfiles.studentId] }),
+  documents: many(studentDocuments),
+  scholarships: many(studentScholarships),
+  healthRecords: many(studentHealthRecords),
+  extracurricularRecords: many(studentExtracurricularRecords),
+  behaviorLogs: many(studentBehaviorLogs),
   parentLinks: many(parentStudent),
   attendance: many(attendance),
   grades: many(grades),
@@ -307,10 +345,59 @@ export const studentsRelations = relations(students, ({ one, many }) => ({
   aiInsights: many(aiInsights),
 }))
 
+export const studentProfilesRelations = relations(studentProfiles, ({ one }) => ({
+  tenant: one(tenants, { fields: [studentProfiles.tenantId], references: [tenants.id] }),
+  student: one(students, { fields: [studentProfiles.studentId], references: [students.id] }),
+}))
+
+export const tenantStudentModuleSettingsRelations = relations(
+  tenantStudentModuleSettings,
+  ({ one }) => ({
+    tenant: one(tenants, {
+      fields: [tenantStudentModuleSettings.tenantId],
+      references: [tenants.id],
+    }),
+  })
+)
+
 export const parentsRelations = relations(parents, ({ one, many }) => ({
   tenant: one(tenants, { fields: [parents.tenantId], references: [tenants.id] }),
   user: one(users, { fields: [parents.userId], references: [users.id] }),
   studentLinks: many(parentStudent),
+}))
+
+export const studentDocumentsRelations = relations(studentDocuments, ({ one }) => ({
+  tenant: one(tenants, { fields: [studentDocuments.tenantId], references: [tenants.id] }),
+  student: one(students, { fields: [studentDocuments.studentId], references: [students.id] }),
+}))
+
+export const studentScholarshipsRelations = relations(studentScholarships, ({ one }) => ({
+  tenant: one(tenants, { fields: [studentScholarships.tenantId], references: [tenants.id] }),
+  student: one(students, { fields: [studentScholarships.studentId], references: [students.id] }),
+}))
+
+export const studentHealthRecordsRelations = relations(studentHealthRecords, ({ one }) => ({
+  tenant: one(tenants, { fields: [studentHealthRecords.tenantId], references: [tenants.id] }),
+  student: one(students, { fields: [studentHealthRecords.studentId], references: [students.id] }),
+}))
+
+export const studentExtracurricularRecordsRelations = relations(
+  studentExtracurricularRecords,
+  ({ one }) => ({
+    tenant: one(tenants, {
+      fields: [studentExtracurricularRecords.tenantId],
+      references: [tenants.id],
+    }),
+    student: one(students, {
+      fields: [studentExtracurricularRecords.studentId],
+      references: [students.id],
+    }),
+  })
+)
+
+export const studentBehaviorLogsRelations = relations(studentBehaviorLogs, ({ one }) => ({
+  tenant: one(tenants, { fields: [studentBehaviorLogs.tenantId], references: [tenants.id] }),
+  student: one(students, { fields: [studentBehaviorLogs.studentId], references: [students.id] }),
 }))
 
 export const parentStudentRelations = relations(parentStudent, ({ one }) => ({
@@ -401,6 +488,17 @@ export const paymentPlansRelations = relations(paymentPlans, ({ one }) => ({
 export const invoicesRelations = relations(invoices, ({ one }) => ({
   tenant: one(tenants, { fields: [invoices.tenantId], references: [tenants.id] }),
   student: one(students, { fields: [invoices.studentId], references: [students.id] }),
+}))
+
+export const financeExpensesRelations = relations(financeExpenses, ({ one }) => ({
+  tenant: one(tenants, { fields: [financeExpenses.tenantId], references: [tenants.id] }),
+}))
+
+export const financeReimbursementsRelations = relations(financeReimbursements, ({ one }) => ({
+  tenant: one(tenants, {
+    fields: [financeReimbursements.tenantId],
+    references: [tenants.id],
+  }),
 }))
 
 export const noticesRelations = relations(notices, ({ one }) => ({

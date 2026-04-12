@@ -1,6 +1,4 @@
 import { MiddlewareConsumer, Module, type NestModule } from "@nestjs/common"
-import { APP_FILTER } from "@nestjs/core"
-import { SentryGlobalFilter, SentryModule } from "@sentry/nestjs/setup"
 
 import { AppController } from "./app.controller"
 import { AuthGuard } from "./common/guards/auth.guard"
@@ -14,6 +12,7 @@ import { AuthModule } from "./modules/auth/auth.module"
 import { AssignmentsModule } from "./modules/assignments/assignments.module"
 import { AttendanceModule } from "./modules/attendance/attendance.module"
 import { AiModule } from "./modules/ai/ai.module"
+import { AdminAttendanceModule } from "./modules/admin-attendance/admin-attendance.module"
 import { AdminDashboardModule } from "./modules/admin-dashboard/admin-dashboard.module"
 import { AuditModule } from "./modules/audit/audit.module"
 import { ClassesModule } from "./modules/classes/classes.module"
@@ -35,8 +34,8 @@ import { UploadModule } from "./modules/upload/upload.module"
 
 @Module({
   imports: [
-    SentryModule.forRoot(),
     PermifyModule,
+    AdminAttendanceModule,
     AdminDashboardModule,
     AuthModule,
     UsersModule,
@@ -61,16 +60,7 @@ import { UploadModule } from "./modules/upload/upload.module"
     CacheModule,
   ],
   controllers: [AppController],
-  providers: [
-    AuthGuard,
-    RolesGuard,
-    TenantGuard,
-    GenderGuard,
-    {
-      provide: APP_FILTER,
-      useClass: SentryGlobalFilter,
-    },
-  ],
+  providers: [AuthGuard, RolesGuard, TenantGuard, GenderGuard],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

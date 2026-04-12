@@ -34,6 +34,7 @@ export type StudentsAttendanceWeeklyResponse = {
     label: string
     value: number
   }>
+  totalStudents: number
   week: "current"
 }
 

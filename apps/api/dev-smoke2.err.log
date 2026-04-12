@@ -1,0 +1,2 @@
+$ bun run scripts/dev-start.ts
+error: script "dev" exited with code 255

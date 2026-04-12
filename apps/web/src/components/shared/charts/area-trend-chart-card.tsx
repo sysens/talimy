@@ -23,9 +23,11 @@ type AreaTrendChartCardProps<TPeriod extends string> = {
   fillColor?: string
   filterAriaLabel: string
   filterOptions: readonly [AreaTrendChartOption<TPeriod>, ...AreaTrendChartOption<TPeriod>[]]
+  hoverContentClassName?: string
   lineColor?: string
   onPeriodChange?: (value: TPeriod) => void
   period?: TPeriod
+  renderHoverContent?: (point: AreaTrendChartPoint) => React.ReactNode
   title: string
   valueFormatter?: (value: number) => string
   yScaleValues: readonly string[]
@@ -102,9 +104,11 @@ export function AreaTrendChartCard<TPeriod extends string>({
   fillColor = "var(--talimy-color-pink)",
   filterAriaLabel,
   filterOptions,
+  hoverContentClassName,
   lineColor = "var(--talimy-color-navy)",
   onPeriodChange,
   period,
+  renderHoverContent,
   title,
   valueFormatter = (value) => value.toLocaleString(),
   yScaleValues,
@@ -159,6 +163,11 @@ export function AreaTrendChartCard<TPeriod extends string>({
       : 18 + ((chartMaxValue - hoveredPoint.value) / chartValueRange) * 112
   const hoveredPointLeft =
     hoveredPointIndex < 0 ? null : `${((hoveredPointIndex + 0.5) / activeData.length) * 100}%`
+  const hoverContent =
+    hoveredPoint === null
+      ? null
+      : (renderHoverContent?.(hoveredPoint) ?? valueFormatter(hoveredPoint.value))
+  const hoverContentTopOffset = renderHoverContent ? 70 : 18
 
   return (
     <MiniChart
@@ -166,7 +175,7 @@ export function AreaTrendChartCard<TPeriod extends string>({
         distribution: "evenly",
         values: activeData.map((item) => item.shortLabel),
       }}
-      chartClassName="min-h-[188px]"
+      chartClassName="min-h-[188px] pl-11"
       className={className}
       filter={{
         ariaLabel: filterAriaLabel,
@@ -265,15 +274,22 @@ export function AreaTrendChartCard<TPeriod extends string>({
             />
           </AreaChart>
         </ChartContainer>
-        {hoveredPoint !== null && hoveredPointLeft !== null && hoveredPointTop !== null ? (
+        {hoverContent !== null && hoveredPointLeft !== null && hoveredPointTop !== null ? (
           <div
-            className="pointer-events-none absolute z-30 -translate-x-1/2 text-[11px] font-semibold text-talimy-navy"
+            className={
+              renderHoverContent
+                ? [
+                    "pointer-events-none absolute z-30 -translate-x-1/2 rounded-2xl border border-slate-100 bg-white px-3 py-2 text-left shadow-sm",
+                    hoverContentClassName ?? "",
+                  ].join(" ")
+                : "pointer-events-none absolute z-30 -translate-x-1/2 text-[11px] font-semibold text-talimy-navy"
+            }
             style={{
               left: hoveredPointLeft,
-              top: `${hoveredPointTop - 18}px`,
+              top: `${hoveredPointTop - hoverContentTopOffset}px`,
             }}
           >
-            {valueFormatter(hoveredPoint.value)}
+            {hoverContent}
           </div>
         ) : null}
         <div

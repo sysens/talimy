@@ -18,7 +18,7 @@ export function AuthSidePanel({ workspaceKind }: AuthSidePanelProps) {
 
   return (
     <div className="flex h-full flex-col rounded-[2rem] bg-[linear-gradient(180deg,rgba(254,204,253,0.92),rgba(254,204,253,0.78))] text-talimy-navy shadow-[0_28px_60px_rgba(21,68,110,0.12)] xl:p-6">
-      <div className="relative flex h-full flex-col justify-between overflow-hidden rounded-[1.75rem] bg-[linear-gradient(180deg,rgba(254,204,253,0.35),rgba(254,204,253,0.18))]">
+      <div className="relative flex h-full flex-col justify-around overflow-hidden rounded-[1.75rem] bg-[linear-gradient(180deg,rgba(254,204,253,0.35),rgba(254,204,253,0.18))]">
         <div className="pointer-events-none absolute -left-40 top-16 h-96 w-96 rounded-full border-26 border-(--talimy-color-pink)/24" />
         <div className="pointer-events-none absolute -bottom-20 -left-20 h-104 w-104 rounded-full border-26 border-(--talimy-color-pink)/14" />
 
@@ -33,7 +33,7 @@ export function AuthSidePanel({ workspaceKind }: AuthSidePanelProps) {
           </div>
         </div>
 
-        <Card className="relative mt-10 overflow-hidden rounded-[1.75rem] border-none bg-white/95 shadow-[0_26px_70px_rgba(21,68,110,0.14)]">
+        <Card className="relative overflow-hidden rounded-[1.75rem] border-none bg-white/95 shadow-[0_26px_70px_rgba(21,68,110,0.14)]">
           <CardContent className="relative space-y-5 p-8">
             <div className="absolute right-0 top-0 flex size-16 items-center justify-center rounded-bl-[1.5rem] bg-white">
               <div className="rounded-[1.15rem] bg-talimy-sky/48 p-3 text-talimy-navy shadow-inner">
@@ -66,10 +66,7 @@ export function AuthSidePanel({ workspaceKind }: AuthSidePanelProps) {
             <div className="flex items-center justify-end">
               <div className="flex -space-x-3">
                 {["SA", "TE", "ST"].map((initials) => (
-                  <Avatar
-                    key={initials}
-                    className="size-12 border-2 border-white bg-talimy-sky/38"
-                  >
+                  <Avatar key={initials} className="size-12 border-2 border-white bg-talimy-sky/38">
                     <AvatarFallback className="bg-talimy-sky/52 text-sm font-semibold text-talimy-navy">
                       {initials}
                     </AvatarFallback>

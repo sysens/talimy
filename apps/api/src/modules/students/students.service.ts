@@ -1,13 +1,22 @@
 import { Injectable } from "@nestjs/common"
+import type {
+  CreateStudentInput,
+  StudentCreateFormOptions,
+  UpdateStudentInput,
+} from "@talimy/shared"
 
-import { CreateStudentDto } from "./dto/create-student.dto"
-import { UpdateStudentDto } from "./dto/update-student.dto"
+import { StudentsCreateRepository } from "./students-create.repository"
+import { StudentsFormService } from "./students-form.service"
 import { StudentsRepository } from "./students.repository"
 import { StudentsSummaryRepository } from "./students.summary.repository"
+
+type FormGenderScope = "all" | "female" | "male"
 
 @Injectable()
 export class StudentsService {
   constructor(
+    private readonly createRepository: StudentsCreateRepository,
+    private readonly formService: StudentsFormService,
     private readonly repository: StudentsRepository,
     private readonly summaryRepository: StudentsSummaryRepository
   ) {}
@@ -16,11 +25,18 @@ export class StudentsService {
     return this.repository.getById(tenantId, id)
   }
 
-  create(payload: CreateStudentDto) {
-    return this.repository.create(payload)
+  getFormOptions(
+    tenantId: string,
+    genderScope: FormGenderScope
+  ): Promise<StudentCreateFormOptions> {
+    return this.formService.getFormOptions(tenantId, genderScope)
   }
 
-  update(tenantId: string, id: string, payload: UpdateStudentDto) {
+  create(payload: CreateStudentInput) {
+    return this.createRepository.create(payload)
+  }
+
+  update(tenantId: string, id: string, payload: UpdateStudentInput) {
     return this.repository.update(tenantId, id, payload)
   }
 

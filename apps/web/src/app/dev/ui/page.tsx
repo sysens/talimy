@@ -2,15 +2,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@talimy/ui"
 
 import { AttendanceOverviewChartShowcase433 } from "@/components/shared/ui-showcase/attendance-overview-chart-4-3-3"
 import { AttendanceProgressChartShowcase433 } from "@/components/shared/ui-showcase/attendance-progress-chart-4-3-3"
+import { AttendanceRosterGridCardShowcase } from "@/components/shared/ui-showcase/attendance-roster-grid-card-showcase"
 import { DataTableShowcase42 } from "@/components/shared/ui-showcase/data-table-4-2"
 import { DocumentsListCardShowcase } from "@/components/shared/ui-showcase/documents-list-card-showcase"
 import { EarningsExpensesChartShowcase433 } from "@/components/shared/ui-showcase/earnings-expenses-chart-4-3-3"
 import { EventsListShowcase } from "@/components/shared/ui-showcase/events-list-showcase"
+import { FeesProgressCardShowcase } from "@/components/shared/ui-showcase/fees-progress-card-showcase"
 import { FeesCollectionTrendChartShowcase433 } from "@/components/shared/ui-showcase/area-gradient"
+import { ExpenseBreakdownDonutCardShowcase } from "@/components/shared/ui-showcase/expense-breakdown-donut-card-showcase"
+import { ExpenseTrendChartCardShowcase } from "@/components/shared/ui-showcase/expense-trend-chart-card-showcase"
+import { ExpensesTableCardShowcase } from "@/components/shared/ui-showcase/expenses-table-card-showcase"
 import { FullStackedRadialChartShowcase433 } from "@/components/shared/ui-showcase/full-stacked-radial-4-3-3"
 import { GenderDistributionChartShowcase433 } from "@/components/shared/ui-showcase/gender-distribution-chart-4-3-3"
 import { AdminDashboardTodoListSection } from "@/components/dashboard/admin/admin-dashboard-todo-list-section"
 import { AcademicPerformanceGroupedChartShowcase433 } from "@/components/shared/ui-showcase/academic-performance-grouped-chart-4-3-3"
+import { AdminCalendarPageShowcase } from "@/components/shared/ui-showcase/admin-calendar-page-showcase"
 import { NoticeBoardHerouiTableShowcase } from "@/components/shared/ui-showcase/notice-board-heroui-table"
 import { PrimitivesShowcase411 } from "@/components/shared/ui-showcase/primitives-4-1-1"
 import { PrimitivesShowcase412 } from "@/components/shared/ui-showcase/primitives-4-1-2"
@@ -25,6 +31,10 @@ import { RequestDecisionCardShowcase } from "@/components/shared/ui-showcase/req
 import { MetricProgressCardShowcase } from "@/components/shared/ui-showcase/metric-progress-card-showcase"
 import { StatCardShowcase431 } from "@/components/shared/ui-showcase/stat-card-4-3-1"
 import { StudentAcademicPerformanceChartShowcase433 } from "@/components/shared/ui-showcase/student-academic-performance-chart-4-3-3"
+import { AttendanceSummaryCardsShowcase } from "@/components/shared/ui-showcase/attendance-summary-cards-showcase"
+import { ReimbursementsTableCardShowcase } from "@/components/shared/ui-showcase/reimbursements-table-card-showcase"
+import { StudentCreateFormShowcase } from "@/components/shared/ui-showcase/student-create-form-showcase"
+import { StudentDetailPageShowcase } from "@/components/shared/ui-showcase/student-detail-page-showcase"
 import { CalendarWidgetShowcase } from "@/components/shared/ui-showcase/calendar-widget-showcase"
 import { ProfileDetailsCardShowcase } from "@/components/shared/ui-showcase/profile-details-card-showcase"
 import { ProfileOverviewCardShowcase } from "@/components/shared/ui-showcase/profile-overview-card-showcase"
@@ -267,6 +277,74 @@ export default function UiShowcasePage() {
         </CardHeader>
         <CardContent>
           <TeacherCreateFormShowcase />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 8.2.1 - 8.2.11 Student Detail Page</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <StudentDetailPageShowcase />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 8.3.1 - 8.3.9 Add Student Page</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <StudentCreateFormShowcase />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 9.1.1 - Attendance Summary Cards</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <AttendanceSummaryCardsShowcase />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 9.1.4 - Attendance Calendar Grid</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <AttendanceRosterGridCardShowcase />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 9.2.3 - Fees Collection Progress</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <FeesProgressCardShowcase />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 9.3.1 - 9.3.5 Finance Expenses</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
+            <ExpenseTrendChartCardShowcase />
+            <ReimbursementsTableCardShowcase />
+          </div>
+          <ExpenseBreakdownDonutCardShowcase />
+          <ExpensesTableCardShowcase />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 9.6.1 - 9.6.7 Calendar Page</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <AdminCalendarPageShowcase />
         </CardContent>
       </Card>
     </main>

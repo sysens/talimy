@@ -11,6 +11,7 @@ import { classes } from "./schema/classes"
 import { parentStudent } from "./schema/parent-student"
 import { parents } from "./schema/parents"
 import { students } from "./schema/students"
+import { tenantStudentModuleSettings } from "./schema/tenant-student-module-settings"
 import { teachers } from "./schema/teachers"
 import { tenants } from "./schema/tenants"
 import { users } from "./schema/users"
@@ -296,6 +297,36 @@ async function ensureParentStudentRelation(
   })
 }
 
+async function ensureTenantStudentModuleSettings(
+  tx: DatabaseTransaction,
+  tenantId: string
+): Promise<void> {
+  await tx
+    .insert(tenantStudentModuleSettings)
+    .values({
+      tenantId,
+      contractNumberEnabled: true,
+      dormitoryEnabled: true,
+      financeEnabled: true,
+      grantEnabled: true,
+      mealsEnabled: true,
+      residencePermitEnabled: true,
+    })
+    .onConflictDoUpdate({
+      target: tenantStudentModuleSettings.tenantId,
+      set: {
+        contractNumberEnabled: true,
+        dormitoryEnabled: true,
+        financeEnabled: true,
+        grantEnabled: true,
+        mealsEnabled: true,
+        residencePermitEnabled: true,
+        updatedAt: new Date(),
+        deletedAt: null,
+      },
+    })
+}
+
 export async function bootstrapProductionData(): Promise<void> {
   const platformPasswordHash = await hashPassword(PLATFORM_PASSWORD)
   const schoolAdminPasswordHash = await hashPassword(SCHOOL_ADMIN_PASSWORD)
@@ -421,8 +452,10 @@ export async function bootstrapProductionData(): Promise<void> {
     })
 
     await ensureParentStudentRelation(tx, schoolTenantId, parentId, studentId)
+    await ensureTenantStudentModuleSettings(tx, schoolTenantId)
     await ensureDashboardFixtures(tx, {
       academicYearId,
+      parentPasswordHash,
       schoolAdminUserId,
       schoolTenantId,
       studentPasswordHash,

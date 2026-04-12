@@ -213,6 +213,17 @@ export class StudentsDirectoryRepository {
     const endDate = new Date(lastWeekDay)
     endDate.setUTCDate(endDate.getUTCDate() + 1)
 
+    const [studentCountRow] = await db
+      .select({ total: sql<number>`count(*)::int` })
+      .from(students)
+      .where(
+        and(
+          eq(students.tenantId, query.tenantId),
+          isNull(students.deletedAt),
+          gender ? eq(students.gender, gender) : undefined
+        )
+      )
+
     const presentRows = await db
       .select({
         date: attendance.date,
@@ -230,7 +241,7 @@ export class StudentsDirectoryRepository {
       .where(
         and(
           eq(attendance.tenantId, query.tenantId),
-          eq(attendance.status, "present"),
+          sql`${attendance.status} <> 'absent'`,
           gte(attendance.date, formatDateOnly(startDate)),
           lt(attendance.date, formatDateOnly(endDate)),
           gender ? eq(students.gender, gender) : undefined,
@@ -314,6 +325,7 @@ export class StudentsDirectoryRepository {
           value: totalsByDate.get(isoDate) ?? 0,
         }
       }),
+      totalStudents: studentCountRow?.total ?? 0,
       week: query.week,
     }
   }

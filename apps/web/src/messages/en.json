@@ -1104,6 +1104,309 @@
         "empty": "No students found.",
         "error": "Failed to load students."
       }
+    },
+    "detail": {
+      "monthNames": {
+        "january": "January",
+        "february": "February",
+        "march": "March",
+        "april": "April",
+        "may": "May",
+        "june": "June",
+        "july": "July",
+        "august": "August",
+        "september": "September",
+        "october": "October",
+        "november": "November",
+        "december": "December"
+      },
+      "header": {
+        "title": "Student Details"
+      },
+      "toast": {
+        "title": "Student Information",
+        "loadFailed": "Failed to load student details."
+      },
+      "states": {
+        "empty": "Student not found."
+      },
+      "gender": {
+        "male": "Male",
+        "female": "Female"
+      },
+      "status": {
+        "active": "Active",
+        "inactive": "Inactive",
+        "graduated": "Graduated",
+        "transferred": "Transferred"
+      },
+      "personal": {
+        "gender": "Gender",
+        "dateOfBirth": "Date of Birth",
+        "phone": "Phone Number",
+        "address": "Address"
+      },
+      "guardians": {
+        "title": "Parent/Guardian Info",
+        "actionLabel": "Guardian actions",
+        "father": "Father",
+        "mother": "Mother",
+        "alternativeGuardian": "Alternative Guardian",
+        "relationship": {
+          "aunt": "Aunt",
+          "uncle": "Uncle",
+          "guardian": "Guardian"
+        }
+      },
+      "documents": {
+        "title": "Documents",
+        "actionLabel": "Document actions"
+      },
+      "attendanceCalendar": {
+        "meta": {
+          "absent": "Absent",
+          "absentDescription": "Student was absent from class",
+          "late": "Late",
+          "lateDescription": "Student arrived late to class",
+          "present": "Present",
+          "presentDescription": "Student attended class",
+          "sick": "Sick",
+          "sickDescription": "Excused due to health reasons"
+        },
+        "weekdays": {
+          "sunday": "S",
+          "monday": "M",
+          "tuesday": "T",
+          "wednesday": "W",
+          "thursday": "T",
+          "friday": "F",
+          "saturday": "S"
+        }
+      },
+      "scholarships": {
+        "title": "Scholarships",
+        "actionLabel": "Scholarship actions",
+        "types": {
+          "finance": "Finance",
+          "enrichment": "Enrichment"
+        }
+      },
+      "health": {
+        "title": "Health & Medical Info",
+        "actionLabel": "Health actions"
+      },
+      "academicPerformance": {
+        "title": "Academic Performance",
+        "filters": {
+          "last6Months": "Last 6 Months",
+          "thisSemester": "This Semester"
+        }
+      },
+      "extracurricular": {
+        "title": "Extracurricular",
+        "actionLabel": "Extracurricular actions",
+        "empty": "No extracurricular records found.",
+        "columns": {
+          "club": "Club",
+          "achievements": "Achievements",
+          "duration": "Duration",
+          "advisor": "Advisor"
+        }
+      },
+      "behaviorLog": {
+        "title": "Behavior & Discipline Log",
+        "actionLabel": "Behavior log actions",
+        "empty": "No behavior records found.",
+        "columns": {
+          "date": "Date",
+          "typeAndDetails": "Type & Details",
+          "reportedBy": "Reported By",
+          "statusAction": "Status/Action"
+        },
+        "types": {
+          "positiveNote": "Positive Note",
+          "minorIssue": "Minor Issue",
+          "majorIssue": "Major Issue"
+        },
+        "actions": {
+          "recordRecognition": "Record Recognition",
+          "recognitionRecorded": "Recognition Recorded",
+          "issueWarning": "Issue Warning",
+          "parentNotified": "Parent Notified"
+        }
+      }
+    },
+    "create": {
+      "header": {
+        "title": "Add Student",
+        "backLabel": "Students",
+        "breadcrumbs": {
+          "dashboard": "Dashboard",
+          "students": "Students",
+          "addStudent": "Add Student"
+        }
+      },
+      "loading": "Loading form data...",
+      "loadError": "Could not load the add student form data.",
+      "retry": "Retry",
+      "personal": {
+        "title": "Personal Information",
+        "firstNameLabel": "First Name",
+        "firstNamePlaceholder": "Enter first name",
+        "lastNameLabel": "Last Name",
+        "lastNamePlaceholder": "Enter last name",
+        "middleNameLabel": "Middle Name",
+        "middleNamePlaceholder": "Enter middle name",
+        "dateOfBirthLabel": "Date of Birth",
+        "genderLabel": "Gender",
+        "genderPlaceholder": "Select gender",
+        "genderOptions": {
+          "male": "Male",
+          "female": "Female"
+        },
+        "avatar": {
+          "label": "Avatar",
+          "uploadLabel": "Upload image",
+          "changeLabel": "Change image",
+          "removeLabel": "Remove image",
+          "emptyLabel": "No image attached",
+          "previewLabel": "Uploaded image preview",
+          "uploadErrorTitle": "Avatar upload failed"
+        }
+      },
+      "contact": {
+        "title": "Contact Information",
+        "emailLabel": "Email Address",
+        "emailPlaceholder": "student@school.uz",
+        "phoneLabel": "Phone Number",
+        "addressLabel": "Address",
+        "addressPlaceholder": "Enter street, city, region and ZIP"
+      },
+      "guardians": {
+        "title": "Parent / Guardian Information",
+        "fatherTitle": "Father",
+        "motherTitle": "Mother",
+        "alternativeTitle": "Alternative Guardian",
+        "nameLabel": "First Name",
+        "lastNameLabel": "Last Name",
+        "phoneLabel": "Phone Number",
+        "relationLabel": "Relation",
+        "relationPlaceholder": "Select relation",
+        "firstNamePlaceholder": "Enter first name",
+        "lastNamePlaceholder": "Enter last name",
+        "relationOptions": {
+          "aunt": "Aunt",
+          "uncle": "Uncle",
+          "guardian": "Guardian",
+          "grandmother": "Grandmother",
+          "grandfather": "Grandfather",
+          "sibling": "Sibling",
+          "other": "Other"
+        }
+      },
+      "administration": {
+        "title": "Administration",
+        "gradeLabel": "Grade",
+        "gradePlaceholder": "Select grade",
+        "sectionLabel": "Section",
+        "sectionPlaceholder": "Select section",
+        "enrollmentDateLabel": "Enrollment Date",
+        "previousSchoolLabel": "Previous School",
+        "previousSchoolPlaceholder": "Enter previous school"
+      },
+      "additional": {
+        "title": "Additional Information",
+        "hobbiesLabel": "Hobbies / Interests",
+        "hobbiesPlaceholder": "Enter hobbies and interests",
+        "specialNeedsLabel": "Special Needs Support",
+        "specialNeedsDescription": "Enable if the student needs additional learning support.",
+        "medicalConditionLabel": "Medical Condition Alert",
+        "medicalConditionDescription": "Enable if there is an important medical condition.",
+        "medicalConditionDetailsLabel": "Medical Condition Details",
+        "medicalConditionDetailsPlaceholder": "Describe the medical condition"
+      },
+      "academic": {
+        "title": "Academic Information",
+        "classSummaryLabel": "Class / Section",
+        "classSummaryPlaceholder": "Select a class",
+        "grantTypeLabel": "Grant Type",
+        "grantTypePlaceholder": "Select grant type",
+        "grantTypeOptions": {
+          "zakat": "Zakat",
+          "sponsor": "Sponsor",
+          "other": "Other"
+        },
+        "totalFeeLabel": "Total Fee",
+        "totalFeePlaceholder": "0.00",
+        "paidAmountLabel": "Paid Amount",
+        "paidAmountPlaceholder": "0.00"
+      },
+      "modules": {
+        "title": "Module-based Fields",
+        "dormitoryRoomLabel": "Dormitory Room",
+        "dormitoryRoomPlaceholder": "e.g. A-12",
+        "mealsLabel": "Meals",
+        "mealsPlaceholder": "Select meal plan",
+        "mealsOptions": {
+          "none": "None",
+          "one_meal": "1 meal",
+          "three_meals": "3 meals"
+        },
+        "residencePermitLabel": "Residence Permit",
+        "residencePermitPlaceholder": "Select status",
+        "residencePermitOptions": {
+          "obtained": "Obtained",
+          "pending_90_days": "Pending in 90 days",
+          "none": "None"
+        },
+        "contractNumberLabel": "Contract Number",
+        "contractNumberPlaceholder": "Enter contract number"
+      },
+      "actions": {
+        "saveDraft": "Save as Draft",
+        "cancel": "Cancel",
+        "submit": "Save & Add Student",
+        "submitting": "Saving..."
+      },
+      "validation": {
+        "addressRequired": "Address is required.",
+        "alternativeGuardianFirstNameRequired": "Alternative guardian first name is required.",
+        "alternativeGuardianLastNameRequired": "Alternative guardian last name is required.",
+        "alternativeGuardianPhoneRequired": "Alternative guardian phone is required.",
+        "alternativeGuardianRelationRequired": "Alternative guardian relation is required.",
+        "classRequired": "Class is required.",
+        "dateOfBirthRequired": "Date of birth is required.",
+        "emailInvalid": "Enter a valid email address.",
+        "emailRequired": "Email is required.",
+        "enrollmentDateRequired": "Enrollment date is required.",
+        "fatherFirstNameRequired": "Father first name is required.",
+        "fatherLastNameRequired": "Father last name is required.",
+        "fatherPhoneInvalid": "Enter a valid father phone number.",
+        "firstNameRequired": "First name is required.",
+        "gradeRequired": "Grade is required.",
+        "lastNameRequired": "Last name is required.",
+        "medicalConditionDetailsRequired": "Medical condition details are required.",
+        "motherFirstNameRequired": "Mother first name is required.",
+        "motherLastNameRequired": "Mother last name is required.",
+        "motherPhoneInvalid": "Enter a valid mother phone number.",
+        "paidAmountInvalid": "Paid amount is invalid.",
+        "paidAmountTooLarge": "Paid amount cannot exceed total fee.",
+        "phoneInvalid": "Enter a valid phone number.",
+        "phoneRequired": "Phone number is required.",
+        "previousSchoolRequired": "Previous school cannot be empty.",
+        "sectionRequired": "Section is required.",
+        "totalFeeInvalid": "Total fee is invalid."
+      },
+      "toasts": {
+        "draftSavedTitle": "Draft saved",
+        "draftSavedDescription": "The form was saved so you can continue later.",
+        "formOptionsMissing": "Required form options were not found.",
+        "createErrorTitle": "Could not add student",
+        "createErrorDescription": "Please review the information and try again.",
+        "emailAlreadyExists": "This email address is already registered.",
+        "createSuccessTitle": "Student added",
+        "createSuccessDescription": "The new student was created successfully."
+      }
     }
   },
   "adminTeachers": {
@@ -1430,6 +1733,440 @@
         "createErrorDescription": "Check the entered data and try again.",
         "createSuccessTitle": "Teacher added",
         "createSuccessDescription": "The new teacher was created successfully."
+      }
+    }
+  },
+  "adminAttendance": {
+    "summary": {
+      "sectionTitle": "Attendance Summary",
+      "filterAriaLabel": "Attendance date filter",
+      "dates": {
+        "today": "Today"
+      },
+      "titles": {
+        "students": "Students",
+        "teachers": "Teachers",
+        "staff": "Staff"
+      },
+      "totalLabel": "Total Present",
+      "metrics": {
+        "onTime": "On-Time",
+        "late": "Late",
+        "absent": "Absent"
+      }
+    },
+    "overview": {
+      "title": "Attendance Overview",
+      "filterAriaLabel": "Attendance period filter",
+      "periods": {
+        "lastSemester": "Last Semester",
+        "thisSemester": "This Semester"
+      },
+      "legend": {
+        "students": "Students",
+        "teachers": "Teachers",
+        "staff": "Staff"
+      }
+    },
+    "filters": {
+      "tabs": {
+        "students": "Students",
+        "teachers": "Teachers",
+        "staff": "Staff"
+      },
+      "allDepartments": "All Departments"
+    },
+    "grid": {
+      "ariaLabel": "Attendance grid",
+      "profile": {
+        "students": "Student Profile",
+        "teachers": "Teacher Profile",
+        "staff": "Staff Profile"
+      },
+      "empty": {
+        "students": "No students found.",
+        "teachers": "No teachers found.",
+        "staff": "No staff found."
+      },
+      "editor": {
+        "title": "Attendance",
+        "description": "Update the status and add a reason if needed.",
+        "reasonPlaceholder": "Enter reason",
+        "save": "Save",
+        "cancel": "Cancel"
+      },
+      "statuses": {
+        "onTime": "On time",
+        "late": "Late",
+        "absent": "Absent",
+        "holiday": "Holiday",
+        "weekend": "—"
+      }
+    },
+    "pagination": {
+      "show": "Show",
+      "of": "of",
+      "results": "results",
+      "previous": "Previous",
+      "next": "Next"
+    },
+    "states": {
+      "loadError": "Could not load attendance data."
+    },
+    "toasts": {
+      "markErrorTitle": "Could not update attendance",
+      "markErrorDescription": "Please try again."
+    }
+  },
+  "adminFinancePayments": {
+    "stats": {
+      "collected": "Fees Collected",
+      "pending": "Pending Fees",
+      "overdue": "Overdue Payments"
+    },
+    "trend": {
+      "title": "Fees Collection Trend",
+      "filterAriaLabel": "Fees trend period",
+      "periods": {
+        "last6Months": "Last 6 Months",
+        "last8Months": "Last 8 Months"
+      }
+    },
+    "progress": {
+      "title": "Fees Collection Progress",
+      "actionLabel": "Progress actions",
+      "collectedLabel": "{collected}/{total} collected",
+      "categories": {
+        "tuitionFee": "Tuition Fee",
+        "booksSupplies": "Books & Supplies",
+        "activities": "Activities",
+        "miscellaneous": "Miscellaneous"
+      }
+    },
+    "table": {
+      "title": "Fees Collection",
+      "filters": {
+        "allClasses": "All Classes",
+        "allStatuses": "All Status",
+        "thisMonth": "This Month",
+        "classAriaLabel": "Class filter",
+        "statusAriaLabel": "Status filter",
+        "monthAriaLabel": "Month filter"
+      },
+      "columns": {
+        "student": "Student",
+        "classLabel": "Class",
+        "feeCategory": "Fee Category",
+        "totalAmount": "Total Amount",
+        "dueDate": "Due Date",
+        "status": "Status"
+      },
+      "categories": {
+        "tuitionFee": "Tuition Fee",
+        "booksSupplies": "Books & Supplies",
+        "activities": "Activities",
+        "miscellaneous": "Miscellaneous"
+      },
+      "statuses": {
+        "paid": "Paid",
+        "pending": "Pending",
+        "overdue": "Overdue",
+        "partiallyPaid": "Partially Paid"
+      },
+      "pagination": {
+        "show": "Show",
+        "of": "of",
+        "results": "results",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "states": {
+        "empty": "No fee records found.",
+        "loadError": "Could not load fees data."
+      }
+    }
+  },
+  "adminFinanceExpenses": {
+    "trend": {
+      "title": "Expense Trend",
+      "filterAriaLabel": "Expense trend period",
+      "periods": {
+        "last8Months": "Last 8 Months"
+      }
+    },
+    "breakdown": {
+      "title": "Expense Breakdown",
+      "actionLabel": "Expense breakdown actions",
+      "totalLabel": "Total Expense",
+      "categories": {
+        "salaries": "Salaries",
+        "supplies": "Supplies",
+        "events": "Events",
+        "maintenance": "Maintenance",
+        "others": "Others",
+        "custom": "Custom"
+      }
+    },
+    "reimbursements": {
+      "title": "Reimbursements Tracking",
+      "filterAriaLabel": "Reimbursements week",
+      "periods": {
+        "thisWeek": "This Week",
+        "previousWeek": "Previous Week"
+      },
+      "columns": {
+        "requestName": "Request Name",
+        "staffName": "Staff Name",
+        "amount": "Amount",
+        "datePaid": "Date Paid",
+        "proof": "Proof",
+        "status": "Status"
+      },
+      "departments": {
+        "science": "Science",
+        "mathematics": "Mathematics",
+        "language": "Language",
+        "social": "Social Studies",
+        "arts": "Arts",
+        "physicalEducation": "Physical Education",
+        "other": "Other"
+      },
+      "statuses": {
+        "approved": "Approved",
+        "declined": "Declined",
+        "pending": "Pending"
+      },
+      "actions": {
+        "approve": "Approve",
+        "decline": "Decline",
+        "viewFile": "View File"
+      },
+      "states": {
+        "empty": "No reimbursements found.",
+        "loadError": "Failed to load reimbursements."
+      },
+      "toasts": {
+        "successTitle": "Status updated",
+        "successDescription": "Reimbursement status was saved.",
+        "errorTitle": "Status update failed",
+        "errorDescription": "Please try again."
+      }
+    },
+    "expenses": {
+      "title": "Expenses",
+      "filters": {
+        "allCategories": "All Categories",
+        "thisMonth": "This Month",
+        "categoryAriaLabel": "Category filter",
+        "monthAriaLabel": "Month filter"
+      },
+      "columns": {
+        "date": "Date",
+        "department": "Department",
+        "category": "Category",
+        "description": "Description",
+        "quantity": "Quantity",
+        "amount": "Amount"
+      },
+      "categories": {
+        "all": "All",
+        "salaries": "Salaries",
+        "supplies": "Supplies",
+        "events": "Events",
+        "maintenance": "Maintenance",
+        "others": "Others",
+        "custom": "Custom"
+      },
+      "pagination": {
+        "show": "Show",
+        "of": "of",
+        "results": "results",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "states": {
+        "empty": "No expenses found.",
+        "loadError": "Failed to load expenses."
+      },
+      "actions": {
+        "add": "Add"
+      },
+      "departments": {
+        "science": "Science",
+        "mathematics": "Mathematics",
+        "language": "Language",
+        "social": "Social",
+        "arts": "Arts",
+        "physicalEducation": "Physical Education",
+        "other": "Other"
+      }
+    }
+  },
+  "adminCalendar": {
+    "monthNames": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "categories": {
+      "all": "All Schedules",
+      "academic": "Academic",
+      "events": "Events",
+      "finance": "Finance",
+      "administration": "Administration"
+    },
+    "header": {
+      "monthAriaLabel": "Calendar month",
+      "day": "Day",
+      "week": "Week",
+      "month": "Month",
+      "addAgenda": "Add Agenda"
+    },
+    "detailPanel": {
+      "title": "Schedule Details",
+      "notes": "Notes",
+      "empty": "No events found for the selected date."
+    },
+    "addAgenda": {
+      "title": "Add New Agenda",
+      "description": "Create a new event for the calendar.",
+      "fields": {
+        "title": "Title",
+        "category": "Category",
+        "date": "Date",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "location": "Location / Platform",
+        "notes": "Notes",
+        "visibility": "Visibility"
+      },
+      "visibility": {
+        "all": "All",
+        "admin": "Admin",
+        "teachers": "Teachers",
+        "students": "Students"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "submit": "Save",
+        "submitting": "Saving..."
+      },
+      "toasts": {
+        "successTitle": "Event added",
+        "successDescription": "The new agenda item has been saved.",
+        "errorTitle": "Event not added",
+        "errorDescription": "Check the form and try again."
+      }
+    }
+  },
+  "adminNotices": {
+    "pageTitle": "Notice Board",
+    "actions": {
+      "add": "New notice",
+      "edit": "Edit",
+      "share": "Share",
+      "archive": "Archive",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "submit": "Save",
+      "submitting": "Saving...",
+      "update": "Update"
+    },
+    "filters": {
+      "searchPlaceholder": "Search notices...",
+      "allCategories": "All categories",
+      "allStatuses": "All statuses",
+      "categoryAriaLabel": "Filter by category",
+      "statusAriaLabel": "Filter by status"
+    },
+    "columns": {
+      "postDate": "Post date",
+      "expDate": "Exp. date"
+    },
+    "categories": {
+      "academic": "Academic",
+      "events": "Events",
+      "maintenance": "Maintenance",
+      "finance": "Finance",
+      "holiday": "Holiday",
+      "sports": "Sports",
+      "other": "Other"
+    },
+    "statuses": {
+      "active": "Active",
+      "scheduled": "Scheduled",
+      "archived": "Archived",
+      "draft": "Draft"
+    },
+    "audience": {
+      "students": "Students",
+      "teachers": "Teachers",
+      "parents": "Parents",
+      "staff": "Staff",
+      "all": "All"
+    },
+    "detail": {
+      "audience": "Audience",
+      "content": "Content",
+      "attachments": "Attachments",
+      "createdBy": "Created by",
+      "createdByLabel": "by",
+      "detailBoard": "Detail Board",
+      "views": "Views"
+    },
+    "pagination": {
+      "show": "Show",
+      "of": "of",
+      "results": "results",
+      "next": "Next",
+      "previous": "Previous"
+    },
+    "states": {
+      "empty": "No notices found",
+      "loadError": "Error loading notices"
+    },
+    "toasts": {
+      "createSuccessTitle": "Notice created",
+      "createSuccessDescription": "New notice saved successfully.",
+      "createErrorTitle": "Error occurred",
+      "createErrorDescription": "Could not save notice.",
+      "deleteSuccessTitle": "Notice deleted",
+      "deleteSuccessDescription": "Notice removed successfully.",
+      "deleteErrorTitle": "Error",
+      "deleteErrorDescription": "Could not delete notice.",
+      "archiveInfo": "Notice archived",
+      "shareInfo": "Share link copied"
+    },
+    "modal": {
+      "addTitle": "Add New Notice",
+      "addDescription": "Create a new notice for the school community.",
+      "editTitle": "Edit Notice",
+      "editDescription": "Update existing notice information.",
+      "fields": {
+        "titleLabel": "Title",
+        "titlePlaceholder": "Enter notice title",
+        "categoryLabel": "Category",
+        "categoryPlaceholder": "Select category",
+        "audienceLabel": "Audience",
+        "contentLabel": "Notice content",
+        "contentPlaceholder": "Write detailed info...",
+        "postDateLabel": "Post date",
+        "expDateLabel": "Exp. date"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "submit": "Save",
+        "submitting": "Saving...",
+        "update": "Update"
       }
     }
   }

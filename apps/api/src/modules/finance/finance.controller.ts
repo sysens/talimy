@@ -1,9 +1,29 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
 import {
   createFeeStructureSchema,
+  createFinanceExpenseSchema,
   createInvoiceSchema,
   createPaymentPlanSchema,
   createPaymentSchema,
+  financeExpensesBreakdownQuerySchema,
+  financeExpensesListQuerySchema,
+  financeExpensesTrendQuerySchema,
+  financeFeesListQuerySchema,
+  financeFeesProgressQuerySchema,
+  financeFeesSummaryQuerySchema,
+  financeFeesTrendQuerySchema,
+  financeReimbursementsQuerySchema,
+  financeReimbursementStatusUpdateSchema,
+  type CreateFinanceExpenseInput,
+  type FinanceExpensesBreakdownQueryInput,
+  type FinanceExpensesListQueryInput,
+  type FinanceExpensesTrendQueryInput,
+  type FinanceFeesListQueryInput,
+  type FinanceFeesProgressQueryInput,
+  type FinanceFeesSummaryQueryInput,
+  type FinanceFeesTrendQueryInput,
+  type FinanceReimbursementsQueryInput,
+  type FinanceReimbursementStatusUpdateInput,
   updateFeeStructureSchema,
   updatePaymentPlanSchema,
   updatePaymentSchema,
@@ -17,11 +37,12 @@ import { RolesGuard } from "@/common/guards/roles.guard"
 import { TenantGuard } from "@/common/guards/tenant.guard"
 import { ZodValidationPipe } from "@/common/pipes/zod-validation.pipe"
 
+import { FinanceFeesService } from "./fees.service"
+import { FinanceExpensesService } from "./expenses.service"
 import { FinanceService } from "./finance.service"
 import { CreateFeeStructureDto, UpdateFeeStructureDto } from "./dto/fee-structure.dto"
 import { CreateInvoiceDto } from "./dto/create-invoice.dto"
 import { CreatePaymentDto, UpdatePaymentDto } from "./dto/create-payment.dto"
-import { CreatePaymentPlanDto, UpdatePaymentPlanDto } from "./dto/payment-plan.dto"
 import { CacheService } from "../cache/cache.service"
 import {
   CACHE_TTLS,
@@ -29,6 +50,7 @@ import {
   financeOverviewCacheKey,
   financePaymentsSummaryCacheKey,
 } from "../cache/cache.keys"
+import { CreatePaymentPlanDto, UpdatePaymentPlanDto } from "./dto/payment-plan.dto"
 
 @Controller("finance")
 @UseGuards(AuthGuard, RolesGuard, TenantGuard)
@@ -36,6 +58,8 @@ import {
 export class FinanceController {
   constructor(
     private readonly financeService: FinanceService,
+    private readonly financeFeesService: FinanceFeesService,
+    private readonly financeExpensesService: FinanceExpensesService,
     private readonly cacheService: CacheService
   ) {}
   private static readonly idParamSchema = z.object({ id: z.string().uuid() })
@@ -58,6 +82,90 @@ export class FinanceController {
       CACHE_TTLS.financePaymentsSummarySeconds,
       () => this.financeService.getPaymentsSummary(query.tenantId)
     )
+  }
+
+  @Get("fees/summary")
+  getFeesSummary(
+    @Query(new ZodValidationPipe(financeFeesSummaryQuerySchema))
+    query: FinanceFeesSummaryQueryInput
+  ) {
+    return this.financeFeesService.getSummary(query)
+  }
+
+  @Get("fees/trend")
+  getFeesTrend(
+    @Query(new ZodValidationPipe(financeFeesTrendQuerySchema))
+    query: FinanceFeesTrendQueryInput
+  ) {
+    return this.financeFeesService.getTrend(query)
+  }
+
+  @Get("fees/progress")
+  getFeesProgress(
+    @Query(new ZodValidationPipe(financeFeesProgressQuerySchema))
+    query: FinanceFeesProgressQueryInput
+  ) {
+    return this.financeFeesService.getProgress(query)
+  }
+
+  @Get("fees")
+  listFees(
+    @Query(new ZodValidationPipe(financeFeesListQuerySchema))
+    query: FinanceFeesListQueryInput
+  ) {
+    return this.financeFeesService.list(query)
+  }
+
+  @Get("expenses/trend")
+  getExpensesTrend(
+    @Query(new ZodValidationPipe(financeExpensesTrendQuerySchema))
+    query: FinanceExpensesTrendQueryInput
+  ) {
+    return this.financeExpensesService.getTrend(query)
+  }
+
+  @Get("expenses/breakdown")
+  getExpensesBreakdown(
+    @Query(new ZodValidationPipe(financeExpensesBreakdownQuerySchema))
+    query: FinanceExpensesBreakdownQueryInput
+  ) {
+    return this.financeExpensesService.getBreakdown(query)
+  }
+
+  @Get("reimbursements")
+  listReimbursements(
+    @Query(new ZodValidationPipe(financeReimbursementsQuerySchema))
+    query: FinanceReimbursementsQueryInput
+  ) {
+    return this.financeExpensesService.listReimbursements(query)
+  }
+
+  @Patch("reimbursements/:id/status")
+  updateReimbursementStatus(
+    @Query(new ZodValidationPipe(userTenantQuerySchema)) query: { tenantId: string },
+    @Param(new ZodValidationPipe(FinanceController.idParamSchema)) params: { id: string },
+    @Body(new ZodValidationPipe(financeReimbursementStatusUpdateSchema))
+    payload: FinanceReimbursementStatusUpdateInput
+  ) {
+    return this.financeExpensesService.updateReimbursementStatus(query.tenantId, params.id, payload)
+  }
+
+  @Get("expenses")
+  listExpenses(
+    @Query(new ZodValidationPipe(financeExpensesListQuerySchema))
+    query: FinanceExpensesListQueryInput
+  ) {
+    return this.financeExpensesService.listExpenses(query)
+  }
+
+  @Post("expenses")
+  createExpense(
+    @Body(new ZodValidationPipe(createFinanceExpenseSchema)) payload: CreateFinanceExpenseInput
+  ) {
+    return this.financeExpensesService.createExpense(payload).then(async (created) => {
+      await this.invalidateFinanceCache(payload.tenantId)
+      return created
+    })
   }
 
   @Get("fee-structures")

@@ -1,11 +1,12 @@
 "use client"
 
-import { SessionProvider, useSession } from "next-auth/react"
+import { SessionProvider, useSession, signOut } from "next-auth/react"
 import type { Session } from "next-auth"
 import type { ReactNode } from "react"
 import { useEffect } from "react"
 
 import { useAuthStore, type AuthUser } from "@/stores/auth-store"
+import { AUTH_ROUTE_PATHS } from "@/lib/auth-options"
 
 type AuthProviderProps = {
   children: ReactNode
@@ -57,6 +58,7 @@ function AuthStoreHydrator({ children }: AuthStoreHydratorProps) {
 
     if (sessionState.session?.authError) {
       clearSession()
+      void signOut({ callbackUrl: AUTH_ROUTE_PATHS.login })
       return
     }
 

@@ -15,6 +15,11 @@ export function StudentsAttendanceOverviewSection() {
     staleTime: 60_000,
   })
   const points = attendanceQuery.data?.points ?? []
+  const maxValue = Math.max(
+    attendanceQuery.data?.totalStudents ?? 0,
+    ...points.map((item) => item.value),
+    1
+  )
   const chartData =
     points.length > 0
       ? points.map((item) => ({
@@ -45,7 +50,7 @@ export function StudentsAttendanceOverviewSection() {
         options: [{ label: t("periods.thisWeek"), value: "thisWeek" }],
         value: "thisWeek",
       }}
-      maxValue={1300}
+      maxValue={maxValue}
       title={t("title")}
     />
   )

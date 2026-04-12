@@ -1,9 +1,13 @@
 "use client"
 
 import * as React from "react"
-import { ChartBarDefault, MiniChart } from "@talimy/ui"
 
-type Period = "last6Months" | "thisSemester"
+import {
+  StudentAcademicPerformanceCard,
+  type StudentAcademicPerformanceCardPeriod,
+} from "@/components/shared/charts/student-academic-performance-card"
+
+type Period = StudentAcademicPerformanceCardPeriod
 
 const LAST_SIX_MONTHS_DATA = [
   { label: "Jan", value: 90 },
@@ -33,46 +37,15 @@ export function StudentAcademicPerformanceChartShowcase433() {
       <h3 className="text-sm font-semibold text-muted-foreground">/student/profile</h3>
 
       <div className="max-w-4xl">
-        <MiniChart
-          bottomLabels={{
-            className: "px-1",
-            values: data.map((item) => item.label),
-          }}
-          contentClassName="space-y-5"
-          filter={{
-            ariaLabel: "Academic performance period filter",
-            onValueChange: (value) => setPeriod(value as Period),
-            options: [
-              { label: "Last 6 Months", value: "last6Months" },
-              { label: "This Semester", value: "thisSemester" },
-            ],
-            value: period,
-          }}
+        <StudentAcademicPerformanceCard
+          averageScoreMax={4}
+          averageScoreValue={3.9}
+          note="Isabella shows consistent excellence in her studies and leadership in group projects. Keep aiming high!"
+          onPeriodChange={setPeriod}
+          period={period}
+          points={data}
           title="Academic Performance"
-        >
-          <ChartBarDefault
-            chartType="bar"
-            data={data}
-            dualConfig={{
-              note: "Isabella shows consistent excellence in her studies and leadership in group projects. Keep aiming high!",
-              radialCenterLabel: "Average Score",
-              radialCenterValue: (
-                <>
-                  3.9<tspan className="fill-muted-foreground text-base font-medium">/4.0</tspan>
-                </>
-              ),
-              radialSegments: [
-                { color: "var(--talimy-color-navy)", key: "core", label: "Core Score", value: 90 },
-                { color: "var(--talimy-color-pink)", key: "bonus", label: "Bonus Score", value: 4 },
-              ],
-            }}
-            hideFooter
-            hideHeader
-            insideLabelFormatter={(value) => value.toString()}
-            valueDomain={[0, 100]}
-            variant="dual"
-          />
-        </MiniChart>
+        />
       </div>
     </div>
   )

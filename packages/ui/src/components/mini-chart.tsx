@@ -160,7 +160,7 @@ export function MiniChart({
 
             <div
               className={cn(
-                "relative min-h-56",
+                "relative",
                 hasLeftScale ? "pl-8" : "",
                 hasRightScale ? "pr-8" : "",
                 chartClassName
@@ -205,7 +205,7 @@ export function MiniChart({
                 className={cn(
                   bottomLabels.distribution === "evenly"
                     ? "flex justify-evenly text-center text-xs text-[var(--talimy-color-gray)] dark:text-muted-foreground"
-                    : "grid text-center text-xs text-[var(--talimy-color-gray)] dark:text-muted-foreground",
+                    : "grid text-center text-xs text-[var(--talimy-color-gray)] dark:text-muted-foreground ",
                   hasLeftScale ? "pl-8" : "",
                   hasRightScale ? "pr-8" : "",
                   bottomLabels.className

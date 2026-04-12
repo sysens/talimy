@@ -481,6 +481,7 @@ principal          → Full access regardless of gender
 - 200+ translation keys covering all UI text
 - Language switcher in header
 - User preference saved in profile
+- UI oy label'lari har doim lokalizatsiya qilingan oy nomi bilan ko'rsatiladi (`Mart 2035`, `March 2035` kabi). `M01`, `M02` kabi CLDR fallback formatlari taqiqlanadi.
 
 ---
 

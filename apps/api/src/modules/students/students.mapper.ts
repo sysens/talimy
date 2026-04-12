@@ -14,22 +14,24 @@ export function toStudentView(
   classRow: typeof classes.$inferSelect | null
 ): StudentView {
   return {
+    address: student.address,
+    avatar: user.avatar,
+    bloodGroup: student.bloodGroup,
     id: student.id,
-    tenantId: student.tenantId,
-    userId: student.userId,
     classId: student.classId,
     className: classRow?.name ?? null,
-    fullName: `${user.firstName} ${user.lastName}`.trim(),
-    email: user.email,
-    studentId: student.studentId,
-    gender: student.gender as "male" | "female",
-    dateOfBirth: student.dateOfBirth,
-    enrollmentDate: student.enrollmentDate,
-    status: student.status,
-    bloodGroup: student.bloodGroup,
-    address: student.address,
     createdAt: student.createdAt,
+    dateOfBirth: student.dateOfBirth,
+    email: user.email,
+    enrollmentDate: student.enrollmentDate,
+    fullName: `${user.firstName} ${user.lastName}`.trim(),
+    gender: student.gender as "male" | "female",
+    phone: user.phone,
     updatedAt: student.updatedAt,
+    status: student.status,
+    studentId: student.studentId,
+    tenantId: student.tenantId,
+    userId: student.userId,
   }
 }
 
@@ -54,11 +56,13 @@ export function toStudentParentItem(row: {
   firstName: string
   lastName: string
   phone: string | null
+  relationship: string
 }): StudentParentItem {
   return {
-    id: row.id,
     fullName: `${row.firstName} ${row.lastName}`.trim(),
+    id: row.id,
     phone: row.phone,
+    relationship: row.relationship,
   }
 }
 

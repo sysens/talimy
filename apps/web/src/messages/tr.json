@@ -1104,6 +1104,309 @@
         "empty": "Öğrenci bulunamadı.",
         "error": "Öğrenciler yüklenemedi."
       }
+    },
+    "detail": {
+      "monthNames": {
+        "january": "Ocak",
+        "february": "Şubat",
+        "march": "Mart",
+        "april": "Nisan",
+        "may": "Mayıs",
+        "june": "Haziran",
+        "july": "Temmuz",
+        "august": "Ağustos",
+        "september": "Eylül",
+        "october": "Ekim",
+        "november": "Kasım",
+        "december": "Aralık"
+      },
+      "header": {
+        "title": "Oğrenci Detayları"
+      },
+      "toast": {
+        "title": "Öğrenci Bilgileri",
+        "loadFailed": "Öğrenci detayları yüklenemedi."
+      },
+      "states": {
+        "empty": "Öğrenci bulunamadı."
+      },
+      "gender": {
+        "male": "Erkek",
+        "female": "Kadın"
+      },
+      "status": {
+        "active": "Aktif",
+        "inactive": "Pasif",
+        "graduated": "Mezun",
+        "transferred": "Transfer"
+      },
+      "personal": {
+        "gender": "Cinsiyet",
+        "dateOfBirth": "Doğum Tarihi",
+        "phone": "Telefon Numarası",
+        "address": "Adres"
+      },
+      "guardians": {
+        "title": "Veli / Vasi Bilgisi",
+        "actionLabel": "Veli işlemleri",
+        "father": "Baba",
+        "mother": "Anne",
+        "alternativeGuardian": "Alternatif Vasi",
+        "relationship": {
+          "aunt": "Teyze",
+          "uncle": "Amca",
+          "guardian": "Vasi"
+        }
+      },
+      "documents": {
+        "title": "Belgeler",
+        "actionLabel": "Belge işlemleri"
+      },
+      "attendanceCalendar": {
+        "meta": {
+          "absent": "Yok",
+          "absentDescription": "Öğrenci derse katılmadı",
+          "late": "Geç",
+          "lateDescription": "Öğrenci derse geç geldi",
+          "present": "Hazır",
+          "presentDescription": "Öğrenci derse katıldı",
+          "sick": "Hasta",
+          "sickDescription": "Sağlık nedeniyle izinli"
+        },
+        "weekdays": {
+          "sunday": "P",
+          "monday": "P",
+          "tuesday": "S",
+          "wednesday": "Ç",
+          "thursday": "P",
+          "friday": "C",
+          "saturday": "C"
+        }
+      },
+      "scholarships": {
+        "title": "Burslar",
+        "actionLabel": "Burs işlemleri",
+        "types": {
+          "finance": "Finans",
+          "enrichment": "Gelişim"
+        }
+      },
+      "health": {
+        "title": "Sağlık ve Tıbbi Bilgi",
+        "actionLabel": "Sağlık işlemleri"
+      },
+      "academicPerformance": {
+        "title": "Akademik Performans",
+        "filters": {
+          "last6Months": "Son 6 Ay",
+          "thisSemester": "Bu Dönem"
+        }
+      },
+      "extracurricular": {
+        "title": "Kulüp Etkinlikleri",
+        "actionLabel": "Kulüp işlemleri",
+        "empty": "Kulüp kaydı bulunamadı.",
+        "columns": {
+          "club": "Kulüp",
+          "achievements": "Başarılar",
+          "duration": "Süre",
+          "advisor": "Danışman"
+        }
+      },
+      "behaviorLog": {
+        "title": "Davranış ve Disiplin Kaydı",
+        "actionLabel": "Kayıt işlemleri",
+        "empty": "Davranış kaydı bulunamadı.",
+        "columns": {
+          "date": "Tarih",
+          "typeAndDetails": "Tür ve Detay",
+          "reportedBy": "Bildiren",
+          "statusAction": "Durum / İşlem"
+        },
+        "types": {
+          "positiveNote": "Olumlu Not",
+          "minorIssue": "Küçük Sorun",
+          "majorIssue": "Büyük Sorun"
+        },
+        "actions": {
+          "recordRecognition": "Takdiri Kaydet",
+          "recognitionRecorded": "Takdir Kaydedildi",
+          "issueWarning": "Uyarı Ver",
+          "parentNotified": "Veli Bilgilendirildi"
+        }
+      }
+    },
+    "create": {
+      "header": {
+        "title": "Öğrenci Ekle",
+        "backLabel": "Öğrenciler",
+        "breadcrumbs": {
+          "dashboard": "Dashboard",
+          "students": "Öğrenciler",
+          "addStudent": "Öğrenci Ekle"
+        }
+      },
+      "loading": "Form verileri yükleniyor...",
+      "loadError": "Öğrenci ekleme formu verileri yüklenemedi.",
+      "retry": "Tekrar dene",
+      "personal": {
+        "title": "Kişisel Bilgiler",
+        "firstNameLabel": "Ad",
+        "firstNamePlaceholder": "Ad girin",
+        "lastNameLabel": "Soyad",
+        "lastNamePlaceholder": "Soyad girin",
+        "middleNameLabel": "İkinci Ad",
+        "middleNamePlaceholder": "İkinci adı girin",
+        "dateOfBirthLabel": "Doğum Tarihi",
+        "genderLabel": "Cinsiyet",
+        "genderPlaceholder": "Cinsiyet seçin",
+        "genderOptions": {
+          "male": "Erkek",
+          "female": "Kadın"
+        },
+        "avatar": {
+          "label": "Avatar",
+          "uploadLabel": "Resim yükle",
+          "changeLabel": "Resmi değiştir",
+          "removeLabel": "Resmi kaldır",
+          "emptyLabel": "Resim eklenmedi",
+          "previewLabel": "Yüklenen resim önizlemesi",
+          "uploadErrorTitle": "Avatar yüklenemedi"
+        }
+      },
+      "contact": {
+        "title": "İletişim Bilgileri",
+        "emailLabel": "E-posta",
+        "emailPlaceholder": "student@school.uz",
+        "phoneLabel": "Telefon Numarası",
+        "addressLabel": "Adres",
+        "addressPlaceholder": "Sokak, şehir, bölge ve posta kodunu girin"
+      },
+      "guardians": {
+        "title": "Veli / Vasi Bilgileri",
+        "fatherTitle": "Baba",
+        "motherTitle": "Anne",
+        "alternativeTitle": "Alternatif Vasi",
+        "nameLabel": "Ad",
+        "lastNameLabel": "Soyad",
+        "phoneLabel": "Telefon Numarası",
+        "relationLabel": "Yakınlık",
+        "relationPlaceholder": "Yakınlık seçin",
+        "firstNamePlaceholder": "Ad girin",
+        "lastNamePlaceholder": "Soyad girin",
+        "relationOptions": {
+          "aunt": "Teyze / Hala",
+          "uncle": "Amca / Dayı",
+          "guardian": "Vasi",
+          "grandmother": "Büyükanne",
+          "grandfather": "Büyükbaba",
+          "sibling": "Kardeş",
+          "other": "Diğer"
+        }
+      },
+      "administration": {
+        "title": "İdari Bilgiler",
+        "gradeLabel": "Sınıf",
+        "gradePlaceholder": "Sınıf seçin",
+        "sectionLabel": "Şube",
+        "sectionPlaceholder": "Şube seçin",
+        "enrollmentDateLabel": "Kayıt Tarihi",
+        "previousSchoolLabel": "Önceki Okul",
+        "previousSchoolPlaceholder": "Önceki okul adını girin"
+      },
+      "additional": {
+        "title": "Ek Bilgiler",
+        "hobbiesLabel": "Hobi / İlgi Alanları",
+        "hobbiesPlaceholder": "Hobi ve ilgi alanlarını girin",
+        "specialNeedsLabel": "Özel Destek İhtiyacı",
+        "specialNeedsDescription": "Öğrenci ek öğrenme desteğine ihtiyaç duyuyorsa etkinleştirin.",
+        "medicalConditionLabel": "Tıbbi Durum Uyarısı",
+        "medicalConditionDescription": "Önemli bir tıbbi durum varsa etkinleştirin.",
+        "medicalConditionDetailsLabel": "Tıbbi Durum Detayları",
+        "medicalConditionDetailsPlaceholder": "Tıbbi durumu açıklayın"
+      },
+      "academic": {
+        "title": "Akademik Bilgiler",
+        "classSummaryLabel": "Sınıf / Şube",
+        "classSummaryPlaceholder": "Sınıf seçin",
+        "grantTypeLabel": "Destek Türü",
+        "grantTypePlaceholder": "Destek türü seçin",
+        "grantTypeOptions": {
+          "zakat": "Zekât",
+          "sponsor": "Sponsor",
+          "other": "Diğer"
+        },
+        "totalFeeLabel": "Toplam Ücret",
+        "totalFeePlaceholder": "0.00",
+        "paidAmountLabel": "Ödenen Tutar",
+        "paidAmountPlaceholder": "0.00"
+      },
+      "modules": {
+        "title": "Modüle Bağlı Alanlar",
+        "dormitoryRoomLabel": "Yurt Odası",
+        "dormitoryRoomPlaceholder": "Örn. A-12",
+        "mealsLabel": "Yemek",
+        "mealsPlaceholder": "Plan seçin",
+        "mealsOptions": {
+          "none": "Yok",
+          "one_meal": "1 öğün",
+          "three_meals": "3 öğün"
+        },
+        "residencePermitLabel": "İkamet İzni",
+        "residencePermitPlaceholder": "Durum seçin",
+        "residencePermitOptions": {
+          "obtained": "Alındı",
+          "pending_90_days": "90 gün içinde",
+          "none": "Yok"
+        },
+        "contractNumberLabel": "Sözleşme Numarası",
+        "contractNumberPlaceholder": "Sözleşme numarasını girin"
+      },
+      "actions": {
+        "saveDraft": "Taslak Olarak Kaydet",
+        "cancel": "İptal",
+        "submit": "Kaydet ve Öğrenci Ekle",
+        "submitting": "Kaydediliyor..."
+      },
+      "validation": {
+        "addressRequired": "Adres zorunludur.",
+        "alternativeGuardianFirstNameRequired": "Alternatif vasinin adı zorunludur.",
+        "alternativeGuardianLastNameRequired": "Alternatif vasinin soyadı zorunludur.",
+        "alternativeGuardianPhoneRequired": "Alternatif vasinin telefonu zorunludur.",
+        "alternativeGuardianRelationRequired": "Alternatif vasi yakınlığı zorunludur.",
+        "classRequired": "Sınıf zorunludur.",
+        "dateOfBirthRequired": "Doğum tarihi zorunludur.",
+        "emailInvalid": "Geçerli bir e-posta girin.",
+        "emailRequired": "E-posta zorunludur.",
+        "enrollmentDateRequired": "Kayıt tarihi zorunludur.",
+        "fatherFirstNameRequired": "Baba adı zorunludur.",
+        "fatherLastNameRequired": "Baba soyadı zorunludur.",
+        "fatherPhoneInvalid": "Geçerli bir baba telefonu girin.",
+        "firstNameRequired": "Ad zorunludur.",
+        "gradeRequired": "Sınıf zorunludur.",
+        "lastNameRequired": "Soyad zorunludur.",
+        "medicalConditionDetailsRequired": "Tıbbi durum detayları zorunludur.",
+        "motherFirstNameRequired": "Anne adı zorunludur.",
+        "motherLastNameRequired": "Anne soyadı zorunludur.",
+        "motherPhoneInvalid": "Geçerli bir anne telefonu girin.",
+        "paidAmountInvalid": "Ödenen tutar geçersizdir.",
+        "paidAmountTooLarge": "Ödenen tutar toplam ücretten büyük olamaz.",
+        "phoneInvalid": "Geçerli bir telefon numarası girin.",
+        "phoneRequired": "Telefon numarası zorunludur.",
+        "previousSchoolRequired": "Önceki okul boş olamaz.",
+        "sectionRequired": "Şube zorunludur.",
+        "totalFeeInvalid": "Toplam ücret geçersizdir."
+      },
+      "toasts": {
+        "draftSavedTitle": "Taslak kaydedildi",
+        "draftSavedDescription": "Daha sonra devam edebilmeniz için form kaydedildi.",
+        "formOptionsMissing": "Gerekli form verileri bulunamadı.",
+        "createErrorTitle": "Öğrenci eklenemedi",
+        "createErrorDescription": "Bilgileri kontrol edip tekrar deneyin.",
+        "emailAlreadyExists": "Bu e-posta adresi zaten kayıtlı.",
+        "createSuccessTitle": "Öğrenci eklendi",
+        "createSuccessDescription": "Yeni öğrenci başarıyla oluşturuldu."
+      }
     }
   },
   "adminTeachers": {
@@ -1430,6 +1733,466 @@
         "createErrorDescription": "Girilen verileri kontrol edip tekrar deneyin.",
         "createSuccessTitle": "Öğretmen eklendi",
         "createSuccessDescription": "Yeni öğretmen başarıyla oluşturuldu."
+      }
+    }
+  },
+  "adminAttendance": {
+    "summary": {
+      "sectionTitle": "Yoklama özeti",
+      "filterAriaLabel": "Yoklama tarihi filtresi",
+      "dates": {
+        "today": "Bugün"
+      },
+      "titles": {
+        "students": "Öğrenciler",
+        "teachers": "Öğretmenler",
+        "staff": "Personel"
+      },
+      "totalLabel": "Toplam Gelen",
+      "metrics": {
+        "onTime": "Zamanında",
+        "late": "Geç",
+        "absent": "Gelmedi"
+      }
+    },
+    "overview": {
+      "title": "Devam görünümü",
+      "filterAriaLabel": "Devam dönemi filtresi",
+      "periods": {
+        "lastSemester": "Son dönem",
+        "thisSemester": "Bu dönem"
+      },
+      "legend": {
+        "students": "Öğrenciler",
+        "teachers": "Öğretmenler",
+        "staff": "Personel"
+      }
+    },
+    "filters": {
+      "tabs": {
+        "students": "Öğrenciler",
+        "teachers": "Öğretmenler",
+        "staff": "Personel"
+      },
+      "allDepartments": "Tüm bölümler"
+    },
+    "grid": {
+      "ariaLabel": "Devam tablosu",
+      "profile": {
+        "students": "Öğrenci profili",
+        "teachers": "Öğretmen profili",
+        "staff": "Personel profili"
+      },
+      "empty": {
+        "students": "Öğrenci bulunamadı.",
+        "teachers": "Öğretmen bulunamadı.",
+        "staff": "Personel bulunamadı."
+      },
+      "editor": {
+        "title": "Devam",
+        "description": "Durumu güncelleyin ve gerekirse neden ekleyin.",
+        "reasonPlaceholder": "Nedeni girin",
+        "save": "Kaydet",
+        "cancel": "İptal"
+      },
+      "statuses": {
+        "onTime": "Zamanında",
+        "late": "Geç",
+        "absent": "Gelmedi",
+        "holiday": "Tatil",
+        "weekend": "—"
+      }
+    },
+    "pagination": {
+      "show": "Göster",
+      "of": "toplam",
+      "results": "sonuç",
+      "previous": "Önceki",
+      "next": "Sonraki"
+    },
+    "states": {
+      "loadError": "Devam verileri yüklenemedi."
+    },
+    "toasts": {
+      "markErrorTitle": "Devam güncellenemedi",
+      "markErrorDescription": "Lütfen tekrar deneyin."
+    }
+  },
+  "adminFinancePayments": {
+    "stats": {
+      "collected": "Tahsil edilen ücretler",
+      "pending": "Bekleyen ücretler",
+      "overdue": "Geciken ödemeler"
+    },
+    "trend": {
+      "title": "Ücret Tahsilat Trendi",
+      "filterAriaLabel": "Ücret trend dönemi",
+      "periods": {
+        "last6Months": "Son 6 Ay",
+        "last8Months": "Son 8 Ay"
+      }
+    },
+    "progress": {
+      "title": "Ücret Tahsilat İlerlemesi",
+      "actionLabel": "İlerleme işlemleri",
+      "collectedLabel": "{collected}/{total} tahsil edildi",
+      "categories": {
+        "tuitionFee": "Eğitim ücreti",
+        "booksSupplies": "Kitap ve malzeme",
+        "activities": "Etkinlikler",
+        "miscellaneous": "Diğer"
+      }
+    },
+    "table": {
+      "title": "Ücret Tahsilatı",
+      "filters": {
+        "allClasses": "Tüm sınıflar",
+        "allStatuses": "Tüm durumlar",
+        "thisMonth": "Bu ay",
+        "classAriaLabel": "Sınıf filtresi",
+        "statusAriaLabel": "Durum filtresi",
+        "monthAriaLabel": "Ay filtresi"
+      },
+      "columns": {
+        "student": "Öğrenci",
+        "classLabel": "Sınıf",
+        "feeCategory": "Ücret türü",
+        "totalAmount": "Toplam tutar",
+        "dueDate": "Son tarih",
+        "status": "Durum"
+      },
+      "categories": {
+        "tuitionFee": "Eğitim ücreti",
+        "booksSupplies": "Kitap ve malzeme",
+        "activities": "Etkinlikler",
+        "miscellaneous": "Diğer"
+      },
+      "statuses": {
+        "paid": "Ödendi",
+        "pending": "Beklemede",
+        "overdue": "Gecikti",
+        "empty": "Ücret kaydı bulunamadı.",
+        "loadError": "Ücret verileri yüklenemedi."
+      }
+    }
+  },
+  "adminFinanceExpenses": {
+    "trend": {
+      "title": "Gider Trendi",
+      "filterAriaLabel": "Gider trend dönemi",
+      "periods": {
+        "last8Months": "Son 8 Ay"
+      }
+    },
+    "breakdown": {
+      "title": "Gider Dağılımı",
+      "actionLabel": "Gider dağılımı işlemleri",
+      "totalLabel": "Toplam Gider",
+      "categories": {
+        "salaries": "Maaşlar",
+        "supplies": "Malzemeler",
+        "events": "Etkinlikler",
+        "maintenance": "Bakım",
+        "others": "Diğer",
+        "custom": "Özel"
+      }
+    },
+    "reimbursements": {
+      "title": "Geri Ödeme Takibi",
+      "filterAriaLabel": "Geri ödeme haftası",
+      "periods": {
+        "thisWeek": "Bu Hafta",
+        "previousWeek": "Geçen Hafta"
+      },
+      "columns": {
+        "requestName": "Talep Adı",
+        "staffName": "Personel Adı",
+        "amount": "Tutar",
+        "datePaid": "Ödeme Tarihi",
+        "proof": "Belge",
+        "status": "Durum"
+      },
+      "departments": {
+        "science": "Fen",
+        "mathematics": "Matematik",
+        "language": "Dil",
+        "social": "Sosyal Bilgiler",
+        "arts": "Sanat",
+        "physicalEducation": "Beden Eğitimi",
+        "other": "Diğer"
+      },
+      "statuses": {
+        "approved": "Onaylandı",
+        "declined": "Reddedildi",
+        "pending": "Bekliyor"
+      },
+      "actions": {
+        "approve": "Onayla",
+        "decline": "Reddet",
+        "viewFile": "Dosyayı Gör"
+      },
+      "states": {
+        "empty": "Geri ödeme bulunamadı.",
+        "loadError": "Geri ödemeler yüklenemedi."
+      },
+      "toasts": {
+        "successTitle": "Durum güncellendi",
+        "successDescription": "Geri ödeme durumu kaydedildi.",
+        "errorTitle": "Durum güncellenemedi",
+        "errorDescription": "Lütfen tekrar deneyin."
+      }
+    },
+    "expenses": {
+      "title": "Giderler",
+      "filters": {
+        "allCategories": "Tüm Kategoriler",
+        "thisMonth": "Bu Ay",
+        "categoryAriaLabel": "Kategori filtresi",
+        "monthAriaLabel": "Ay filtresi"
+      },
+      "columns": {
+        "date": "Tarih",
+        "department": "Bölüm",
+        "category": "Kategori",
+        "description": "Açıklama",
+        "quantity": "Adet",
+        "amount": "Tutar"
+      },
+      "categories": {
+        "all": "Tümü",
+        "salaries": "Maaşlar",
+        "supplies": "Malzemeler",
+        "events": "Etkinlikler",
+        "maintenance": "Bakım",
+        "others": "Diğer",
+        "custom": "Özel"
+      },
+      "pagination": {
+        "show": "Göster",
+        "of": "/",
+        "results": "sonuç",
+        "previous": "Önceki",
+        "next": "Sonraki"
+      },
+      "states": {
+        "empty": "Gider bulunamadı.",
+        "loadError": "Giderler yüklenemedi."
+      },
+      "actions": {
+        "add": "Ekle"
+      },
+      "departments": {
+        "science": "Fen",
+        "mathematics": "Matematik",
+        "language": "Dil",
+        "social": "Sosyal Bilgiler",
+        "arts": "Sanat",
+        "physicalEducation": "Beden Eğitimi",
+        "other": "Diğer"
+      }
+    },
+    "modal": {
+      "title": "Gider Ekle",
+      "description": "Yeni gider kaydı oluşturun.",
+      "fields": {
+        "departmentLabel": "Bölüm",
+        "departmentPlaceholder": "Bölüm seçin",
+        "categoryLabel": "Kategori",
+        "categoryPlaceholder": "Kategori seçin",
+        "categoryNameLabel": "Özel kategori adı",
+        "categoryNamePlaceholder": "Kategori adını girin",
+        "descriptionLabel": "Açıklama",
+        "descriptionPlaceholder": "Gider detayını yazın",
+        "amountLabel": "Tutar",
+        "amountPlaceholder": "0",
+        "dateLabel": "Tarih"
+      },
+      "categories": {
+        "salaries": "Maaşlar",
+        "supplies": "Malzemeler",
+        "events": "Etkinlikler",
+        "maintenance": "Bakım",
+        "others": "Diğer",
+        "custom": "Özel"
+      },
+      "actions": {
+        "cancel": "İptal",
+        "submit": "Kaydet",
+        "submitting": "Kaydediliyor..."
+      },
+      "toasts": {
+        "successTitle": "Gider eklendi",
+        "successDescription": "Yeni gider kaydı kaydedildi.",
+        "errorTitle": "Gider eklenemedi",
+        "errorDescription": "Lütfen tekrar deneyin."
+      }
+    }
+  },
+  "adminCalendar": {
+    "monthNames": {
+      "january": "Ocak",
+      "february": "Şubat",
+      "march": "Mart",
+      "april": "Nisan",
+      "may": "Mayıs",
+      "june": "Haziran",
+      "july": "Temmuz",
+      "august": "Ağustos",
+      "september": "Eylül",
+      "october": "Ekim",
+      "november": "Kasım",
+      "december": "Aralık"
+    },
+    "categories": {
+      "all": "Tüm Takvim",
+      "academic": "Akademik",
+      "events": "Etkinlikler",
+      "finance": "Finans",
+      "administration": "Yönetim"
+    },
+    "header": {
+      "monthAriaLabel": "Takvim ayı",
+      "day": "Gün",
+      "week": "Hafta",
+      "month": "Ay",
+      "addAgenda": "Ajanda Ekle"
+    },
+    "detailPanel": {
+      "title": "Program Detayı",
+      "notes": "Notlar",
+      "empty": "Seçilen gün için etkinlik bulunamadı."
+    },
+    "addAgenda": {
+      "title": "Yeni Ajanda Ekle",
+      "description": "Takvim için yeni bir etkinlik oluşturun.",
+      "fields": {
+        "title": "Adı",
+        "category": "Kategori",
+        "date": "Tarih",
+        "startTime": "Başlangıç saati",
+        "endTime": "Bitiş saati",
+        "location": "Yer / Platform",
+        "notes": "Notlar",
+        "visibility": "Görünürlük"
+      },
+      "visibility": {
+        "all": "Hepsi",
+        "admin": "Yalnızca yönetici",
+        "teachers": "Öğretmenler",
+        "students": "Öğrenciler"
+      },
+      "actions": {
+        "cancel": "İptal",
+        "submit": "Kaydet",
+        "submitting": "Kaydediliyor..."
+      },
+      "toasts": {
+        "successTitle": "Etkinlik eklendi",
+        "successDescription": "Yeni ajanda öğesi kaydedildi.",
+        "errorTitle": "Etkinlik eklenemedi",
+        "errorDescription": "Bilgileri kontrol edip tekrar deneyin."
+      }
+    }
+  },
+  "adminNotices": {
+    "pageTitle": "Duyuru Panosu",
+    "actions": {
+      "add": "Yeni duyuru",
+      "edit": "Düzenle",
+      "share": "Paylaş",
+      "archive": "Arşivle",
+      "delete": "Sil",
+      "cancel": "İptal",
+      "submit": "Kaydet",
+      "submitting": "Kaydediliyor...",
+      "update": "Güncelle"
+    },
+    "filters": {
+      "searchPlaceholder": "Duyurularda ara...",
+      "allCategories": "Tüm kategoriler",
+      "allStatuses": "Tüm durumlar",
+      "categoryAriaLabel": "Kategoriye göre filtrele",
+      "statusAriaLabel": "Duruma göre filtrele"
+    },
+    "columns": {
+      "postDate": "Yayın tarihi",
+      "expDate": "Bitiş tarihi"
+    },
+    "categories": {
+      "academic": "Akademik",
+      "events": "Etkinlikler",
+      "maintenance": "Bakım",
+      "finance": "Finans",
+      "holiday": "Tatil",
+      "sports": "Spor",
+      "other": "Diğer"
+    },
+    "statuses": {
+      "active": "Aktif",
+      "scheduled": "Planlanmış",
+      "archived": "Arşivlenmiş",
+      "draft": "Taslak"
+    },
+    "audience": {
+      "students": "Öğrenciler",
+      "teachers": "Öğretmenler",
+      "parents": "Veliler",
+      "staff": "Personel",
+      "all": "Hepsi"
+    },
+    "detail": {
+      "audience": "Hedef kitle",
+      "content": "İçerik",
+      "attachments": "Ekler",
+      "createdBy": "Hazırlayan",
+      "createdByLabel": "tarafından",
+      "detailBoard": "Duyuru Detayları",
+      "views": "Görüntülenme"
+    },
+    "pagination": {
+      "show": "Göster",
+      "of": "dan",
+      "results": "sonuçlar",
+      "next": "Sonraki",
+      "previous": "Önceki"
+    },
+    "states": {
+      "empty": "Duyuru bulunamadı",
+      "loadError": "Veri yüklenirken bir hata oluştu"
+    },
+    "toasts": {
+      "createSuccessTitle": "Duyuru oluşturuldu",
+      "createSuccessDescription": "Yeni duyuru başarıyla kaydedildi.",
+      "createErrorTitle": "Hata oluştu",
+      "createErrorDescription": "Duyuru kaydedilemedi.",
+      "deleteSuccessTitle": "Duyuru silindi",
+      "deleteSuccessDescription": "Duyuru başarıyla silindi.",
+      "deleteErrorTitle": "Hata",
+      "deleteErrorDescription": "Duyuru silinirken hata oluştu.",
+      "archiveInfo": "Duyuru arşivlendi",
+      "shareInfo": "Paylaşım bağlantısı kopyalandı"
+    },
+    "modal": {
+      "addTitle": "Yeni Duyuru Ekle",
+      "addDescription": "Okul topluluğu için yeni bir duyuru oluşturun.",
+      "editTitle": "Duyuruyu Düzenle",
+      "editDescription": "Mevcut duyuru bilgilerini güncelleyin.",
+      "fields": {
+        "titleLabel": "Başlık",
+        "titlePlaceholder": "Duyuru başlığını girin",
+        "categoryLabel": "Kategori",
+        "categoryPlaceholder": "Kategori seçin",
+        "audienceLabel": "Hedef kitle",
+        "contentLabel": "Duyuru içeriği",
+        "contentPlaceholder": "Detaylı bilgi yazın...",
+        "postDateLabel": "Yayın tarihi",
+        "expDateLabel": "Bitiş tarihi"
+      },
+      "actions": {
+        "cancel": "İptal",
+        "submit": "Kaydet",
+        "submitting": "Kaydediliyor...",
+        "update": "Güncelle"
       }
     }
   }

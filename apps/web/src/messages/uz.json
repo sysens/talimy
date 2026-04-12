@@ -128,7 +128,7 @@
     "passwordPlaceholder": "Parolingizni kiriting",
     "rememberMe": "Eslab qolish",
     "forgotPassword": "Parolni unutdingizmi?",
-    "signInButton": "Talimy ga kirish",
+    "signInButton": "Talimyga kirish",
     "invalidCredentials": "Email yoki parol noto'g'ri.",
     "invalidCredentialsDescription": "Ma'lumotlarni tekshirib, bir necha daqiqadan keyin qayta urinib ko'ring.",
     "locales": {
@@ -1104,6 +1104,309 @@
         "empty": "O'quvchilar topilmadi.",
         "error": "O'quvchilar ro'yxatini yuklab bo'lmadi."
       }
+    },
+    "detail": {
+      "monthNames": {
+        "january": "Yanvar",
+        "february": "Fevral",
+        "march": "Mart",
+        "april": "Aprel",
+        "may": "May",
+        "june": "Iyun",
+        "july": "Iyul",
+        "august": "Avgust",
+        "september": "Sentabr",
+        "october": "Oktabr",
+        "november": "Noyabr",
+        "december": "Dekabr"
+      },
+      "header": {
+        "title": "O'quvchi tafsilotlari"
+      },
+      "toast": {
+        "title": "O'quvchi ma'lumotlari",
+        "loadFailed": "O'quvchi ma'lumotlarini yuklab bo'lmadi."
+      },
+      "states": {
+        "empty": "O'quvchi topilmadi."
+      },
+      "gender": {
+        "male": "Erkak",
+        "female": "Ayol"
+      },
+      "status": {
+        "active": "Faol",
+        "inactive": "Faol emas",
+        "graduated": "Bitirgan",
+        "transferred": "Ko'chirilgan"
+      },
+      "personal": {
+        "gender": "Jins",
+        "dateOfBirth": "Tug'ilgan sana",
+        "phone": "Telefon raqami",
+        "address": "Manzil"
+      },
+      "guardians": {
+        "title": "Ota-ona / Vasiy",
+        "actionLabel": "Vasiylar amallari",
+        "father": "Ota",
+        "mother": "Ona",
+        "alternativeGuardian": "Vasiy",
+        "relationship": {
+          "aunt": "Xola",
+          "uncle": "Amaki",
+          "guardian": "Vasiy"
+        }
+      },
+      "documents": {
+        "title": "Hujjatlar",
+        "actionLabel": "Hujjatlar amallari"
+      },
+      "attendanceCalendar": {
+        "meta": {
+          "absent": "Yo'q",
+          "absentDescription": "O'quvchi darsga qatnashmagan",
+          "late": "Kechikdi",
+          "lateDescription": "O'quvchi darsga kechikib kelgan",
+          "present": "Qatnashdi",
+          "presentDescription": "O'quvchi darsda bo'lgan",
+          "sick": "Kasal",
+          "sickDescription": "Sog'liq sababli ruxsatli yo'q"
+        },
+        "weekdays": {
+          "sunday": "Y",
+          "monday": "D",
+          "tuesday": "S",
+          "wednesday": "Ch",
+          "thursday": "P",
+          "friday": "J",
+          "saturday": "Sh"
+        }
+      },
+      "scholarships": {
+        "title": "Stipendiyalar",
+        "actionLabel": "Stipendiyalar amallari",
+        "types": {
+          "finance": "Moliya",
+          "enrichment": "Rivojlantiruvchi"
+        }
+      },
+      "health": {
+        "title": "Sog'liq va tibbiy ma'lumotlar",
+        "actionLabel": "Sog'liq amallari"
+      },
+      "academicPerformance": {
+        "title": "Akademik ko'rsatkich",
+        "filters": {
+          "last6Months": "So'nggi 6 oy",
+          "thisSemester": "Shu semestr"
+        }
+      },
+      "extracurricular": {
+        "title": "To'garaklar",
+        "actionLabel": "To'garak amallari",
+        "empty": "To'garak yozuvlari topilmadi.",
+        "columns": {
+          "club": "Klub",
+          "achievements": "Yutuqlar",
+          "duration": "Davomiylik",
+          "advisor": "Rahbar"
+        }
+      },
+      "behaviorLog": {
+        "title": "Xulq-atvor va intizom jurnali",
+        "actionLabel": "Jurnal amallari",
+        "empty": "Xulq-atvor yozuvlari topilmadi.",
+        "columns": {
+          "date": "Sana",
+          "typeAndDetails": "Turi va tafsilotlar",
+          "reportedBy": "Qayd etgan",
+          "statusAction": "Holat / Amal"
+        },
+        "types": {
+          "positiveNote": "Ijobiy qayd",
+          "minorIssue": "Kichik muammo",
+          "majorIssue": "Jiddiy muammo"
+        },
+        "actions": {
+          "recordRecognition": "E'tirofni qayd etish",
+          "recognitionRecorded": "E'tirof qayd etildi",
+          "issueWarning": "Ogohlantirish berish",
+          "parentNotified": "Ota-ona xabardor qilindi"
+        }
+      }
+    },
+    "create": {
+      "header": {
+        "title": "O'quvchi qo'shish",
+        "backLabel": "O'quvchilar",
+        "breadcrumbs": {
+          "dashboard": "Dashboard",
+          "students": "O'quvchilar",
+          "addStudent": "O'quvchi qo'shish"
+        }
+      },
+      "loading": "Form ma'lumotlari yuklanmoqda...",
+      "loadError": "O'quvchi qo'shish formasi ma'lumotlarini yuklab bo'lmadi.",
+      "retry": "Qayta urinish",
+      "personal": {
+        "title": "Shaxsiy ma'lumotlar",
+        "firstNameLabel": "Ism",
+        "firstNamePlaceholder": "Ismni kiriting",
+        "lastNameLabel": "Familiya",
+        "lastNamePlaceholder": "Familiyani kiriting",
+        "middleNameLabel": "Sharif",
+        "middleNamePlaceholder": "Sharifni kiriting",
+        "dateOfBirthLabel": "Tug'ilgan sana",
+        "genderLabel": "Jinsi",
+        "genderPlaceholder": "Jinsni tanlang",
+        "genderOptions": {
+          "male": "Erkak",
+          "female": "Ayol"
+        },
+        "avatar": {
+          "label": "Avatar",
+          "uploadLabel": "Rasm yuklash",
+          "changeLabel": "Rasmni almashtirish",
+          "removeLabel": "Olib tashlash",
+          "emptyLabel": "Rasm biriktirilmagan",
+          "previewLabel": "Yuklangan rasm previewi",
+          "uploadErrorTitle": "Avatar yuklanmadi"
+        }
+      },
+      "contact": {
+        "title": "Kontakt ma'lumotlar",
+        "emailLabel": "Email",
+        "emailPlaceholder": "student@school.uz",
+        "phoneLabel": "Telefon raqami",
+        "addressLabel": "Yashash manzili",
+        "addressPlaceholder": "Viloyat, tuman, manzilni kiriting"
+      },
+      "guardians": {
+        "title": "Ota-ona / Vasiy ma'lumotlari",
+        "fatherTitle": "Ota",
+        "motherTitle": "Ona",
+        "alternativeTitle": "Qo'shimcha vasiy",
+        "nameLabel": "Ism",
+        "lastNameLabel": "Familiya",
+        "phoneLabel": "Telefon raqami",
+        "relationLabel": "Munosabat",
+        "relationPlaceholder": "Munosabatni tanlang",
+        "firstNamePlaceholder": "Ismni kiriting",
+        "lastNamePlaceholder": "Familiyani kiriting",
+        "relationOptions": {
+          "aunt": "Xola",
+          "uncle": "Amaki",
+          "guardian": "Vasiy",
+          "grandmother": "Buvi",
+          "grandfather": "Bobo",
+          "sibling": "Aka-uka / opa-singil",
+          "other": "Boshqa"
+        }
+      },
+      "administration": {
+        "title": "Ma'muriy ma'lumotlar",
+        "gradeLabel": "Sinf",
+        "gradePlaceholder": "Sinfni tanlang",
+        "sectionLabel": "Bo'lim",
+        "sectionPlaceholder": "Bo'limni tanlang",
+        "enrollmentDateLabel": "Qabul sanasi",
+        "previousSchoolLabel": "Avvalgi maktab",
+        "previousSchoolPlaceholder": "Avvalgi maktab nomini kiriting"
+      },
+      "additional": {
+        "title": "Qo'shimcha ma'lumotlar",
+        "hobbiesLabel": "Qiziqishlar / Hobbi",
+        "hobbiesPlaceholder": "Qiziqishlar va faoliyatlarni kiriting",
+        "specialNeedsLabel": "Maxsus yordam kerak",
+        "specialNeedsDescription": "Ta'lim jarayonida qo'shimcha ko'mak kerak bo'lsa yoqing.",
+        "medicalConditionLabel": "Tibbiy ogohlantirish",
+        "medicalConditionDescription": "Muhim tibbiy holat bo'lsa yoqing.",
+        "medicalConditionDetailsLabel": "Tibbiy holat tafsilotlari",
+        "medicalConditionDetailsPlaceholder": "Tibbiy holat haqida yozing"
+      },
+      "academic": {
+        "title": "Akademik ma'lumotlar",
+        "classSummaryLabel": "Sinf / Bo'lim",
+        "classSummaryPlaceholder": "Sinf tanlang",
+        "grantTypeLabel": "Grant turi",
+        "grantTypePlaceholder": "Grant turini tanlang",
+        "grantTypeOptions": {
+          "zakat": "Zakot",
+          "sponsor": "Homiy",
+          "other": "Boshqa"
+        },
+        "totalFeeLabel": "Umumiy to'lov",
+        "totalFeePlaceholder": "0.00",
+        "paidAmountLabel": "To'langan summa",
+        "paidAmountPlaceholder": "0.00"
+      },
+      "modules": {
+        "title": "Modulga bog'liq maydonlar",
+        "dormitoryRoomLabel": "Yotoqxona xonasi",
+        "dormitoryRoomPlaceholder": "Masalan, A-12",
+        "mealsLabel": "Ovqatlanish",
+        "mealsPlaceholder": "Variantni tanlang",
+        "mealsOptions": {
+          "none": "Yo'q",
+          "one_meal": "1 mahal",
+          "three_meals": "3 mahal"
+        },
+        "residencePermitLabel": "Yashash ruxsati",
+        "residencePermitPlaceholder": "Holatni tanlang",
+        "residencePermitOptions": {
+          "obtained": "Olingan",
+          "pending_90_days": "90 kun ichida",
+          "none": "Yo'q"
+        },
+        "contractNumberLabel": "Shartnoma raqami",
+        "contractNumberPlaceholder": "Shartnoma raqamini kiriting"
+      },
+      "actions": {
+        "saveDraft": "Qoralama saqlash",
+        "cancel": "Bekor qilish",
+        "submit": "Saqlash va qo'shish",
+        "submitting": "Saqlanmoqda..."
+      },
+      "validation": {
+        "addressRequired": "Manzil majburiy.",
+        "alternativeGuardianFirstNameRequired": "Qo'shimcha vasiy ismi majburiy.",
+        "alternativeGuardianLastNameRequired": "Qo'shimcha vasiy familiyasi majburiy.",
+        "alternativeGuardianPhoneRequired": "Qo'shimcha vasiy telefoni majburiy.",
+        "alternativeGuardianRelationRequired": "Qo'shimcha vasiy munosabatini tanlang.",
+        "classRequired": "Sinfni tanlang.",
+        "dateOfBirthRequired": "Tug'ilgan sana majburiy.",
+        "emailInvalid": "Email formatini to'g'ri kiriting.",
+        "emailRequired": "Email majburiy.",
+        "enrollmentDateRequired": "Qabul sanasi majburiy.",
+        "fatherFirstNameRequired": "Otaning ismi majburiy.",
+        "fatherLastNameRequired": "Otaning familiyasi majburiy.",
+        "fatherPhoneInvalid": "Otaning telefon raqamini to'g'ri kiriting.",
+        "firstNameRequired": "Ism majburiy.",
+        "gradeRequired": "Sinfni tanlang.",
+        "lastNameRequired": "Familiya majburiy.",
+        "medicalConditionDetailsRequired": "Tibbiy holat tafsiloti majburiy.",
+        "motherFirstNameRequired": "Onaning ismi majburiy.",
+        "motherLastNameRequired": "Onaning familiyasi majburiy.",
+        "motherPhoneInvalid": "Onaning telefon raqamini to'g'ri kiriting.",
+        "paidAmountInvalid": "To'langan summa noto'g'ri.",
+        "paidAmountTooLarge": "To'langan summa umumiy to'lovdan katta bo'lmasligi kerak.",
+        "phoneInvalid": "Telefon raqamini to'g'ri kiriting.",
+        "phoneRequired": "Telefon raqami majburiy.",
+        "previousSchoolRequired": "Avvalgi maktab bo'sh bo'lmasligi kerak.",
+        "sectionRequired": "Bo'limni tanlang.",
+        "totalFeeInvalid": "Umumiy to'lov noto'g'ri."
+      },
+      "toasts": {
+        "draftSavedTitle": "Qoralama saqlandi",
+        "draftSavedDescription": "Form ma'lumotlari keyin davom ettirish uchun saqlandi.",
+        "formOptionsMissing": "Form uchun kerakli ma'lumotlar topilmadi.",
+        "createErrorTitle": "O'quvchini qo'shib bo'lmadi",
+        "createErrorDescription": "Ma'lumotlarni tekshirib qayta urinib ko'ring.",
+        "emailAlreadyExists": "Ushbu elektron pochta manzili allaqachon ro'yxatdan o'tgan.",
+        "createSuccessTitle": "O'quvchi qo'shildi",
+        "createSuccessDescription": "Yangi o'quvchi muvaffaqiyatli yaratildi."
+      }
     }
   },
   "adminTeachers": {
@@ -1430,6 +1733,476 @@
         "createErrorDescription": "Ma'lumotlarni tekshirib qayta urinib ko'ring.",
         "createSuccessTitle": "O'qituvchi qo'shildi",
         "createSuccessDescription": "Yangi o'qituvchi muvaffaqiyatli yaratildi."
+      }
+    }
+  },
+  "adminAttendance": {
+    "summary": {
+      "sectionTitle": "Davomat xulosasi",
+      "filterAriaLabel": "Davomat sanasi filtri",
+      "dates": {
+        "today": "Bugun"
+      },
+      "titles": {
+        "students": "O'quvchilar",
+        "teachers": "O'qituvchilar",
+        "staff": "Xodimlar"
+      },
+      "totalLabel": "Jami kelganlar",
+      "metrics": {
+        "onTime": "Vaqtida",
+        "late": "Kechikkan",
+        "absent": "Kelmagan"
+      }
+    },
+    "overview": {
+      "title": "Davomat ko'rinishi",
+      "filterAriaLabel": "Davomat davri filtri",
+      "periods": {
+        "lastSemester": "So'nggi semestr",
+        "thisSemester": "Joriy semestr"
+      },
+      "legend": {
+        "students": "O'quvchilar",
+        "teachers": "O'qituvchilar",
+        "staff": "Xodimlar"
+      }
+    },
+    "filters": {
+      "tabs": {
+        "students": "O'quvchilar",
+        "teachers": "O'qituvchilar",
+        "staff": "Xodimlar"
+      },
+      "allDepartments": "Barcha bo'limlar"
+    },
+    "grid": {
+      "ariaLabel": "Davomat jadvali",
+      "profile": {
+        "students": "O'quvchi profili",
+        "teachers": "O'qituvchi profili",
+        "staff": "Xodim profili"
+      },
+      "empty": {
+        "students": "O'quvchilar topilmadi.",
+        "teachers": "O'qituvchilar topilmadi.",
+        "staff": "Xodimlar topilmadi."
+      },
+      "editor": {
+        "title": "Davomat",
+        "description": "Holatni yangilang va kerak bo'lsa sabab kiriting.",
+        "reasonPlaceholder": "Sababni kiriting",
+        "save": "Saqlash",
+        "cancel": "Bekor qilish"
+      },
+      "statuses": {
+        "onTime": "Vaqtida",
+        "late": "Kechikkan",
+        "absent": "Kelmagan",
+        "holiday": "Dam olish kuni",
+        "weekend": "—"
+      }
+    },
+    "pagination": {
+      "show": "Ko'rsatish",
+      "of": "jami",
+      "results": "natija",
+      "previous": "Oldingi",
+      "next": "Keyingi"
+    },
+    "states": {
+      "loadError": "Davomat ma'lumotlarini yuklab bo'lmadi."
+    },
+    "toasts": {
+      "markErrorTitle": "Davomatni yangilab bo'lmadi",
+      "markErrorDescription": "Qayta urinib ko'ring."
+    }
+  },
+  "adminFinancePayments": {
+    "stats": {
+      "collected": "Yig'ilgan to'lovlar",
+      "pending": "Kutilayotgan to'lovlar",
+      "overdue": "Muddati o'tgan to'lovlar"
+    },
+    "trend": {
+      "title": "To'lovlar yig'ilishi trendi",
+      "filterAriaLabel": "To'lovlar trendi davri",
+      "periods": {
+        "last6Months": "So'nggi 6 oy",
+        "last8Months": "So'nggi 8 oy"
+      }
+    },
+    "progress": {
+      "title": "To'lovlar yig'ilishi progressi",
+      "actionLabel": "Progress amallari",
+      "collectedLabel": "{collected}/{total} yig'ildi",
+      "categories": {
+        "tuitionFee": "Kontrakt to'lovi",
+        "booksSupplies": "Kitob va jihozlar",
+        "activities": "Faoliyatlar",
+        "miscellaneous": "Boshqa"
+      }
+    },
+    "table": {
+      "title": "To'lovlar yig'ilishi",
+      "filters": {
+        "allClasses": "Barcha sinflar",
+        "allStatuses": "Barcha holatlar",
+        "thisMonth": "Shu oy",
+        "classAriaLabel": "Sinf filtri",
+        "statusAriaLabel": "Holat filtri",
+        "monthAriaLabel": "Oy filtri"
+      },
+      "columns": {
+        "student": "O'quvchi",
+        "classLabel": "Sinf",
+        "feeCategory": "To'lov turi",
+        "totalAmount": "Jami summa",
+        "dueDate": "Muddat",
+        "status": "Holat"
+      },
+      "categories": {
+        "tuitionFee": "Kontrakt to'lovi",
+        "booksSupplies": "Kitob va jihozlar",
+        "activities": "Faoliyatlar",
+        "miscellaneous": "Boshqa"
+      },
+      "statuses": {
+        "paid": "To'langan",
+        "pending": "Kutilmoqda",
+        "overdue": "Muddati o'tgan",
+        "partiallyPaid": "Qisman to'langan"
+      },
+      "pagination": {
+        "show": "Ko'rsatish",
+        "of": "dan",
+        "results": "natija",
+        "previous": "Oldingi",
+        "next": "Keyingi"
+      },
+      "states": {
+        "empty": "To'lov yozuvlari topilmadi.",
+        "loadError": "To'lovlar ma'lumotini yuklab bo'lmadi."
+      }
+    }
+  },
+  "adminFinanceExpenses": {
+    "trend": {
+      "title": "Xarajat trendi",
+      "filterAriaLabel": "Xarajat trendi davri",
+      "periods": {
+        "last8Months": "So'nggi 8 oy"
+      }
+    },
+    "breakdown": {
+      "title": "Xarajatlar tarkibi",
+      "actionLabel": "Xarajat tarkibi amallari",
+      "totalLabel": "Jami xarajat",
+      "categories": {
+        "salaries": "Maoshlar",
+        "supplies": "Jihozlar",
+        "events": "Tadbirlar",
+        "maintenance": "Ta'mirlash",
+        "others": "Boshqa",
+        "custom": "Maxsus"
+      }
+    },
+    "reimbursements": {
+      "title": "Kommunal to'lovlar",
+      "filterAriaLabel": "Kommunal to'lovlar haftasi",
+      "periods": {
+        "thisWeek": "Shu hafta",
+        "previousWeek": "O'tgan hafta"
+      },
+      "columns": {
+        "requestName": "So'rov nomi",
+        "staffName": "Xodim nomi",
+        "amount": "Summa",
+        "datePaid": "To'langan sana",
+        "proof": "Isbot",
+        "status": "Holat"
+      },
+      "departments": {
+        "science": "Ilm-fan",
+        "mathematics": "Matematika",
+        "language": "Tillar",
+        "social": "Ijtimoiy fan",
+        "arts": "San'at",
+        "physicalEducation": "Jismoniy tarbiya",
+        "other": "Boshqa"
+      },
+      "statuses": {
+        "approved": "Tasdiqlangan",
+        "declined": "Rad etilgan",
+        "pending": "Kutilmoqda"
+      },
+      "actions": {
+        "approve": "Tasdiqlash",
+        "decline": "Rad etish",
+        "viewFile": "Faylni ko'rish"
+      },
+      "states": {
+        "empty": "Kommunal to'lovlar topilmadi.",
+        "loadError": "Kommunal to'lovlarni yuklab bo'lmadi."
+      },
+      "toasts": {
+        "successTitle": "Holat yangilandi",
+        "successDescription": "Kommunal to'lov holati saqlandi.",
+        "errorTitle": "Holat yangilanmadi",
+        "errorDescription": "Qayta urinib ko'ring."
+      }
+    },
+    "expenses": {
+      "title": "Xarajatlar",
+      "filters": {
+        "allCategories": "Barcha kategoriyalar",
+        "thisMonth": "Shu oy",
+        "categoryAriaLabel": "Kategoriya filtri",
+        "monthAriaLabel": "Oy filtri"
+      },
+      "columns": {
+        "date": "Sana",
+        "department": "Bo'lim",
+        "category": "Kategoriya",
+        "description": "Izoh",
+        "quantity": "Miqdor",
+        "amount": "Summa"
+      },
+      "categories": {
+        "all": "Barchasi",
+        "salaries": "Maoshlar",
+        "supplies": "Jihozlar",
+        "events": "Tadbirlar",
+        "maintenance": "Ta'mirlash",
+        "others": "Boshqa",
+        "custom": "Maxsus"
+      },
+      "departments": {
+        "science": "Ilm-fan",
+        "mathematics": "Matematika",
+        "language": "Tillar",
+        "social": "Ijtimoiy f.",
+        "arts": "San'at",
+        "physicalEducation": "Jismoniy t.",
+        "other": "Boshqa"
+      },
+      "pagination": {
+        "show": "Ko'rsatish",
+        "of": "dan",
+        "results": "natija",
+        "previous": "Oldingi",
+        "next": "Keyingi"
+      },
+      "states": {
+        "empty": "Xarajatlar topilmadi.",
+        "loadError": "Xarajatlarni yuklab bo'lmadi."
+      },
+      "actions": {
+        "add": "Qo'shish"
+      }
+    },
+    "modal": {
+      "title": "Xarajat qo'shish",
+      "description": "Yangi xarajat yozuvini kiriting.",
+      "fields": {
+        "departmentLabel": "Bo'lim",
+        "departmentPlaceholder": "Bo'limni tanlang",
+        "categoryLabel": "Kategoriya",
+        "categoryPlaceholder": "Kategoriyani tanlang",
+        "categoryNameLabel": "Maxsus kategoriya nomi",
+        "categoryNamePlaceholder": "Kategoriya nomini kiriting",
+        "descriptionLabel": "Izoh",
+        "descriptionPlaceholder": "Xarajat tafsilotini yozing",
+        "amountLabel": "Summa",
+        "amountPlaceholder": "0",
+        "dateLabel": "Sana"
+      },
+      "categories": {
+        "salaries": "Maoshlar",
+        "supplies": "Jihozlar",
+        "events": "Tadbirlar",
+        "maintenance": "Ta'mirlash",
+        "others": "Boshqa",
+        "custom": "Maxsus"
+      },
+      "actions": {
+        "cancel": "Bekor qilish",
+        "submit": "Saqlash",
+        "submitting": "Saqlanmoqda..."
+      },
+      "toasts": {
+        "successTitle": "Xarajat qo'shildi",
+        "successDescription": "Yangi xarajat yozuvi saqlandi.",
+        "errorTitle": "Xarajat qo'shilmadi",
+        "errorDescription": "Qayta urinib ko'ring."
+      }
+    }
+  },
+  "adminCalendar": {
+    "monthNames": {
+      "january": "Yanvar",
+      "february": "Fevral",
+      "march": "Mart",
+      "april": "Aprel",
+      "may": "May",
+      "june": "Iyun",
+      "july": "Iyul",
+      "august": "Avgust",
+      "september": "Sentabr",
+      "october": "Oktabr",
+      "november": "Noyabr",
+      "december": "Dekabr"
+    },
+    "categories": {
+      "all": "Barcha jadval",
+      "academic": "Akademik",
+      "events": "Tadbirlar",
+      "finance": "Moliya",
+      "administration": "Ma'muriyat"
+    },
+    "header": {
+      "monthAriaLabel": "Kalendar oyi",
+      "day": "Kun",
+      "week": "Hafta",
+      "month": "Oy",
+      "addAgenda": "Agenda qo'shish"
+    },
+    "detailPanel": {
+      "title": "Jadval tafsilotlari",
+      "notes": "Izohlar",
+      "empty": "Tanlangan kun uchun tadbir topilmadi."
+    },
+    "addAgenda": {
+      "title": "Yangi agenda qo'shish",
+      "description": "Kalendar uchun yangi tadbir yarating.",
+      "fields": {
+        "title": "Nomi",
+        "category": "Kategoriya",
+        "date": "Sana",
+        "startTime": "Boshlanish vaqti",
+        "endTime": "Tugash vaqti",
+        "location": "Joy / Platforma",
+        "notes": "Izohlar",
+        "visibility": "Ko'rish huquqi"
+      },
+      "visibility": {
+        "all": "Barchasi",
+        "admin": "Faqat admin",
+        "teachers": "O'qituvchilar",
+        "students": "O'quvchilar"
+      },
+      "actions": {
+        "cancel": "Bekor qilish",
+        "submit": "Saqlash",
+        "submitting": "Saqlanmoqda..."
+      },
+      "toasts": {
+        "successTitle": "Tadbir qo'shildi",
+        "successDescription": "Yangi agenda muvaffaqiyatli saqlandi.",
+        "errorTitle": "Tadbir qo'shilmadi",
+        "errorDescription": "Ma'lumotlarni tekshirib qayta urinib ko'ring."
+      }
+    }
+  },
+  "adminNotices": {
+    "pageTitle": "E'lonlar taxtasi",
+    "actions": {
+      "add": "Yangi e'lon",
+      "edit": "Tahrirlash",
+      "share": "Ulashish",
+      "archive": "Arxivlash",
+      "delete": "O'chirish",
+      "cancel": "Bekor qilish",
+      "submit": "Saqlash",
+      "submitting": "Saqlanmoqda...",
+      "update": "Yangilash"
+    },
+    "filters": {
+      "searchPlaceholder": "E'lonlarni qidirish...",
+      "allCategories": "Barcha kategoriyalar",
+      "allStatuses": "Barcha holatlar",
+      "categoryAriaLabel": "Kategoriya bo'yicha filter",
+      "statusAriaLabel": "Holat bo'yicha filter"
+    },
+    "columns": {
+      "postDate": "E'lon sanasi",
+      "expDate": "Tugash sanasi"
+    },
+    "categories": {
+      "academic": "Akademik",
+      "events": "Tadbirlar",
+      "maintenance": "Ta'mirlash",
+      "finance": "Moliya",
+      "holiday": "Ta'til",
+      "sports": "Sport",
+      "other": "Boshqa"
+    },
+    "statuses": {
+      "active": "Faol",
+      "scheduled": "Rejalashtirilgan",
+      "archived": "Arxivlangan",
+      "draft": "Qoralama"
+    },
+    "audience": {
+      "students": "O'quvchilar",
+      "teachers": "O'qituvchilar",
+      "parents": "Ota-onalar",
+      "staff": "Xodimlar",
+      "all": "Barchasi"
+    },
+    "detail": {
+      "detailBoard": "Batafsil ma'lumot",
+      "audience": "Kimlar uchun",
+      "content": "Matni",
+      "attachments": "Fayllar",
+      "createdBy": "Yaratuvchi",
+      "createdByLabel": "Tomonidan yaratilgan",
+      "views": "Ko'rishlar"
+    },
+    "pagination": {
+      "show": "Ko'rsatish",
+      "of": "dan",
+      "results": "natijalar",
+      "next": "Keyingisi",
+      "previous": "Oldingisi"
+    },
+    "states": {
+      "empty": "E'lonlar topilmadi",
+      "loadError": "Ma'lumotlarni yuklashda xatolik yuz berdi"
+    },
+    "toasts": {
+      "createSuccessTitle": "E'lon yaratildi",
+      "createSuccessDescription": "Yangi e'lon muvaffaqiyatli saqlandi.",
+      "createErrorTitle": "Xatolik yuz berdi",
+      "createErrorDescription": "E'lonni saqlash imkoni bo'lmadi.",
+      "deleteSuccessTitle": "E'lon o'chirildi",
+      "deleteSuccessDescription": "E'lon muvaffaqiyatli o'chirib tashlandi.",
+      "deleteErrorTitle": "Xatolik",
+      "deleteErrorDescription": "E'lonni o'chirishda xatolik yuz berdi.",
+      "archiveInfo": "E'lon arxivlandi",
+      "shareInfo": "Ulashish havolasi nusxalandi"
+    },
+    "modal": {
+      "addTitle": "Yangi e'lon qo'shish",
+      "addDescription": "Maktab hamjamiyati uchun yangi e'lon yarating.",
+      "editTitle": "E'lonni tahrirlash",
+      "editDescription": "Mavjud e'lon ma'lumotlarini o'zgartiring.",
+      "fields": {
+        "titleLabel": "Sarlavha",
+        "titlePlaceholder": "E'lon sarlavhasini kiriting",
+        "categoryLabel": "Kategoriya",
+        "categoryPlaceholder": "Kategoriyani tanlang",
+        "audienceLabel": "Kimlar uchun",
+        "contentLabel": "E'lon matni",
+        "contentPlaceholder": "Batafsil ma'lumot yozing...",
+        "postDateLabel": "E'lon sanasi",
+        "expDateLabel": "Tugash sanasi"
+      },
+      "actions": {
+        "cancel": "Bekor qilish",
+        "submit": "Saqlash",
+        "submitting": "Saqlanmoqda...",
+        "update": "Yangilash"
       }
     }
   }

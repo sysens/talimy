@@ -90,7 +90,16 @@ export type EventsResponse = {
     startDate: string
     tenantId: string
     title: string
-    type: "academic" | "exam" | "holiday" | "sports" | "other"
+    type:
+      | "academic"
+      | "events"
+      | "finance"
+      | "administration"
+      | "exam"
+      | "holiday"
+      | "sports"
+      | "other"
+    visibility: "all" | "admin" | "teachers" | "students"
     updatedAt: string
   }>
   meta: {

@@ -612,6 +612,20 @@
       }
     },
     "detail": {
+      "monthNames": {
+        "january": "يناير",
+        "february": "فبراير",
+        "march": "مارس",
+        "april": "أبريل",
+        "may": "مايو",
+        "june": "يونيو",
+        "july": "يوليو",
+        "august": "أغسطس",
+        "september": "سبتمبر",
+        "october": "أكتوبر",
+        "november": "نوفمبر",
+        "december": "ديسمبر"
+      },
       "header": {
         "title": "تفاصيل المعلم"
       },
@@ -831,6 +845,174 @@
         "createErrorDescription": "تحقق من البيانات المدخلة ثم حاول مرة أخرى.",
         "createSuccessTitle": "تمت إضافة المعلم",
         "createSuccessDescription": "تم إنشاء المعلم الجديد بنجاح."
+      }
+    }
+  },
+  "adminCalendar": {
+    "monthNames": {
+      "january": "يناير",
+      "february": "فبراير",
+      "march": "مارس",
+      "april": "أبريل",
+      "may": "مايو",
+      "june": "يونيو",
+      "july": "يوليو",
+      "august": "أغسطس",
+      "september": "سبتمبر",
+      "october": "أكتوبر",
+      "november": "نوفمبر",
+      "december": "ديسمبر"
+    },
+    "categories": {
+      "all": "جميع الجداول",
+      "academic": "أكاديمي",
+      "events": "الفعاليات",
+      "finance": "المالية",
+      "administration": "الإدارة"
+    },
+    "header": {
+      "monthAriaLabel": "شهر التقويم",
+      "day": "يوم",
+      "week": "أسبوع",
+      "month": "شهر",
+      "addAgenda": "إضافة أجندة"
+    },
+    "detailPanel": {
+      "title": "تفاصيل الجدول",
+      "notes": "ملاحظات",
+      "empty": "لا توجد فعاليات في التاريخ المحدد."
+    },
+    "addAgenda": {
+      "title": "إضافة أجندة جديدة",
+      "description": "أنشئ فعالية جديدة للتقويم.",
+      "fields": {
+        "title": "الاسم",
+        "category": "الفئة",
+        "date": "التاريخ",
+        "startTime": "وقت البدء",
+        "endTime": "وقت الانتهاء",
+        "location": "المكان / المنصة",
+        "notes": "ملاحظات",
+        "visibility": "صلاحية العرض"
+      },
+      "visibility": {
+        "all": "الكل",
+        "admin": "المشرف فقط",
+        "teachers": "المعلمون",
+        "students": "الطلاب"
+      },
+      "actions": {
+        "cancel": "إلغاء",
+        "submit": "حفظ",
+        "submitting": "جارٍ الحفظ..."
+      },
+      "toasts": {
+        "successTitle": "تمت إضافة الفعالية",
+        "successDescription": "تم حفظ عنصر الأجندة الجديد بنجاح.",
+        "errorTitle": "تعذر إضافة الفعالية",
+        "errorDescription": "تحقق من البيانات ثم حاول مرة أخرى."
+      }
+    }
+  },
+  "adminNotices": {
+    "pageTitle": "لوحة الإعلانات",
+    "actions": {
+      "add": "إعلان جديد",
+      "edit": "تعديل",
+      "share": "مشاركة",
+      "archive": "أرشفة",
+      "delete": "حذف",
+      "cancel": "إلغاء",
+      "submit": "حفظ",
+      "submitting": "جارٍ الحفظ...",
+      "update": "تحديث"
+    },
+    "filters": {
+      "searchPlaceholder": "البحث عن الإعلانات...",
+      "allCategories": "كل الفئات",
+      "allStatuses": "كل الحالات",
+      "categoryAriaLabel": "تصفية حسب الفئة",
+      "statusAriaLabel": "تصفية حسب الحالة"
+    },
+    "columns": {
+      "postDate": "تاريخ النشر",
+      "expDate": "تاريخ الانتهاء"
+    },
+    "categories": {
+      "academic": "أكاديمي",
+      "events": "فعاليات",
+      "maintenance": "صيانة",
+      "finance": "مالي",
+      "holiday": "عطلة",
+      "sports": "رياضة",
+      "other": "آخر"
+    },
+    "statuses": {
+      "active": "نشط",
+      "scheduled": "مجدول",
+      "archived": "مؤرشف",
+      "draft": "مسودة"
+    },
+    "audience": {
+      "students": "الطلاب",
+      "teachers": "المعلمون",
+      "parents": "أولياء الأمور",
+      "staff": "الموظفون",
+      "all": "الكل"
+    },
+    "detail": {
+      "detailBoard": "لوحة التفاصيل",
+      "audience": "الجمهور المستهدف",
+      "content": "المحتوى",
+      "attachments": "المرفقات",
+      "createdBy": "أنشئ بواسطة",
+      "createdByLabel": "أنشئ بواسطة",
+      "views": "المشاهدات"
+    },
+    "pagination": {
+      "show": "عرض",
+      "of": "من",
+      "results": "نتائج",
+      "next": "التالي",
+      "previous": "السابق"
+    },
+    "states": {
+      "empty": "لم يتم العثور على إعلانات",
+      "loadError": "حدث خطأ أثناء تحميل الإعلانات"
+    },
+    "toasts": {
+      "createSuccessTitle": "تم إنشاء الإعلان",
+      "createSuccessDescription": "تم حفظ الإعلان الجديد بنجاح.",
+      "createErrorTitle": "حدث خطأ",
+      "createErrorDescription": "تعذر حفظ الإعلان.",
+      "deleteSuccessTitle": "تم حذف الإعلان",
+      "deleteSuccessDescription": "تمت إزالة الإعلان بنجاح.",
+      "deleteErrorTitle": "خطأ",
+      "deleteErrorDescription": "تعذر حذف الإعلان.",
+      "archiveInfo": "تم أرشفة الإعلان",
+      "shareInfo": "تم نسخ رابط المشاركة"
+    },
+    "modal": {
+      "addTitle": "إضافة إعلان جديد",
+      "addDescription": "أنشئ إعلاناً جديداً لمجتمع المدرسة.",
+      "editTitle": "تعديل الإعلان",
+      "editDescription": "تحديث معلومات الإعلان الحالية.",
+      "fields": {
+        "titleLabel": "العنوان",
+        "titlePlaceholder": "أدخل عنوان الإعلان",
+        "categoryLabel": "الفئة",
+        "categoryPlaceholder": "اختر الفئة",
+        "audienceLabel": "الجمهور المستهدف",
+        "contentLabel": "محتوى الإعلان",
+        "contentPlaceholder": "اكتب معلومات مفصلة...",
+        "postDateLabel": "تاريخ النشر",
+        "expDateLabel": "تاريخ الانتهاء"
+      },
+      "actions": {
+        "cancel": "إلغاء",
+        "submit": "حفظ",
+        "submitting": "جارٍ الحفظ...",
+        "update": "تحديث"
       }
     }
   }
