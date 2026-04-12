@@ -44,9 +44,11 @@ function createApiTrpcRouter(tenantsService: TenantsService) {
       list: platformAdminProcedure.input(listTenantsQuerySchema).query(({ input }) => {
         return tenantsService.list(input as ListTenantsQueryDto)
       }),
-      getById: platformAdminProcedure.input(z.object({ id: z.string().uuid() })).query(({ input }) => {
-        return tenantsService.getById(input.id)
-      }),
+      getById: platformAdminProcedure
+        .input(z.object({ id: z.string().uuid() }))
+        .query(({ input }) => {
+          return tenantsService.getById(input.id)
+        }),
       create: platformAdminProcedure.input(createTenantSchema).mutation(({ input }) => {
         return tenantsService.create(input as CreateTenantDto)
       }),
@@ -60,9 +62,11 @@ function createApiTrpcRouter(tenantsService: TenantsService) {
         .mutation(({ input }) => {
           return tenantsService.delete(input.id)
         }),
-      stats: platformAdminProcedure.input(z.object({ id: z.string().uuid() })).query(({ input }) => {
-        return tenantsService.getStats(input.id)
-      }),
+      stats: platformAdminProcedure
+        .input(z.object({ id: z.string().uuid() }))
+        .query(({ input }) => {
+          return tenantsService.getStats(input.id)
+        }),
       billing: platformAdminProcedure
         .input(z.object({ id: z.string().uuid() }))
         .query(({ input }) => {

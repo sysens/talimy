@@ -34,15 +34,21 @@ async function bootstrap(): Promise<void> {
   app.useGlobalFilters(new AllExceptionsFilter())
   mountTrpcHttpAdapter(app)
 
-  httpAdapter.get("/", (_request: unknown, response: { status: (code: number) => { json: (body: object) => void } }) => {
-    response.status(200).json({
-      success: true,
-      data: {
-        name: "Talimy API",
-        status: "ok",
-      },
-    })
-  })
+  httpAdapter.get(
+    "/",
+    (
+      _request: unknown,
+      response: { status: (code: number) => { json: (body: object) => void } }
+    ) => {
+      response.status(200).json({
+        success: true,
+        data: {
+          name: "Talimy API",
+          status: "ok",
+        },
+      })
+    }
+  )
 
   httpAdapter.get(
     "/robots.txt",
@@ -54,10 +60,7 @@ async function bootstrap(): Promise<void> {
         }
       }
     ) => {
-      response
-        .status(200)
-        .type("text/plain")
-        .send("User-agent: *\nDisallow: /\n")
+      response.status(200).type("text/plain").send("User-agent: *\nDisallow: /\n")
     }
   )
 

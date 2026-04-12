@@ -40,7 +40,9 @@ function DataTableToolbar<TData>({
           <Input
             placeholder={searchPlaceholder}
             value={(table.getColumn(searchColumnId)?.getFilterValue() as string | undefined) ?? ""}
-            onChange={(event) => table.getColumn(searchColumnId)?.setFilterValue(event.target.value)}
+            onChange={(event) =>
+              table.getColumn(searchColumnId)?.setFilterValue(event.target.value)
+            }
             className="h-8 w-[150px] lg:w-[250px]"
           />
         )}
@@ -55,7 +57,12 @@ function DataTableToolbar<TData>({
         ))}
 
         {hasFilters && (
-          <Button variant="ghost" size="sm" className="h-8 px-2 lg:px-3" onClick={() => table.resetColumnFilters()}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 px-2 lg:px-3"
+            onClick={() => table.resetColumnFilters()}
+          >
             Reset
             <XIcon className="ml-2 size-4" />
           </Button>

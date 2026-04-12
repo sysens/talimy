@@ -1,6 +1,11 @@
 "use client"
 
-import type { ColumnDef, ColumnFiltersState, SortingState, VisibilityState } from "@tanstack/react-table"
+import type {
+  ColumnDef,
+  ColumnFiltersState,
+  SortingState,
+  VisibilityState,
+} from "@tanstack/react-table"
 import {
   flexRender,
   getCoreRowModel,
@@ -15,14 +20,7 @@ import type { ReactNode } from "react"
 import { useState } from "react"
 
 import { cn } from "../../lib/utils"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table"
 import { DataTablePagination } from "./data-table-pagination"
 import { DataTableToolbar } from "./data-table-toolbar"
 import type { DataTableToolbarFilter } from "./data-table-toolbar"

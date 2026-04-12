@@ -76,7 +76,12 @@ export function TeacherProfileWorkloadChartShowcase433() {
             values: ["160 h", "120 h", "80 h", "40 h", "0 h"],
           }}
         >
-          <ChartAreaStackedExpand className="flex h-full items-end" data={data} hideXAxis series={WORKLOAD_SERIES} />
+          <ChartAreaStackedExpand
+            className="flex h-full items-end"
+            data={data}
+            hideXAxis
+            series={WORKLOAD_SERIES}
+          />
         </MiniChart>
       </div>
     </div>

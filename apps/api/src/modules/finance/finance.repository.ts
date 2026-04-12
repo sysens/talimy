@@ -1,5 +1,13 @@
 import { Injectable } from "@nestjs/common"
-import { classes, db, feeStructures, invoices, paymentPlans, payments, students } from "@talimy/database"
+import {
+  classes,
+  db,
+  feeStructures,
+  invoices,
+  paymentPlans,
+  payments,
+  students,
+} from "@talimy/database"
 import { and, asc, desc, eq, isNull, sql } from "drizzle-orm"
 
 import type { FinanceOverviewView, FinancePaymentsSummaryView } from "./finance.types"
@@ -140,7 +148,11 @@ export class FinanceRepository {
       .update(feeStructures)
       .set(updatePayload)
       .where(
-        and(eq(feeStructures.id, id), eq(feeStructures.tenantId, tenantId), isNull(feeStructures.deletedAt))
+        and(
+          eq(feeStructures.id, id),
+          eq(feeStructures.tenantId, tenantId),
+          isNull(feeStructures.deletedAt)
+        )
       )
       .returning()
 
@@ -155,7 +167,11 @@ export class FinanceRepository {
       .update(feeStructures)
       .set({ deletedAt: new Date(), updatedAt: new Date() })
       .where(
-        and(eq(feeStructures.id, id), eq(feeStructures.tenantId, tenantId), isNull(feeStructures.deletedAt))
+        and(
+          eq(feeStructures.id, id),
+          eq(feeStructures.tenantId, tenantId),
+          isNull(feeStructures.deletedAt)
+        )
       )
 
     return { success: true }
@@ -212,14 +228,22 @@ export class FinanceRepository {
     }
 
     if (payload.feeStructureId) updatePayload.feeStructureId = payload.feeStructureId
-    if (typeof payload.totalAmount === "number") updatePayload.totalAmount = this.toMoney(payload.totalAmount)
-    if (typeof payload.paidAmount === "number") updatePayload.paidAmount = this.toMoney(payload.paidAmount)
+    if (typeof payload.totalAmount === "number")
+      updatePayload.totalAmount = this.toMoney(payload.totalAmount)
+    if (typeof payload.paidAmount === "number")
+      updatePayload.paidAmount = this.toMoney(payload.paidAmount)
     if (payload.dueDate) updatePayload.dueDate = payload.dueDate
 
     const [updated] = await db
       .update(paymentPlans)
       .set(updatePayload)
-      .where(and(eq(paymentPlans.id, id), eq(paymentPlans.tenantId, tenantId), isNull(paymentPlans.deletedAt)))
+      .where(
+        and(
+          eq(paymentPlans.id, id),
+          eq(paymentPlans.tenantId, tenantId),
+          isNull(paymentPlans.deletedAt)
+        )
+      )
       .returning()
 
     if (!updated) throw new NotFoundException("Payment plan not found")
@@ -232,7 +256,13 @@ export class FinanceRepository {
     await db
       .update(paymentPlans)
       .set({ deletedAt: new Date(), updatedAt: new Date() })
-      .where(and(eq(paymentPlans.id, id), eq(paymentPlans.tenantId, tenantId), isNull(paymentPlans.deletedAt)))
+      .where(
+        and(
+          eq(paymentPlans.id, id),
+          eq(paymentPlans.tenantId, tenantId),
+          isNull(paymentPlans.deletedAt)
+        )
+      )
 
     return { success: true }
   }
@@ -276,7 +306,8 @@ export class FinanceRepository {
     if (payload.method) updatePayload.method = payload.method
     if (payload.status) updatePayload.status = payload.status
     if (payload.date) updatePayload.date = payload.date
-    if (typeof payload.receiptNumber !== "undefined") updatePayload.receiptNumber = payload.receiptNumber
+    if (typeof payload.receiptNumber !== "undefined")
+      updatePayload.receiptNumber = payload.receiptNumber
 
     const [updated] = await db
       .update(payments)
@@ -332,7 +363,13 @@ export class FinanceRepository {
     const [row] = await db
       .select()
       .from(feeStructures)
-      .where(and(eq(feeStructures.id, id), eq(feeStructures.tenantId, tenantId), isNull(feeStructures.deletedAt)))
+      .where(
+        and(
+          eq(feeStructures.id, id),
+          eq(feeStructures.tenantId, tenantId),
+          isNull(feeStructures.deletedAt)
+        )
+      )
       .limit(1)
 
     if (!row) throw new NotFoundException("Fee structure not found")
@@ -343,7 +380,13 @@ export class FinanceRepository {
     const [row] = await db
       .select()
       .from(paymentPlans)
-      .where(and(eq(paymentPlans.id, id), eq(paymentPlans.tenantId, tenantId), isNull(paymentPlans.deletedAt)))
+      .where(
+        and(
+          eq(paymentPlans.id, id),
+          eq(paymentPlans.tenantId, tenantId),
+          isNull(paymentPlans.deletedAt)
+        )
+      )
       .limit(1)
 
     if (!row) throw new NotFoundException("Payment plan not found")
@@ -365,7 +408,9 @@ export class FinanceRepository {
     const [row] = await db
       .select({ id: classes.id })
       .from(classes)
-      .where(and(eq(classes.id, classId), eq(classes.tenantId, tenantId), isNull(classes.deletedAt)))
+      .where(
+        and(eq(classes.id, classId), eq(classes.tenantId, tenantId), isNull(classes.deletedAt))
+      )
       .limit(1)
 
     if (!row) throw new BadRequestException("Class not found in tenant")
@@ -375,13 +420,18 @@ export class FinanceRepository {
     const [row] = await db
       .select({ id: students.id })
       .from(students)
-      .where(and(eq(students.id, studentId), eq(students.tenantId, tenantId), isNull(students.deletedAt)))
+      .where(
+        and(eq(students.id, studentId), eq(students.tenantId, tenantId), isNull(students.deletedAt))
+      )
       .limit(1)
 
     if (!row) throw new BadRequestException("Student not found in tenant")
   }
 
-  private async assertFeeStructureInTenant(tenantId: string, feeStructureId: string): Promise<void> {
+  private async assertFeeStructureInTenant(
+    tenantId: string,
+    feeStructureId: string
+  ): Promise<void> {
     const [row] = await db
       .select({ id: feeStructures.id })
       .from(feeStructures)

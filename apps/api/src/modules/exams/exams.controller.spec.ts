@@ -21,7 +21,10 @@ test("ExamsController.list delegates query to service", () => {
   const service = {
     list: (q: ExamQueryDto) => {
       captured = q
-      return { success: true, data: { data: [], meta: { page: 1, limit: 10, total: 0, totalPages: 1 } } }
+      return {
+        success: true,
+        data: { data: [], meta: { page: 1, limit: 10, total: 0, totalPages: 1 } },
+      }
     },
   } as unknown as ExamsService
 
@@ -106,7 +109,10 @@ test("ExamsController.getResultsByStudent delegates tenant from validated query"
   const service = {
     getResultsByStudent: (qTenantId: string, studentId: string, q: ExamQueryDto) => {
       captured = { tenantId: qTenantId, studentId, query: q }
-      return { success: true, data: { data: [], meta: { page: 1, limit: 10, total: 0, totalPages: 1 } } }
+      return {
+        success: true,
+        data: { data: [], meta: { page: 1, limit: 10, total: 0, totalPages: 1 } },
+      }
     },
   } as unknown as ExamsService
 

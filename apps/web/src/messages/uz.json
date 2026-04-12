@@ -769,7 +769,40 @@
     "scopeMaleLabel": "Faqat o'g'il / erkak",
     "scopeMaleDescription": "Faqat o'g'il o'quvchilar va erkak o'qituvchilar bilan ishlash.",
     "scopeFemaleLabel": "Faqat qiz / ayol",
-    "scopeFemaleDescription": "Faqat qiz o'quvchilar va ayol o'qituvchilar bilan ishlash."
+    "scopeFemaleDescription": "Faqat qiz o'quvchilar va ayol o'qituvchilar bilan ishlash.",
+    "tabs": {
+      "personal": "Shaxsiy ma'lumotlar",
+      "security": "Xavfsizlik va kirish",
+      "activity": "Harakatlar tarixi"
+    },
+    "personalInfo": {
+      "title": "Shaxsiy malumotlar",
+      "edit": "Tahrirlash",
+      "name": "To'liq ism",
+      "role": "Lavozim",
+      "phone": "Telefon raqami",
+      "address": "Manzil",
+      "dob": "Tug'ilgan sana"
+    },
+    "security": {
+      "title": "Xavfsizlik sozlamalari",
+      "changePassword": "Parolni o'zgartirish",
+      "oldPassword": "Eski parol",
+      "newPassword": "Yangi parol",
+      "confirmPassword": "Parolni tasdiqlang",
+      "updatePassword": "Parolni yangilash"
+    },
+    "sessions": {
+      "title": "Faol sessiyalar",
+      "description": "Ushbu hisobga hozirda kirgan qurilmalar va brauzerlar.",
+      "disconnect": "Uzib qo'yish",
+      "disconnectAll": "Boshqa barcha sessiyalarni uzib qo'yish"
+    },
+    "activity": {
+      "title": "So'nggi harakatlar",
+      "description": "Tizimdagi so'nggi 10 ta harakatingiz.",
+      "empty": "So'nggi harakatlar yo'q."
+    }
   },
   "adminDashboard": {
     "stats": {
@@ -2204,6 +2237,73 @@
         "submitting": "Saqlanmoqda...",
         "update": "Yangilash"
       }
+    }
+  },
+  "adminSettings": {
+    "title": "Admin Sozlamalari",
+    "description": "Maktab sozlamalari, o'quv tuzilmasi va asosiy konfiguratsiyalarni boshqarish.",
+    "tabs": {
+      "schoolInfo": "Maktab ma'lumotlari",
+      "classes": "Sinflar",
+      "subjects": "Fanlar",
+      "modules": "Modullar",
+      "roles": "Rollar",
+      "fees": "To'lov Kategoriyalari",
+      "notifications": "Bildirishnomalar"
+    },
+    "schoolInfo": {
+      "title": "Maktab ma'lumotlari",
+      "description": "Maktabning asosiy ma'lumotlari va siyosatini yangilash.",
+      "schoolName": "Maktab nomi",
+      "email": "Email manzil",
+      "phone": "Telefon raqami",
+      "address": "Manzil",
+      "save": "Saqlash"
+    },
+    "classes": {
+      "title": "Sinflarni boshqarish",
+      "description": "Barcha sinflar va bo'limlarni boshqarish.",
+      "add": "Sinf qo'shish",
+      "table": {
+        "name": "Sinf nomi",
+        "grade": "Daraja",
+        "section": "Bo'lim",
+        "students": "O'quvchilar soni",
+        "actions": "Harakatlar"
+      }
+    },
+    "subjects": {
+      "title": "Fanlar katalogi",
+      "description": "Maktabingizda o'qitiladigan fanlar ro'yxati.",
+      "add": "Fan qo'shish",
+      "table": {
+        "name": "Fan nomi",
+        "code": "Kod",
+        "status": "Holati",
+        "actions": "Harakatlar"
+      }
+    },
+    "modules": {
+      "title": "Platforma modullari",
+      "description": "Platformaning turli imkoniyatlarini yoqish yoki o'chirish.",
+      "dormitory": "Yotoqxona tizimi",
+      "meals": "Oshxona tizimi",
+      "transport": "Transport tizimi",
+      "finance": "Kengaytirilgan Moliya",
+      "library": "Kutubxona tizimi"
+    },
+    "fees": {
+      "title": "To'lov tuzilmalari",
+      "description": "Turli to'lov toifalari va standart summalarni belgilash.",
+      "add": "Toifa qo'shish"
+    },
+    "notifications": {
+      "title": "Bildirishnomalar",
+      "description": "Tizim xabarlarini yetkazib berish usullarini sozlash.",
+      "email": "Email xabarlar",
+      "sms": "SMS xabarlar",
+      "push": "Push xabarlar",
+      "save": "Saqlash"
     }
   }
 }

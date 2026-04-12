@@ -2,13 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table"
 import { PlusIcon } from "lucide-react"
-import {
-  Badge,
-  Button,
-  DataTable,
-  DataTableColumnHeader,
-  DataTableRowActions,
-} from "@talimy/ui"
+import { Badge, Button, DataTable, DataTableColumnHeader, DataTableRowActions } from "@talimy/ui"
 import { sileo } from "sileo"
 
 type StudentRow = {
@@ -21,10 +15,34 @@ type StudentRow = {
 
 const STUDENT_ROWS: StudentRow[] = [
   { id: "ST-1001", fullName: "Ali Karimov", classroom: "9-A", attendance: 97, status: "active" },
-  { id: "ST-1002", fullName: "Madina Usmonova", classroom: "9-A", attendance: 92, status: "warning" },
-  { id: "ST-1003", fullName: "Jasur Abdugʻaniyev", classroom: "8-B", attendance: 99, status: "active" },
-  { id: "ST-1004", fullName: "Ozoda Tursunova", classroom: "8-B", attendance: 83, status: "warning" },
-  { id: "ST-1005", fullName: "Sardor Nurmatov", classroom: "7-C", attendance: 76, status: "inactive" },
+  {
+    id: "ST-1002",
+    fullName: "Madina Usmonova",
+    classroom: "9-A",
+    attendance: 92,
+    status: "warning",
+  },
+  {
+    id: "ST-1003",
+    fullName: "Jasur Abdugʻaniyev",
+    classroom: "8-B",
+    attendance: 99,
+    status: "active",
+  },
+  {
+    id: "ST-1004",
+    fullName: "Ozoda Tursunova",
+    classroom: "8-B",
+    attendance: 83,
+    status: "warning",
+  },
+  {
+    id: "ST-1005",
+    fullName: "Sardor Nurmatov",
+    classroom: "7-C",
+    attendance: 76,
+    status: "inactive",
+  },
 ]
 
 const STUDENT_COLUMNS: ColumnDef<StudentRow>[] = [
@@ -53,7 +71,8 @@ const STUDENT_COLUMNS: ColumnDef<StudentRow>[] = [
     header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
     cell: ({ row }) => {
       const status = row.original.status
-      const variant = status === "active" ? "default" : status === "warning" ? "secondary" : "outline"
+      const variant =
+        status === "active" ? "default" : status === "warning" ? "secondary" : "outline"
       return <Badge variant={variant}>{status}</Badge>
     },
   },

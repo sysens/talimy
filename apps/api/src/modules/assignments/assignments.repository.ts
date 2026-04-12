@@ -1,6 +1,28 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
-import { assignmentSubmissions, assignments, classes, db, students, subjects, teachers, users } from "@talimy/database"
-import { and, asc, desc, eq, gte, ilike, inArray, isNull, lte, or, sql, type SQL } from "drizzle-orm"
+import {
+  assignmentSubmissions,
+  assignments,
+  classes,
+  db,
+  students,
+  subjects,
+  teachers,
+  users,
+} from "@talimy/database"
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  gte,
+  ilike,
+  inArray,
+  isNull,
+  lte,
+  or,
+  sql,
+  type SQL,
+} from "drizzle-orm"
 
 import { CreateAssignmentDto, UpdateAssignmentDto } from "./dto/create-assignment.dto"
 import { AssignmentQueryDto } from "./dto/assignment-query.dto"
@@ -159,7 +181,11 @@ export class AssignmentsRepository {
     return this.getById(payload.tenantId, created.id)
   }
 
-  async update(tenantId: string, assignmentId: string, payload: UpdateAssignmentDto): Promise<AssignmentView> {
+  async update(
+    tenantId: string,
+    assignmentId: string,
+    payload: UpdateAssignmentDto
+  ): Promise<AssignmentView> {
     const current = await this.findAssignmentOrThrow(tenantId, assignmentId)
 
     if (payload.teacherId) await this.assertTeacherInTenant(tenantId, payload.teacherId)
@@ -179,7 +205,13 @@ export class AssignmentsRepository {
         fileUrl: payload.fileUrl === undefined ? current.fileUrl : payload.fileUrl,
         updatedAt: new Date(),
       })
-      .where(and(eq(assignments.id, assignmentId), eq(assignments.tenantId, tenantId), isNull(assignments.deletedAt)))
+      .where(
+        and(
+          eq(assignments.id, assignmentId),
+          eq(assignments.tenantId, tenantId),
+          isNull(assignments.deletedAt)
+        )
+      )
 
     return this.getById(tenantId, assignmentId)
   }
@@ -191,7 +223,13 @@ export class AssignmentsRepository {
     await db
       .update(assignments)
       .set({ deletedAt: now, updatedAt: now })
-      .where(and(eq(assignments.id, assignmentId), eq(assignments.tenantId, tenantId), isNull(assignments.deletedAt)))
+      .where(
+        and(
+          eq(assignments.id, assignmentId),
+          eq(assignments.tenantId, tenantId),
+          isNull(assignments.deletedAt)
+        )
+      )
 
     await db
       .update(assignmentSubmissions)
@@ -335,7 +373,9 @@ export class AssignmentsRepository {
         gradedSubmissions: sql<number>`sum(case when ${assignmentSubmissions.score} is not null then 1 else 0 end)::int`,
       })
       .from(assignmentSubmissions)
-      .where(and(eq(assignmentSubmissions.tenantId, tenantId), isNull(assignmentSubmissions.deletedAt)))
+      .where(
+        and(eq(assignmentSubmissions.tenantId, tenantId), isNull(assignmentSubmissions.deletedAt))
+      )
 
     const [studentCountRow] = await db
       .select({ total: sql<number>`count(*)::int` })
@@ -364,9 +404,17 @@ export class AssignmentsRepository {
     const [classStudentCountRow] = await db
       .select({ total: sql<number>`count(*)::int` })
       .from(students)
-      .where(and(eq(students.tenantId, tenantId), eq(students.classId, assignment.classId), isNull(students.deletedAt)))
+      .where(
+        and(
+          eq(students.tenantId, tenantId),
+          eq(students.classId, assignment.classId),
+          isNull(students.deletedAt)
+        )
+      )
 
-    const rows = await this.listSubmissionRows(this.buildSubmissionFilters({ tenantId, assignmentId }))
+    const rows = await this.listSubmissionRows(
+      this.buildSubmissionFilters({ tenantId, assignmentId })
+    )
     const gradedRows = rows.filter((row) => row.score !== null)
     const classStudentCount = classStudentCountRow?.total ?? 0
     const submissionsCount = rows.length
@@ -400,14 +448,19 @@ export class AssignmentsRepository {
       },
       topSubmissions: gradedRows
         .slice()
-        .sort((a, b) => (b.score ?? 0) - (a.score ?? 0) || a.studentName.localeCompare(b.studentName))
+        .sort(
+          (a, b) => (b.score ?? 0) - (a.score ?? 0) || a.studentName.localeCompare(b.studentName)
+        )
         .slice(0, 5)
         .map((row) => ({
           studentId: row.studentId,
           studentName: row.studentName,
           studentCode: row.studentCode,
           score: row.score ?? 0,
-          percentage: assignment.totalPoints > 0 ? this.round(((row.score ?? 0) / assignment.totalPoints) * 100) : 0,
+          percentage:
+            assignment.totalPoints > 0
+              ? this.round(((row.score ?? 0) / assignment.totalPoints) * 100)
+              : 0,
           submittedAt: row.submittedAt,
         })),
     }
@@ -419,7 +472,10 @@ export class AssignmentsRepository {
     offset?: number,
     order: "asc" | "desc" = "desc"
   ): Promise<AssignmentSubmissionView[]> {
-    const sortBySubmittedAt = order === "asc" ? asc(assignmentSubmissions.submittedAt) : desc(assignmentSubmissions.submittedAt)
+    const sortBySubmittedAt =
+      order === "asc"
+        ? asc(assignmentSubmissions.submittedAt)
+        : desc(assignmentSubmissions.submittedAt)
     const baseQuery = db
       .select({
         id: assignmentSubmissions.id,
@@ -606,14 +662,24 @@ export class AssignmentsRepository {
     const [row] = await db
       .select()
       .from(assignments)
-      .where(and(eq(assignments.id, assignmentId), eq(assignments.tenantId, tenantId), isNull(assignments.deletedAt)))
+      .where(
+        and(
+          eq(assignments.id, assignmentId),
+          eq(assignments.tenantId, tenantId),
+          isNull(assignments.deletedAt)
+        )
+      )
       .limit(1)
 
     if (!row) throw new NotFoundException("Assignment not found")
     return row
   }
 
-  private async findSubmissionOrThrow(tenantId: string, assignmentId: string, submissionId: string) {
+  private async findSubmissionOrThrow(
+    tenantId: string,
+    assignmentId: string,
+    submissionId: string
+  ) {
     const [row] = await db
       .select({ id: assignmentSubmissions.id })
       .from(assignmentSubmissions)
@@ -635,7 +701,9 @@ export class AssignmentsRepository {
     const [row] = await db
       .select({ id: teachers.id })
       .from(teachers)
-      .where(and(eq(teachers.id, teacherId), eq(teachers.tenantId, tenantId), isNull(teachers.deletedAt)))
+      .where(
+        and(eq(teachers.id, teacherId), eq(teachers.tenantId, tenantId), isNull(teachers.deletedAt))
+      )
       .limit(1)
 
     if (!row) throw new NotFoundException("Teacher not found in tenant")
@@ -645,7 +713,9 @@ export class AssignmentsRepository {
     const [row] = await db
       .select({ id: subjects.id })
       .from(subjects)
-      .where(and(eq(subjects.id, subjectId), eq(subjects.tenantId, tenantId), isNull(subjects.deletedAt)))
+      .where(
+        and(eq(subjects.id, subjectId), eq(subjects.tenantId, tenantId), isNull(subjects.deletedAt))
+      )
       .limit(1)
 
     if (!row) throw new NotFoundException("Subject not found in tenant")
@@ -655,13 +725,19 @@ export class AssignmentsRepository {
     const [row] = await db
       .select({ id: classes.id })
       .from(classes)
-      .where(and(eq(classes.id, classId), eq(classes.tenantId, tenantId), isNull(classes.deletedAt)))
+      .where(
+        and(eq(classes.id, classId), eq(classes.tenantId, tenantId), isNull(classes.deletedAt))
+      )
       .limit(1)
 
     if (!row) throw new NotFoundException("Class not found in tenant")
   }
 
-  private async assertStudentInAssignmentClass(tenantId: string, classId: string, studentId: string): Promise<void> {
+  private async assertStudentInAssignmentClass(
+    tenantId: string,
+    classId: string,
+    studentId: string
+  ): Promise<void> {
     const [row] = await db
       .select({ id: students.id })
       .from(students)

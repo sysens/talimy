@@ -64,7 +64,10 @@ function DataTableRowActions<TData>({
           </DropdownMenuItem>
         )}
         {onDelete && (
-          <DropdownMenuItem onClick={() => onDelete(row.original)} className="text-destructive focus:text-destructive">
+          <DropdownMenuItem
+            onClick={() => onDelete(row.original)}
+            className="text-destructive focus:text-destructive"
+          >
             <Trash2Icon className="mr-2 size-4" />
             Delete
           </DropdownMenuItem>

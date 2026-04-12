@@ -15,10 +15,7 @@ export async function buildAppShellData(
   session: Session,
   { navItems, homeHref, accountHref, breadcrumbRootLabelKey }: BuildAppShellDataOptions
 ): Promise<AppShellSidebarData> {
-  const [navT, shellT] = await Promise.all([
-    getTranslations("nav.admin"),
-    getTranslations("shell"),
-  ])
+  const [navT, shellT] = await Promise.all([getTranslations("nav.admin"), getTranslations("shell")])
 
   const schoolName = resolveWorkspaceName(session.user.tenantSlug, session.user.roles)
   const email = session.user.email ?? "school-admin@talimy.space"

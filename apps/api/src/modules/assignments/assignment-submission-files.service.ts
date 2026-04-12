@@ -44,10 +44,11 @@ export class AssignmentSubmissionFilesService {
   }
 
   private buildPublicFileUrl(relativePath: string[]): string {
-    const baseUrl = (process.env.NEXT_PUBLIC_API_URL ?? process.env.API_URL ?? "http://localhost:3001").replace(
-      /\/+$/,
-      ""
-    )
+    const baseUrl = (
+      process.env.NEXT_PUBLIC_API_URL ??
+      process.env.API_URL ??
+      "http://localhost:3001"
+    ).replace(/\/+$/, "")
 
     return `${baseUrl}/${relativePath.join("/")}`
   }

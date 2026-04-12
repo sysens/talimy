@@ -83,7 +83,12 @@ test("AssignmentsService.submitWithUploadedFile stores file and delegates to rep
   } as unknown as AssignmentSubmissionFilesService
 
   const service = new AssignmentsService(repository, fileService)
-  const result = await service.submitWithUploadedFile(tenantId, "assignment-id", payload, uploadedFile)
+  const result = await service.submitWithUploadedFile(
+    tenantId,
+    "assignment-id",
+    payload,
+    uploadedFile
+  )
 
   assert.deepEqual(savedInput, {
     tenantId,

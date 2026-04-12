@@ -47,7 +47,8 @@ export function resolveRequestOrigin(
   protocol: string | null | undefined
 ): string {
   const normalizedHost = host?.trim().replace(/\/$/, "")
-  const normalizedProtocol = protocol === "http" || protocol === "https" ? protocol : getWebOriginProtocol()
+  const normalizedProtocol =
+    protocol === "http" || protocol === "https" ? protocol : getWebOriginProtocol()
 
   if (!normalizedHost) {
     return getWebOrigin()

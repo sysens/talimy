@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-  UseGuards,
-} from "@nestjs/common"
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
 import {
   createTenantSchema,
   listTenantsQuerySchema,
@@ -49,7 +39,10 @@ export class TenantsController {
   }
 
   @Patch(":id")
-  update(@Param("id") id: string, @Body(new ZodValidationPipe(updateTenantSchema)) payload: unknown) {
+  update(
+    @Param("id") id: string,
+    @Body(new ZodValidationPipe(updateTenantSchema)) payload: unknown
+  ) {
     return this.tenantsService.update(id, payload as UpdateTenantDto)
   }
 

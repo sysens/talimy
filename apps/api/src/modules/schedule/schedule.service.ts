@@ -1,4 +1,9 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common"
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common"
 import { classes, db, schedules, subjects, teachers, users } from "@talimy/database"
 import { and, asc, desc, eq, gt, ilike, isNull, lt, ne, or, type SQL, sql } from "drizzle-orm"
 
@@ -19,7 +24,14 @@ type ScheduleListItem = {
   room: string | null
 }
 
-type ScheduleDayOfWeek = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday"
+type ScheduleDayOfWeek =
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday"
+  | "sunday"
 
 @Injectable()
 export class ScheduleService {
@@ -36,7 +48,12 @@ export class ScheduleService {
     if (query.search?.trim()) {
       const search = `%${query.search.trim()}%`
       filters.push(
-        or(ilike(classes.name, search), ilike(subjects.name, search), ilike(users.firstName, search), ilike(users.lastName, search))!
+        or(
+          ilike(classes.name, search),
+          ilike(subjects.name, search),
+          ilike(users.firstName, search),
+          ilike(users.lastName, search)
+        )!
       )
     }
 
@@ -144,7 +161,11 @@ export class ScheduleService {
     return this.getScheduleById(tenantId, id)
   }
 
-  async update(tenantId: string, id: string, payload: UpdateScheduleDto): Promise<ScheduleListItem> {
+  async update(
+    tenantId: string,
+    id: string,
+    payload: UpdateScheduleDto
+  ): Promise<ScheduleListItem> {
     const existing = await this.findScheduleOrThrow(tenantId, id)
 
     const next = {
@@ -187,7 +208,9 @@ export class ScheduleService {
     const [updated] = await db
       .update(schedules)
       .set(updatePayload)
-      .where(and(eq(schedules.id, id), eq(schedules.tenantId, tenantId), isNull(schedules.deletedAt)))
+      .where(
+        and(eq(schedules.id, id), eq(schedules.tenantId, tenantId), isNull(schedules.deletedAt))
+      )
       .returning({ id: schedules.id })
 
     if (!updated) {
@@ -202,7 +225,9 @@ export class ScheduleService {
     await db
       .update(schedules)
       .set({ deletedAt: new Date(), updatedAt: new Date() })
-      .where(and(eq(schedules.id, id), eq(schedules.tenantId, tenantId), isNull(schedules.deletedAt)))
+      .where(
+        and(eq(schedules.id, id), eq(schedules.tenantId, tenantId), isNull(schedules.deletedAt))
+      )
 
     return { success: true }
   }
@@ -284,7 +309,9 @@ export class ScheduleService {
         room: schedules.room,
       })
       .from(schedules)
-      .where(and(eq(schedules.id, id), eq(schedules.tenantId, tenantId), isNull(schedules.deletedAt)))
+      .where(
+        and(eq(schedules.id, id), eq(schedules.tenantId, tenantId), isNull(schedules.deletedAt))
+      )
 
     if (!row) {
       throw new NotFoundException("Schedule entry not found")
@@ -297,7 +324,9 @@ export class ScheduleService {
     const [row] = await db
       .select({ id: classes.id })
       .from(classes)
-      .where(and(eq(classes.id, classId), eq(classes.tenantId, tenantId), isNull(classes.deletedAt)))
+      .where(
+        and(eq(classes.id, classId), eq(classes.tenantId, tenantId), isNull(classes.deletedAt))
+      )
 
     if (!row) {
       throw new NotFoundException("Class not found in tenant")
@@ -308,7 +337,9 @@ export class ScheduleService {
     const [row] = await db
       .select({ id: subjects.id })
       .from(subjects)
-      .where(and(eq(subjects.id, subjectId), eq(subjects.tenantId, tenantId), isNull(subjects.deletedAt)))
+      .where(
+        and(eq(subjects.id, subjectId), eq(subjects.tenantId, tenantId), isNull(subjects.deletedAt))
+      )
 
     if (!row) {
       throw new NotFoundException("Subject not found in tenant")
@@ -319,7 +350,9 @@ export class ScheduleService {
     const [row] = await db
       .select({ id: teachers.id })
       .from(teachers)
-      .where(and(eq(teachers.id, teacherId), eq(teachers.tenantId, tenantId), isNull(teachers.deletedAt)))
+      .where(
+        and(eq(teachers.id, teacherId), eq(teachers.tenantId, tenantId), isNull(teachers.deletedAt))
+      )
 
     if (!row) {
       throw new NotFoundException("Teacher not found in tenant")

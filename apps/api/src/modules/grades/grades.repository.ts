@@ -10,7 +10,20 @@ import {
   terms,
   users,
 } from "@talimy/database"
-import { and, asc, desc, eq, gte, ilike, inArray, isNull, lte, or, type SQL, sql } from "drizzle-orm"
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  gte,
+  ilike,
+  inArray,
+  isNull,
+  lte,
+  or,
+  type SQL,
+  sql,
+} from "drizzle-orm"
 
 import { CreateGradeDto, CreateGradeScaleDto, UpdateGradeScaleDto } from "./dto/create-grade.dto"
 import { GradeQueryDto } from "./dto/grade-query.dto"
@@ -108,7 +121,9 @@ export class GradesRepository {
     const scores = rows.map((row) => row.score)
     const totals = {
       count: rows.length,
-      averageScore: rows.length ? this.round(scores.reduce((a, b) => a + b, 0) / rows.length) : null,
+      averageScore: rows.length
+        ? this.round(scores.reduce((a, b) => a + b, 0) / rows.length)
+        : null,
       minScore: rows.length ? Math.min(...scores) : null,
       maxScore: rows.length ? Math.max(...scores) : null,
     }
@@ -235,14 +250,19 @@ export class GradesRepository {
     }
   }
 
-  async updateScale(tenantId: string, id: string, payload: UpdateGradeScaleDto): Promise<GradeScaleView> {
+  async updateScale(
+    tenantId: string,
+    id: string,
+    payload: UpdateGradeScaleDto
+  ): Promise<GradeScaleView> {
     const current = await this.findScaleOrThrow(tenantId, id)
     const next = {
       name: payload.name ?? current.name,
       minScore: typeof payload.minScore === "number" ? payload.minScore : Number(current.minScore),
       maxScore: typeof payload.maxScore === "number" ? payload.maxScore : Number(current.maxScore),
       grade: payload.grade ?? current.grade,
-      gpa: typeof payload.gpa === "number" ? payload.gpa : payload.gpa === null ? null : current.gpa,
+      gpa:
+        typeof payload.gpa === "number" ? payload.gpa : payload.gpa === null ? null : current.gpa,
     }
 
     this.assertValidScaleRange(next.minScore, next.maxScore)
@@ -258,7 +278,13 @@ export class GradesRepository {
         gpa: next.gpa === null ? null : String(next.gpa),
         updatedAt: new Date(),
       })
-      .where(and(eq(gradeScales.id, id), eq(gradeScales.tenantId, tenantId), isNull(gradeScales.deletedAt)))
+      .where(
+        and(
+          eq(gradeScales.id, id),
+          eq(gradeScales.tenantId, tenantId),
+          isNull(gradeScales.deletedAt)
+        )
+      )
       .returning()
     if (!updated) throw new NotFoundException("Grade scale not found")
 
@@ -278,7 +304,13 @@ export class GradesRepository {
     await db
       .update(gradeScales)
       .set({ deletedAt: new Date(), updatedAt: new Date() })
-      .where(and(eq(gradeScales.id, id), eq(gradeScales.tenantId, tenantId), isNull(gradeScales.deletedAt)))
+      .where(
+        and(
+          eq(gradeScales.id, id),
+          eq(gradeScales.tenantId, tenantId),
+          isNull(gradeScales.deletedAt)
+        )
+      )
     return { success: true }
   }
 
@@ -304,7 +336,11 @@ export class GradesRepository {
     }
   }
 
-  private async listRows(filters: SQL[], limit?: number, offset?: number): Promise<GradeListItem[]> {
+  private async listRows(
+    filters: SQL[],
+    limit?: number,
+    offset?: number
+  ): Promise<GradeListItem[]> {
     const baseQuery = db
       .select({
         id: grades.id,
@@ -333,7 +369,12 @@ export class GradesRepository {
       .innerJoin(terms, eq(terms.id, grades.termId))
       .leftJoin(classes, eq(classes.id, students.classId))
       .where(and(...filters))
-      .orderBy(desc(grades.updatedAt), desc(grades.createdAt), asc(users.firstName), asc(users.lastName))
+      .orderBy(
+        desc(grades.updatedAt),
+        desc(grades.createdAt),
+        asc(users.firstName),
+        asc(users.lastName)
+      )
 
     const rows =
       typeof limit === "number" && typeof offset === "number"
@@ -342,7 +383,9 @@ export class GradesRepository {
           ? await baseQuery.limit(limit)
           : await baseQuery
 
-    const teacherIds = rows.map((row) => row.teacherId).filter((value): value is string => Boolean(value))
+    const teacherIds = rows
+      .map((row) => row.teacherId)
+      .filter((value): value is string => Boolean(value))
     const teacherNameById = new Map<string, string>()
     if (teacherIds.length > 0) {
       const teacherRows = await db
@@ -353,7 +396,9 @@ export class GradesRepository {
         })
         .from(teachers)
         .innerJoin(users, eq(users.id, teachers.userId))
-        .where(and(inArray(teachers.id, teacherIds), isNull(teachers.deletedAt), isNull(users.deletedAt)))
+        .where(
+          and(inArray(teachers.id, teacherIds), isNull(teachers.deletedAt), isNull(users.deletedAt))
+        )
       for (const row of teacherRows) {
         teacherNameById.set(row.id, `${row.firstName} ${row.lastName}`.trim())
       }
@@ -383,7 +428,12 @@ export class GradesRepository {
 
   private buildFilters(query: GradeQueryDto): SQL[] {
     const filters: SQL[] = [eq(grades.tenantId, query.tenantId), isNull(grades.deletedAt)]
-    filters.push(isNull(students.deletedAt), isNull(users.deletedAt), isNull(subjects.deletedAt), isNull(terms.deletedAt))
+    filters.push(
+      isNull(students.deletedAt),
+      isNull(users.deletedAt),
+      isNull(subjects.deletedAt),
+      isNull(terms.deletedAt)
+    )
     if (query.studentId) filters.push(eq(grades.studentId, query.studentId))
     if (query.classId) filters.push(eq(students.classId, query.classId))
     if (query.subjectId) filters.push(eq(grades.subjectId, query.subjectId))
@@ -450,7 +500,13 @@ export class GradesRepository {
     const [row] = await db
       .select()
       .from(gradeScales)
-      .where(and(eq(gradeScales.id, id), eq(gradeScales.tenantId, tenantId), isNull(gradeScales.deletedAt)))
+      .where(
+        and(
+          eq(gradeScales.id, id),
+          eq(gradeScales.tenantId, tenantId),
+          isNull(gradeScales.deletedAt)
+        )
+      )
       .limit(1)
     if (!row) throw new NotFoundException("Grade scale not found")
     return row
@@ -460,7 +516,9 @@ export class GradesRepository {
     const [row] = await db
       .select({ id: classes.id })
       .from(classes)
-      .where(and(eq(classes.id, classId), eq(classes.tenantId, tenantId), isNull(classes.deletedAt)))
+      .where(
+        and(eq(classes.id, classId), eq(classes.tenantId, tenantId), isNull(classes.deletedAt))
+      )
       .limit(1)
     if (!row) throw new NotFoundException("Class not found in tenant")
   }
@@ -469,7 +527,9 @@ export class GradesRepository {
     const [row] = await db
       .select({ id: teachers.id })
       .from(teachers)
-      .where(and(eq(teachers.id, teacherId), eq(teachers.tenantId, tenantId), isNull(teachers.deletedAt)))
+      .where(
+        and(eq(teachers.id, teacherId), eq(teachers.tenantId, tenantId), isNull(teachers.deletedAt))
+      )
       .limit(1)
     if (!row) throw new NotFoundException("Teacher not found in tenant")
   }
@@ -478,7 +538,9 @@ export class GradesRepository {
     const [row] = await db
       .select({ id: students.id })
       .from(students)
-      .where(and(eq(students.id, studentId), eq(students.tenantId, tenantId), isNull(students.deletedAt)))
+      .where(
+        and(eq(students.id, studentId), eq(students.tenantId, tenantId), isNull(students.deletedAt))
+      )
       .limit(1)
     if (!row) throw new NotFoundException("Student not found in tenant")
   }
@@ -487,7 +549,13 @@ export class GradesRepository {
     const rows = await db
       .select({ id: students.id })
       .from(students)
-      .where(and(eq(students.tenantId, tenantId), inArray(students.id, studentIds), isNull(students.deletedAt)))
+      .where(
+        and(
+          eq(students.tenantId, tenantId),
+          inArray(students.id, studentIds),
+          isNull(students.deletedAt)
+        )
+      )
     if (rows.length !== studentIds.length) {
       throw new BadRequestException("One or more students do not belong to this tenant")
     }
@@ -518,7 +586,9 @@ export class GradesRepository {
     const [row] = await db
       .select({ id: subjects.id })
       .from(subjects)
-      .where(and(eq(subjects.id, subjectId), eq(subjects.tenantId, tenantId), isNull(subjects.deletedAt)))
+      .where(
+        and(eq(subjects.id, subjectId), eq(subjects.tenantId, tenantId), isNull(subjects.deletedAt))
+      )
       .limit(1)
     if (!row) throw new NotFoundException("Subject not found in tenant")
   }

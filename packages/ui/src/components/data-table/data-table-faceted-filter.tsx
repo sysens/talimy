@@ -14,11 +14,7 @@ import {
   CommandItem,
   CommandList,
 } from "../ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../ui/popover"
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover"
 import { Separator } from "../ui/separator"
 import { cn } from "../../lib/utils"
 
@@ -76,7 +72,11 @@ function DataTableFacetedFilter<TData, TValue>({
                   options
                     .filter((option) => selectedValues.has(option.value))
                     .map((option) => (
-                      <Badge key={option.value} variant="secondary" className="rounded-sm px-1 font-normal">
+                      <Badge
+                        key={option.value}
+                        variant="secondary"
+                        className="rounded-sm px-1 font-normal"
+                      >
                         {option.label}
                       </Badge>
                     ))
@@ -102,7 +102,9 @@ function DataTableFacetedFilter<TData, TValue>({
                     <div
                       className={cn(
                         "mr-2 flex size-4 items-center justify-center rounded-sm border border-primary",
-                        isSelected ? "bg-primary text-primary-foreground" : "opacity-50 [&_svg]:invisible"
+                        isSelected
+                          ? "bg-primary text-primary-foreground"
+                          : "opacity-50 [&_svg]:invisible"
                       )}
                     >
                       <CheckIcon className="size-3.5" />

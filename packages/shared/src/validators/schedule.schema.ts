@@ -1,6 +1,14 @@
 import { z } from "zod"
 
-const dayOfWeekSchema = z.enum(["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"])
+const dayOfWeekSchema = z.enum([
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+])
 
 const timeStringSchema = z
   .string()
@@ -43,7 +51,11 @@ export const updateScheduleSchema = z
     room: z.string().trim().min(1).max(50).optional().nullable(),
   })
   .superRefine((value, ctx) => {
-    if (value.startTime && value.endTime && toSeconds(value.startTime) >= toSeconds(value.endTime)) {
+    if (
+      value.startTime &&
+      value.endTime &&
+      toSeconds(value.startTime) >= toSeconds(value.endTime)
+    ) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         path: ["endTime"],

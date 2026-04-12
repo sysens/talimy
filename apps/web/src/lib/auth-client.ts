@@ -24,7 +24,11 @@ export async function resetPasswordWithMagicLink(payload: PasswordPayload): Prom
 }
 
 export async function acceptInviteWithMagicLink(payload: PasswordPayload): Promise<void> {
-  await postAuthJson("/api/auth/invite/accept", payload, "Taklif havolasi bilan parol o'rnatib bo'lmadi")
+  await postAuthJson(
+    "/api/auth/invite/accept",
+    payload,
+    "Taklif havolasi bilan parol o'rnatib bo'lmadi"
+  )
 }
 
 async function postAuthJson(

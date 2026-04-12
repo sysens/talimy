@@ -13,8 +13,8 @@ export default function Page() {
               Parent panel tayyorlanmoqda
             </CardTitle>
             <CardDescription className="max-w-2xl text-base leading-7 text-slate-600">
-              Bu route endi bo‘sh sahifa emas. Keyingi fazada farzandlar ko‘rsatkichlari,
-              davomati, topshiriqlari va to‘lov holati shu yerga joylashtiriladi.
+              Bu route endi bo‘sh sahifa emas. Keyingi fazada farzandlar ko‘rsatkichlari, davomati,
+              topshiriqlari va to‘lov holati shu yerga joylashtiriladi.
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4 sm:grid-cols-2">
@@ -30,7 +30,8 @@ export default function Page() {
             <div className="rounded-2xl border border-slate-200 bg-white p-5">
               <p className="text-sm font-medium text-slate-500">Hozirgi holat</p>
               <p className="mt-3 text-sm leading-7 text-slate-700">
-                Auth va routing ishlayapti. Bu placeholder oq sahifa chiqmasligi uchun vaqtinchalik page-level render sifatida turadi.
+                Auth va routing ishlayapti. Bu placeholder oq sahifa chiqmasligi uchun vaqtinchalik
+                page-level render sifatida turadi.
               </p>
             </div>
           </CardContent>

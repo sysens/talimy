@@ -12,10 +12,30 @@ export const APP_SHELL_SIDEBAR_DATA: AppShellSidebarData = {
       title: "Main menu",
       defaultOpen: true,
       items: [
-        { label: "Dashboard", icon: "layout-dashboard", href: "/admin/dashboard", matchPrefixes: ["/admin/dashboard"] },
-        { label: "Teachers", icon: "graduation-cap", href: "/admin/teachers", matchPrefixes: ["/admin/teachers"] },
-        { label: "Students", icon: "users", href: "/admin/students", matchPrefixes: ["/admin/students"] },
-        { label: "Attendance", icon: "calendar-check", href: "/admin/attendance", matchPrefixes: ["/admin/attendance"] },
+        {
+          label: "Dashboard",
+          icon: "layout-dashboard",
+          href: "/admin/dashboard",
+          matchPrefixes: ["/admin/dashboard"],
+        },
+        {
+          label: "Teachers",
+          icon: "graduation-cap",
+          href: "/admin/teachers",
+          matchPrefixes: ["/admin/teachers"],
+        },
+        {
+          label: "Students",
+          icon: "users",
+          href: "/admin/students",
+          matchPrefixes: ["/admin/students"],
+        },
+        {
+          label: "Attendance",
+          icon: "calendar-check",
+          href: "/admin/attendance",
+          matchPrefixes: ["/admin/attendance"],
+        },
         {
           label: "Finance",
           icon: "wallet",
@@ -33,8 +53,18 @@ export const APP_SHELL_SIDEBAR_DATA: AppShellSidebarData = {
       defaultOpen: false,
       items: [
         { label: "Inbox", icon: "inbox", href: "/admin/inbox", matchPrefixes: ["/admin/inbox"] },
-        { label: "Calendar", icon: "calendar-days", href: "/admin/calendar", matchPrefixes: ["/admin/calendar"] },
-        { label: "Notice Board", icon: "megaphone", href: "/admin/notices", matchPrefixes: ["/admin/notices"] },
+        {
+          label: "Calendar",
+          icon: "calendar-days",
+          href: "/admin/calendar",
+          matchPrefixes: ["/admin/calendar"],
+        },
+        {
+          label: "Notice Board",
+          icon: "megaphone",
+          href: "/admin/notices",
+          matchPrefixes: ["/admin/notices"],
+        },
       ],
     },
   ],
@@ -42,7 +72,12 @@ export const APP_SHELL_SIDEBAR_DATA: AppShellSidebarData = {
     title: "Account",
     items: [
       { label: "Profile", icon: "user", href: "/admin/profile", matchPrefixes: ["/admin/profile"] },
-      { label: "Settings", icon: "settings", href: "/admin/settings", matchPrefixes: ["/admin/settings"] },
+      {
+        label: "Settings",
+        icon: "settings",
+        href: "/admin/settings",
+        matchPrefixes: ["/admin/settings"],
+      },
     ],
   },
   user: {

@@ -1,7 +1,12 @@
 import { randomBytes } from "node:crypto"
 
 import { Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common"
-import type { AcceptInviteInput, ForgotPasswordInput, MagicLinkPurpose, ResetPasswordInput } from "@talimy/shared"
+import type {
+  AcceptInviteInput,
+  ForgotPasswordInput,
+  MagicLinkPurpose,
+  ResetPasswordInput,
+} from "@talimy/shared"
 
 import { CacheService } from "@/modules/cache/cache.service"
 import { EmailService } from "@/modules/email/email.service"
@@ -115,7 +120,9 @@ export class AuthMagicLinkService {
       payload.token
     )
 
-    const record = await this.cacheService.getJson<MagicLinkRecord>(this.magicLinkCacheKey(payload.token))
+    const record = await this.cacheService.getJson<MagicLinkRecord>(
+      this.magicLinkCacheKey(payload.token)
+    )
 
     if (!record?.email) {
       throw new UnauthorizedException("Magic link is invalid or expired")
@@ -127,7 +134,11 @@ export class AuthMagicLinkService {
 
     this.assertMagicLinkHost(record, context)
 
-    const updated = await this.store.updatePasswordByUser(record.userId, record.tenantId, payload.password)
+    const updated = await this.store.updatePasswordByUser(
+      record.userId,
+      record.tenantId,
+      payload.password
+    )
     if (!updated) {
       throw new NotFoundException("User not found for magic link")
     }

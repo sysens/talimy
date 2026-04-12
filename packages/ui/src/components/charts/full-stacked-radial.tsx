@@ -3,13 +3,7 @@
 import type { CSSProperties } from "react"
 import { Label, Pie, PieChart } from "recharts"
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
 import {
   ChartContainer,
   ChartLegend,
@@ -27,14 +21,17 @@ const chartData = [
 ]
 
 const totalTasks = chartData.reduce((sum, d) => sum + d.count, 0)
-const completionRate = Math.round((((chartData[0]?.count) ?? 0) / (totalTasks || 1)) * 100)
+const completionRate = Math.round(((chartData[0]?.count ?? 0) / (totalTasks || 1)) * 100)
 
 const chartConfig = {
   count: { label: "Tasks" },
   completed: { label: "Completed", color: "var(--talimy-color-navy)" },
   inProgress: { label: "In Progress", color: "var(--talimy-color-sky)" },
   pending: { label: "Pending", color: "var(--talimy-color-pink)" },
-  cancelled: { label: "Cancelled", color: "color-mix(in srgb, var(--talimy-color-gray) 40%, white 60%)" },
+  cancelled: {
+    label: "Cancelled",
+    color: "color-mix(in srgb, var(--talimy-color-gray) 40%, white 60%)",
+  },
 } satisfies ChartConfig
 
 export function FullStackedRadialChart() {
@@ -45,10 +42,7 @@ export function FullStackedRadialChart() {
         <CardDescription>Current sprint task breakdown</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
-        <ChartContainer
-          config={chartConfig}
-          className="mx-auto aspect-square max-h-[280px]"
-        >
+        <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[280px]">
           <PieChart accessibilityLayer className="cpiechart">
             <ChartTooltip
               content={
@@ -66,8 +60,7 @@ export function FullStackedRadialChart() {
                           }
                         />
                         <span className="text-muted-foreground">
-                          {chartConfig[name as keyof typeof chartConfig]
-                            ?.label || name}
+                          {chartConfig[name as keyof typeof chartConfig]?.label || name}
                         </span>
                       </div>
                       <span className="text-foreground font-semibold tabular-nums">

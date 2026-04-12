@@ -2,12 +2,7 @@
 
 import { Area, AreaChart, CartesianGrid, Customized, XAxis } from "recharts"
 
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "../ui/chart"
+import { type ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart"
 
 export type StackedExpandedAreaPoint = {
   label: string
@@ -61,7 +56,15 @@ function VerticalSegmentGuides({ height = 0, points = [] }: VerticalSegmentGuide
   return (
     <g>
       {positions.map((x) => (
-        <line key={`segment-guide-${x}`} x1={x} x2={x} y1={0} y2={height} stroke={stroke} strokeWidth={1} />
+        <line
+          key={`segment-guide-${x}`}
+          x1={x}
+          x2={x}
+          y1={0}
+          y2={height}
+          stroke={stroke}
+          strokeWidth={1}
+        />
       ))}
     </g>
   )
@@ -84,62 +87,65 @@ export function ChartAreaStackedExpand({
   ) satisfies ChartConfig
 
   return (
-  <div className={className ?? "flex h-full w-full max-w-xl items-end"}>
-    <ChartContainer className="h-[170px] w-full !aspect-auto" config={chartConfig}>
-      <AreaChart
-        accessibilityLayer
-        data={data}
-        margin={{
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 0,
-        }}
-      >
-        <CartesianGrid stroke="color-mix(in srgb, var(--talimy-color-gray) 18%, white 82%)" vertical={false} />
-        {!hideXAxis ? (
-          <XAxis
-            axisLine={false}
-            dataKey="label"
-            tickFormatter={value => String(value).slice(0, 3)}
-            tickLine={false}
-            tickMargin={8}
-          />
-        ) : null}
-        <ChartTooltip content={<ChartTooltipContent indicator="line" />} cursor={false} />
-        {series.map((item) => (
-          <Area
-            key={item.key}
-            dataKey={item.key}
-            fill={`var(--color-${item.key})`}
-            fillOpacity={1}
-            stackId="a"
-            stroke={`var(--color-${item.key})`}
-            type="linear"
-          />
-        ))}
-        <Customized
-          component={(props: unknown) => {
-            const dataProps = props as {
-              formattedGraphicalItems?: Array<{
-                props?: {
-                  points?: Array<{ x?: number }>
-                }
-              }>
-              height?: number
-            }
-
-            return (
-              <VerticalSegmentGuides
-                height={dataProps.height}
-                points={dataProps.formattedGraphicalItems?.[0]?.props?.points}
-              />
-            )
+    <div className={className ?? "flex h-full w-full max-w-xl items-end"}>
+      <ChartContainer className="h-[170px] w-full !aspect-auto" config={chartConfig}>
+        <AreaChart
+          accessibilityLayer
+          data={data}
+          margin={{
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
           }}
-        />
-      </AreaChart>
-    </ChartContainer>
-  </div>
+        >
+          <CartesianGrid
+            stroke="color-mix(in srgb, var(--talimy-color-gray) 18%, white 82%)"
+            vertical={false}
+          />
+          {!hideXAxis ? (
+            <XAxis
+              axisLine={false}
+              dataKey="label"
+              tickFormatter={(value) => String(value).slice(0, 3)}
+              tickLine={false}
+              tickMargin={8}
+            />
+          ) : null}
+          <ChartTooltip content={<ChartTooltipContent indicator="line" />} cursor={false} />
+          {series.map((item) => (
+            <Area
+              key={item.key}
+              dataKey={item.key}
+              fill={`var(--color-${item.key})`}
+              fillOpacity={1}
+              stackId="a"
+              stroke={`var(--color-${item.key})`}
+              type="linear"
+            />
+          ))}
+          <Customized
+            component={(props: unknown) => {
+              const dataProps = props as {
+                formattedGraphicalItems?: Array<{
+                  props?: {
+                    points?: Array<{ x?: number }>
+                  }
+                }>
+                height?: number
+              }
+
+              return (
+                <VerticalSegmentGuides
+                  height={dataProps.height}
+                  points={dataProps.formattedGraphicalItems?.[0]?.props?.points}
+                />
+              )
+            }}
+          />
+        </AreaChart>
+      </ChartContainer>
+    </div>
   )
 }
 

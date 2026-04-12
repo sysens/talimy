@@ -1,10 +1,7 @@
 "use client"
 
 import * as React from "react"
-import {
-  CompactGroupedBarChart,
-  type CompactGroupedBarChartSeries,
-} from "@talimy/ui"
+import { CompactGroupedBarChart, type CompactGroupedBarChartSeries } from "@talimy/ui"
 
 type GradeScore = 2 | 3 | 4 | 5
 type GradeDistribution = Record<GradeScore, number>
@@ -108,7 +105,9 @@ function calculateNormalizedPerformance(distribution: GradeDistribution) {
   let totalStudents = 0
   let weightedScore = 0
 
-  for (const [grade, studentsCount] of Object.entries(distribution) as Array<[`${GradeScore}`, number]>) {
+  for (const [grade, studentsCount] of Object.entries(distribution) as Array<
+    [`${GradeScore}`, number]
+  >) {
     const numericGrade = Number(grade)
     totalStudents += studentsCount
     weightedScore += numericGrade * studentsCount

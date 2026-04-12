@@ -769,7 +769,40 @@
     "scopeMaleLabel": "Sadece erkek öğrenciler ve erkek öğretmenler",
     "scopeMaleDescription": "Erişiminizi erkek öğrenciler ve erkek öğretmenlerle sınırlandırın.",
     "scopeFemaleLabel": "Sadece kız öğrenciler ve kadın öğretmenler",
-    "scopeFemaleDescription": "Erişiminizi kız öğrenciler ve kadın öğretmenlerle sınırlandırın."
+    "scopeFemaleDescription": "Erişiminizi kız öğrenciler ve kadın öğretmenlerle sınırlandırın.",
+    "tabs": {
+      "personal": "Personal Info",
+      "security": "Security & Access",
+      "activity": "Activity Log"
+    },
+    "personalInfo": {
+      "title": "Personal Information",
+      "edit": "Edit",
+      "name": "Full Name",
+      "role": "Role",
+      "phone": "Phone Number",
+      "address": "Address",
+      "dob": "Date of Birth"
+    },
+    "security": {
+      "title": "Security Settings",
+      "changePassword": "Change Password",
+      "oldPassword": "Old Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm Password",
+      "updatePassword": "Update Password"
+    },
+    "sessions": {
+      "title": "Active Sessions",
+      "description": "Devices and browsers currently logged into this account.",
+      "disconnect": "Disconnect",
+      "disconnectAll": "Disconnect All Other Sessions"
+    },
+    "activity": {
+      "title": "Recent Activity Log",
+      "description": "Your 10 most recent actions in the system.",
+      "empty": "No recent activity."
+    }
   },
   "adminDashboard": {
     "stats": {
@@ -2194,6 +2227,73 @@
         "submitting": "Kaydediliyor...",
         "update": "Güncelle"
       }
+    }
+  },
+  "adminSettings": {
+    "title": "Admin Settings",
+    "description": "Manage school preferences, academic structure, and basic configuration.",
+    "tabs": {
+      "schoolInfo": "School Information",
+      "classes": "Classes",
+      "subjects": "Subjects",
+      "modules": "Modules",
+      "roles": "Roles",
+      "fees": "Fee Structures",
+      "notifications": "Notifications"
+    },
+    "schoolInfo": {
+      "title": "School Information",
+      "description": "Update the core details and policies of your school.",
+      "schoolName": "School Name",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "address": "Address",
+      "save": "Save Changes"
+    },
+    "classes": {
+      "title": "Classes Management",
+      "description": "Manage all classes, sections, and assignments.",
+      "add": "Add Class",
+      "table": {
+        "name": "Class Name",
+        "grade": "Grade",
+        "section": "Section",
+        "students": "Students",
+        "actions": "Actions"
+      }
+    },
+    "subjects": {
+      "title": "Subjects Catalog",
+      "description": "Global list of subjects taught in your school.",
+      "add": "Add Subject",
+      "table": {
+        "name": "Subject Name",
+        "code": "Code",
+        "status": "Status",
+        "actions": "Actions"
+      }
+    },
+    "modules": {
+      "title": "Platform Modules",
+      "description": "Enable or disable different platform features.",
+      "dormitory": "Dormitory Management",
+      "meals": "Meal Plans",
+      "transport": "Transport",
+      "finance": "Advanced Finance",
+      "library": "Library System"
+    },
+    "fees": {
+      "title": "Fee Structures",
+      "description": "Define different payment categories and standard sums.",
+      "add": "Add Category"
+    },
+    "notifications": {
+      "title": "Notification Settings",
+      "description": "Configure how system notifications are delivered.",
+      "email": "Email Notifications",
+      "sms": "SMS Notifications",
+      "push": "Push Notifications",
+      "save": "Save Preferences"
     }
   }
 }

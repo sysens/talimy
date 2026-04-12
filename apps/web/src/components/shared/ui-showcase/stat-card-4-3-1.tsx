@@ -19,7 +19,6 @@ import {
 } from "lucide-react"
 import { StatCard } from "@talimy/ui"
 
-
 export function StatCardShowcase431() {
   return (
     <div className="space-y-8">
@@ -56,17 +55,49 @@ export function StatCardShowcase431() {
       <section className="space-y-3">
         <h3 className="text-sm font-semibold text-muted-foreground">/admin/students</h3>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <StatCard active icon={Users} title="Total Students" tone="pink" value="1,245" variant="stacked"/>
-          <StatCard icon={Clock3} title="Grade 7 Students" tone="sky" value="410" variant="stacked" />
-          <StatCard icon={Clock3} title="Grade 8 Students" tone="navy" value="415" variant="stacked" />
-          <StatCard icon={Clock3} title="Grade 9 Students" tone="pink" value="420" variant="stacked"/>
+          <StatCard
+            active
+            icon={Users}
+            title="Total Students"
+            tone="pink"
+            value="1,245"
+            variant="stacked"
+          />
+          <StatCard
+            icon={Clock3}
+            title="Grade 7 Students"
+            tone="sky"
+            value="410"
+            variant="stacked"
+          />
+          <StatCard
+            icon={Clock3}
+            title="Grade 8 Students"
+            tone="navy"
+            value="415"
+            variant="stacked"
+          />
+          <StatCard
+            icon={Clock3}
+            title="Grade 9 Students"
+            tone="pink"
+            value="420"
+            variant="stacked"
+          />
         </div>
       </section>
 
       <section className="space-y-3">
         <h3 className="text-sm font-semibold text-muted-foreground">/admin/calendar</h3>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-          <StatCard active icon={LayoutGrid} title="All Schedules" tone="sky" value="12" variant="pill" />
+          <StatCard
+            active
+            icon={LayoutGrid}
+            title="All Schedules"
+            tone="sky"
+            value="12"
+            variant="pill"
+          />
           <StatCard icon={BookOpen} title="Academic" tone="pink" value="4" variant="pill" />
           <StatCard icon={Flag} title="Events" tone="sky" value="3" variant="pill" />
           <StatCard icon={CircleDollarSign} title="Finance" tone="navy" value="2" variant="pill" />
@@ -78,9 +109,26 @@ export function StatCardShowcase431() {
         <section className="space-y-3">
           <h3 className="text-sm font-semibold text-muted-foreground">/admin/finance/payments</h3>
           <div className="max-w-sm space-y-3">
-            <StatCard icon={BadgeCheck} title="Fees Collected" tone="navy" value="$92,500" variant="finance" />
-            <StatCard icon={Hourglass} title="Pending Fees" tone="sky" value="$12,300" variant="finance" />
-            <StatCard icon={AlertCircle} title="Overdue Payments" tone="pink" value="$4,750" variant="finance"
+            <StatCard
+              icon={BadgeCheck}
+              title="Fees Collected"
+              tone="navy"
+              value="$92,500"
+              variant="finance"
+            />
+            <StatCard
+              icon={Hourglass}
+              title="Pending Fees"
+              tone="sky"
+              value="$12,300"
+              variant="finance"
+            />
+            <StatCard
+              icon={AlertCircle}
+              title="Overdue Payments"
+              tone="pink"
+              value="$4,750"
+              variant="finance"
             />
           </div>
         </section>
@@ -88,9 +136,27 @@ export function StatCardShowcase431() {
         <section className="space-y-3">
           <h3 className="text-sm font-semibold text-muted-foreground">/admin/finance</h3>
           <div className="max-w-sm space-y-3">
-            <StatCard icon={CircleDollarSign} title="Total Fees" tone="navy" value="$109,550" variant="finance" />
-            <StatCard icon={BadgeCheck} title="Collected" tone="sky" value="$92,500" variant="finance" />
-            <StatCard icon={AlertCircle} title="Debt" tone="pink" value="$17,050" variant="finance" />
+            <StatCard
+              icon={CircleDollarSign}
+              title="Total Fees"
+              tone="navy"
+              value="$109,550"
+              variant="finance"
+            />
+            <StatCard
+              icon={BadgeCheck}
+              title="Collected"
+              tone="sky"
+              value="$92,500"
+              variant="finance"
+            />
+            <StatCard
+              icon={AlertCircle}
+              title="Debt"
+              tone="pink"
+              value="$17,050"
+              variant="finance"
+            />
           </div>
         </section>
       </div>
@@ -99,7 +165,7 @@ export function StatCardShowcase431() {
         <h3 className="text-sm font-semibold text-muted-foreground">/teacher/dashboard</h3>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <StatCard icon={Users} title="My Students" tone="navy" value="124" />
-          <StatCard icon={LayoutGrid} title="Today&apos;s Classes" tone="pink" value="6" />
+          <StatCard icon={LayoutGrid} title="Today's Classes" tone="pink" value="6" />
           <StatCard icon={FileText} title="Pending Assignments" tone="sky" value="18" />
           <StatCard icon={BadgeCheck} title="Attendance" tone="pink" value="95%" />
         </div>

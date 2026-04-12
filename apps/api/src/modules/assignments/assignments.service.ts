@@ -67,7 +67,12 @@ export class AssignmentsService {
     return this.repository.listSubmissions(tenantId, assignmentId, query)
   }
 
-  gradeSubmission(tenantId: string, assignmentId: string, submissionId: string, payload: GradeAssignmentSubmissionDto) {
+  gradeSubmission(
+    tenantId: string,
+    assignmentId: string,
+    submissionId: string,
+    payload: GradeAssignmentSubmissionDto
+  ) {
     return this.repository.gradeSubmission(tenantId, assignmentId, submissionId, payload)
   }
 
