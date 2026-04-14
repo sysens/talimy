@@ -149,6 +149,35 @@ export class StudentsRepository {
     return row
   }
 
+  async findStudentRowByUserIdOrThrow(
+    tenantId: string,
+    userId: string
+  ): Promise<{
+    student: typeof students.$inferSelect
+    user: typeof users.$inferSelect
+    class: typeof classes.$inferSelect | null
+  }> {
+    const [row] = await db
+      .select({ student: students, user: users, class: classes })
+      .from(students)
+      .innerJoin(users, eq(users.id, students.userId))
+      .leftJoin(classes, eq(classes.id, students.classId))
+      .where(
+        and(
+          eq(students.userId, userId),
+          eq(students.tenantId, tenantId),
+          isNull(students.deletedAt)
+        )
+      )
+      .limit(1)
+
+    if (!row) {
+      throw new NotFoundException("Student not found")
+    }
+
+    return row
+  }
+
   async assertClassInTenant(tenantId: string, classId: string): Promise<void> {
     const [row] = await db
       .select({ id: classes.id })

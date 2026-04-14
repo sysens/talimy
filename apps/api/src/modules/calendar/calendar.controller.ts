@@ -1,13 +1,30 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common"
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UnauthorizedException,
+  UseGuards,
+} from "@nestjs/common"
 import {
   createEventSchema,
+  eventsMeQuerySchema,
   eventsQuerySchema,
   updateEventSchema,
   userTenantQuerySchema,
   uuidStringSchema,
+  type EventsMeQueryInput,
 } from "@talimy/shared"
 
 import { Roles } from "@/common/decorators/roles.decorator"
+import {
+  CurrentUser,
+  type CurrentUser as CurrentUserType,
+} from "@/common/decorators/current-user.decorator"
 import { AuthGuard } from "@/common/guards/auth.guard"
 import { RolesGuard } from "@/common/guards/roles.guard"
 import { TenantGuard } from "@/common/guards/tenant.guard"
@@ -28,6 +45,15 @@ export class CalendarController {
   list(@Query(new ZodValidationPipe(eventsQuerySchema)) queryInput: unknown) {
     const query = queryInput as EventQueryDto
     return this.calendarService.list(query)
+  }
+
+  @Get("me")
+  @Roles("platform_admin", "school_admin", "teacher", "student", "parent")
+  listForCurrentUser(
+    @CurrentUser() currentUser: CurrentUserType | null,
+    @Query(new ZodValidationPipe(eventsMeQuerySchema)) query: EventsMeQueryInput
+  ) {
+    return this.calendarService.listForCurrentUser(query, resolveVisibilityScopes(currentUser))
   }
 
   @Get(":id")
@@ -68,4 +94,24 @@ export class CalendarController {
     const query = queryInput as { tenantId: string }
     return this.calendarService.delete(query.tenantId, id)
   }
+}
+
+function resolveVisibilityScopes(
+  currentUser: CurrentUserType | null
+): readonly ("admin" | "all" | "students" | "teachers")[] {
+  const primaryRole = currentUser?.roles?.[0]
+
+  if (!primaryRole) {
+    throw new UnauthorizedException("Authenticated user is required")
+  }
+
+  if (primaryRole === "student" || primaryRole === "parent") {
+    return ["all", "students"]
+  }
+
+  if (primaryRole === "teacher") {
+    return ["all", "teachers"]
+  }
+
+  return ["all", "admin"]
 }

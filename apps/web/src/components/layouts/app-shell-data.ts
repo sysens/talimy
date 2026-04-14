@@ -9,13 +9,23 @@ type BuildAppShellDataOptions = {
   homeHref: string
   accountHref: string
   breadcrumbRootLabelKey?: string
+  navTranslationsNamespace: string
 }
 
 export async function buildAppShellData(
   session: Session,
-  { navItems, homeHref, accountHref, breadcrumbRootLabelKey }: BuildAppShellDataOptions
+  {
+    navItems,
+    homeHref,
+    accountHref,
+    breadcrumbRootLabelKey,
+    navTranslationsNamespace,
+  }: BuildAppShellDataOptions
 ): Promise<AppShellSidebarData> {
-  const [navT, shellT] = await Promise.all([getTranslations("nav.admin"), getTranslations("shell")])
+  const [navT, shellT] = await Promise.all([
+    getTranslations(navTranslationsNamespace),
+    getTranslations("shell"),
+  ])
 
   const schoolName = resolveWorkspaceName(session.user.tenantSlug, session.user.roles)
   const email = session.user.email ?? "school-admin@talimy.space"
@@ -33,7 +43,7 @@ export async function buildAppShellData(
         title: shellT("mainMenu"),
         defaultOpen: true,
         items: mapNavigationItems(
-          navItems.filter((item) => item.section === "main"),
+          navItems.filter((item) => (item.section ?? "main") === "main"),
           navT
         ),
       },

@@ -37,6 +37,7 @@ export default async function Layout({ children }: LayoutProps) {
     homeHref: "/admin/dashboard",
     accountHref: "/admin/profile",
     breadcrumbRootLabelKey: "breadcrumbSchoolAdmin",
+    navTranslationsNamespace: "nav.admin",
   })
 
   return (

@@ -130,8 +130,15 @@ export const eventsQuerySchema = z
     }
   })
 
+export const eventsMeQuerySchema = z.object({
+  tenantId: z.string().uuid(),
+  dateFrom: z.union([z.literal("today"), z.string().datetime()]).default("today"),
+  limit: z.coerce.number().int().min(1).max(20).default(4),
+})
+
 export type CreateEventInput = z.infer<typeof createEventSchema>
 export type CreateEventFormInput = z.infer<typeof createEventFormSchema>
+export type EventsMeQueryInput = z.infer<typeof eventsMeQuerySchema>
 export type EventsQueryInput = z.infer<typeof eventsQuerySchema>
 export type EventTypeInput = z.infer<typeof eventTypeSchema>
 export type EventVisibilityInput = z.infer<typeof eventVisibilitySchema>

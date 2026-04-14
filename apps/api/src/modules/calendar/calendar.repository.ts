@@ -1,6 +1,19 @@
 import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common"
 import { db, events } from "@talimy/database"
-import { and, asc, desc, eq, gte, ilike, isNull, lte, or, sql, type SQL } from "drizzle-orm"
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  gte,
+  ilike,
+  inArray,
+  isNull,
+  lte,
+  or,
+  sql,
+  type SQL,
+} from "drizzle-orm"
 
 import type { CreateEventDto, UpdateEventDto } from "./dto/create-event.dto"
 import type { EventQueryDto } from "./dto/event-query.dto"
@@ -50,6 +63,57 @@ export class CalendarRepository {
     return {
       data: rows.map((row) => this.mapRow(row)),
       meta: { page, limit: query.limit, total, totalPages },
+    }
+  }
+
+  async listForVisibilityScopes(params: {
+    dateFrom: "today" | string
+    limit: number
+    tenantId: string
+    visibilityScopes: readonly CalendarEventVisibility[]
+  }): Promise<CalendarEventsListResponse> {
+    const resolvedDateFrom =
+      params.dateFrom === "today" ? startOfCurrentDay() : new Date(params.dateFrom)
+    const filters: SQL[] = [
+      eq(events.tenantId, params.tenantId),
+      isNull(events.deletedAt),
+      inArray(events.visibility, [...params.visibilityScopes]),
+      gte(events.endDate, resolvedDateFrom),
+    ]
+
+    const [totalRow] = await db
+      .select({ total: sql<number>`count(*)::int` })
+      .from(events)
+      .where(and(...filters))
+
+    const total = totalRow?.total ?? 0
+    const rows = await db
+      .select({
+        id: events.id,
+        tenantId: events.tenantId,
+        title: events.title,
+        description: events.description,
+        startDate: events.startDate,
+        endDate: events.endDate,
+        location: events.location,
+        type: events.type,
+        visibility: events.visibility,
+        createdAt: events.createdAt,
+        updatedAt: events.updatedAt,
+      })
+      .from(events)
+      .where(and(...filters))
+      .orderBy(asc(events.startDate), asc(events.title))
+      .limit(params.limit)
+
+    return {
+      data: rows.map((row) => this.mapRow(row)),
+      meta: {
+        limit: params.limit,
+        page: 1,
+        total,
+        totalPages: Math.max(1, Math.ceil(total / params.limit)),
+      },
     }
   }
 
@@ -274,4 +338,9 @@ export class CalendarRepository {
       updatedAt: row.updatedAt.toISOString(),
     }
   }
+}
+
+function startOfCurrentDay() {
+  const now = new Date()
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0)
 }

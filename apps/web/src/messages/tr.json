@@ -73,11 +73,11 @@
       "settings": "Ayarlar"
     },
     "student": {
-      "dashboard": "G?sterge paneli",
+      "dashboard": "Gösterge paneli",
       "schedule": "Program",
-      "assignments": "?devler",
+      "assignments": "Ödevler",
       "grades": "Notlar",
-      "exams": "S?navlar",
+      "exams": "Sınavlar",
       "attendance": "Yoklama",
       "notices": "Duyurular",
       "calendar": "Takvim",
@@ -725,16 +725,17 @@
     "message": "Enter message"
   },
   "shell": {
-    "mainMenu": "Ana men?",
+    "mainMenu": "Ana menü",
     "updates": "Ayarlar ve haberler",
     "account": "Hesap",
-    "logout": "??k?? yap",
-    "breadcrumbSchoolAdmin": "Okul y?neticisi",
-    "workspace": "{schoolName} ?al??ma alan?",
-    "searchPlaceholder": "Her ?eyi ara",
+    "logout": "Çıkış yap",
+    "breadcrumbSchoolAdmin": "Okul yöneticisi",
+    "breadcrumbSchoolStudent": "Öğrenci paneli",
+    "workspace": "{schoolName} çalışma alanı",
+    "searchPlaceholder": "Her şeyi ara",
     "settings": "Ayarlar",
     "notifications": "Bildirimler",
-    "theme": "Karanl?k mod"
+    "theme": "Karanlık mod"
   },
   "schoolAdminProfile": {
     "title": "Profil ve erişim kapsamı",
@@ -2294,6 +2295,113 @@
       "sms": "SMS Notifications",
       "push": "Push Notifications",
       "save": "Save Preferences"
+    }
+  },
+  "studentDashboard": {
+    "welcome": {
+      "title": "Hoş geldin, {name}",
+      "actionLabel": "Profili aç",
+      "classLabel": "Sınıf",
+      "dateOfBirthLabel": "Doğum tarihi",
+      "emailLabel": "E-posta",
+      "phoneLabel": "Telefon"
+    },
+    "stats": {
+      "attendancePercentage": "Devam",
+      "taskCompletedCount": "Tamamlanan görev",
+      "taskInProgressPercentage": "Devam eden görev",
+      "rewardPoints": "Ödül puanı"
+    },
+    "performance": {
+      "title": "Performans",
+      "rangeLabel": "1. Dönem - 6. Dönem",
+      "centerLabel": "maks. GPA",
+      "remainingLabel": "Kalan"
+    },
+    "scoreActivity": {
+      "title": "Puan Aktivitesi",
+      "weekly": "Haftalık",
+      "filterAriaLabel": "Puan dönem filtresi",
+      "metricLabel": "Puan"
+    },
+    "lessons": {
+      "title": "Ders Programı",
+      "today": "Bugün",
+      "tomorrow": "Yarın",
+      "empty": "Ders yok"
+    },
+    "subjects": {
+      "title": "Derse göre not",
+      "metricLabel": "Puan"
+    },
+    "assignments": {
+      "title": "Ödevler",
+      "searchPlaceholder": "Derse göre ara",
+      "addLabel": "Ödevleri aç",
+      "empty": "Ödev bulunamadı",
+      "columns": {
+        "no": "No",
+        "task": "Görev",
+        "subject": "Ders",
+        "dueDate": "Teslim tarihi",
+        "time": "Saat",
+        "status": "Durum",
+        "action": "İşlem"
+      },
+      "statuses": {
+        "inProgress": "Devam ediyor",
+        "notStarted": "Başlanmadı",
+        "submitted": "Gönderildi"
+      },
+      "summary": {
+        "show": "Göster",
+        "of": "/",
+        "results": "sonuç"
+      },
+      "pagination": {
+        "previous": "Önceki",
+        "next": "Sonraki"
+      }
+    },
+    "calendar": {
+      "meta": {
+        "present": "Geldi",
+        "presentDescription": "Derse katıldı",
+        "late": "Geç",
+        "lateDescription": "Geç geldi",
+        "sick": "Hasta",
+        "sickDescription": "Sağlık nedeniyle izinli",
+        "absent": "Gelmedi",
+        "absentDescription": "Derse katılmadı"
+      },
+      "weekdays": {
+        "sunday": "Paz",
+        "monday": "Pzt",
+        "tuesday": "Sal",
+        "wednesday": "Çar",
+        "thursday": "Per",
+        "friday": "Cum",
+        "saturday": "Cmt"
+      }
+    },
+    "agenda": {
+      "title": "Ajanda",
+      "viewAll": "Tümünü gör",
+      "empty": "Ajanda boş",
+      "types": {
+        "academic": "Akademik",
+        "administration": "Yönetim",
+        "events": "Etkinlik",
+        "exam": "Sınav",
+        "finance": "Finans",
+        "holiday": "Tatil",
+        "other": "Diğer",
+        "sports": "Spor"
+      }
+    },
+    "messages": {
+      "title": "Mesajlar",
+      "empty": "Mesaj yok"
     }
   }
 }

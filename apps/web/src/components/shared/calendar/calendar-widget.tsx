@@ -20,6 +20,7 @@ import {
   CALENDAR_DAYS_OF_WEEK,
 } from "@/components/shared/calendar/calendar-widget.types"
 import { formatCalendarMonth } from "@/lib/dashboard/dashboard-formatters"
+import { cn } from "@/lib/utils"
 
 type CalendarWidgetLabels = {
   attendanceStatusMeta?: Record<CalendarAttendanceStatus, { description: string; label: string }>
@@ -29,6 +30,7 @@ type CalendarWidgetLabels = {
 
 type CalendarWidgetProps = {
   attendanceSummaryVariant?: "bars" | "cards"
+  attendanceSummaryGridClassName?: string
   className?: string
   labels?: CalendarWidgetLabels
   locale?: string
@@ -100,12 +102,13 @@ function buildIsoDate(year: number, monthNumber: number, day: number): string {
   return `${year}-${monthNumber.toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`
 }
 
-function resolveAttendanceSummaryCardTextClassName(label: string): string {
-  return label === "Sick" || label === "On Leave" ? "text-white" : "text-[#274760]"
+function resolveAttendanceSummaryCardTextClassName(colorClassName: string): string {
+  return colorClassName === "bg-[#1f4b7b]" ? "text-white" : "text-[#274760]"
 }
 
 export function CalendarWidget({
   attendanceSummaryVariant = "bars",
+  attendanceSummaryGridClassName,
   className,
   labels,
   locale = "en",
@@ -376,7 +379,7 @@ export function CalendarWidget({
       {activeMonth.kind === "attendance" ? (
         <div className="mt-5 space-y-3">
           {attendanceSummaryVariant === "cards" ? (
-            <div className="grid grid-cols-4 gap-3">
+            <div className={cn("grid grid-cols-4 gap-3", attendanceSummaryGridClassName)}>
               {activeMonth.summary.map((item) => (
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
@@ -389,7 +392,7 @@ export function CalendarWidget({
                     <p
                       className={[
                         "text-[12px] font-medium",
-                        resolveAttendanceSummaryCardTextClassName(item.label),
+                        resolveAttendanceSummaryCardTextClassName(item.colorClassName),
                       ].join(" ")}
                     >
                       {item.label}
@@ -397,7 +400,7 @@ export function CalendarWidget({
                     <p
                       className={[
                         "text-[10px] font-semibold leading-none",
-                        resolveAttendanceSummaryCardTextClassName(item.label),
+                        resolveAttendanceSummaryCardTextClassName(item.colorClassName),
                       ].join(" ")}
                     >
                       {item.value}

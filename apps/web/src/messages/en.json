@@ -730,6 +730,7 @@
     "account": "Account",
     "logout": "Log out",
     "breadcrumbSchoolAdmin": "School Admin",
+    "breadcrumbSchoolStudent": "Student Portal",
     "workspace": "{schoolName} workspace",
     "searchPlaceholder": "Search anything",
     "settings": "Settings",
@@ -2268,6 +2269,113 @@
       "sms": "SMS Notifications",
       "push": "Push Notifications",
       "save": "Save Preferences"
+    }
+  },
+  "studentDashboard": {
+    "welcome": {
+      "title": "Welcome, {name}",
+      "actionLabel": "Open profile",
+      "classLabel": "Grade",
+      "dateOfBirthLabel": "Date of Birth",
+      "emailLabel": "Email",
+      "phoneLabel": "Phone"
+    },
+    "stats": {
+      "attendancePercentage": "Attendance",
+      "taskCompletedCount": "Task Completed",
+      "taskInProgressPercentage": "Task In Progress",
+      "rewardPoints": "Reward Points"
+    },
+    "performance": {
+      "title": "Performance",
+      "rangeLabel": "1st Semester - 6th Semester",
+      "centerLabel": "max GPA",
+      "remainingLabel": "Remaining"
+    },
+    "scoreActivity": {
+      "title": "Score Activity",
+      "weekly": "Weekly",
+      "filterAriaLabel": "Score period filter",
+      "metricLabel": "Score"
+    },
+    "lessons": {
+      "title": "Class Schedule",
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "empty": "No lessons"
+    },
+    "subjects": {
+      "title": "Grade by Subject",
+      "metricLabel": "Score"
+    },
+    "assignments": {
+      "title": "Assignments",
+      "searchPlaceholder": "Search by subject",
+      "addLabel": "Open assignments",
+      "empty": "No assignments found",
+      "columns": {
+        "no": "No",
+        "task": "Task",
+        "subject": "Subject",
+        "dueDate": "Due Date",
+        "time": "Time",
+        "status": "Status",
+        "action": "Action"
+      },
+      "statuses": {
+        "inProgress": "In Progress",
+        "notStarted": "Not Started",
+        "submitted": "Submitted"
+      },
+      "summary": {
+        "show": "Show",
+        "of": "of",
+        "results": "results"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next"
+      }
+    },
+    "calendar": {
+      "meta": {
+        "present": "Present",
+        "presentDescription": "Present in class",
+        "late": "Late",
+        "lateDescription": "Arrived late",
+        "sick": "Sick",
+        "sickDescription": "Excused for health reasons",
+        "absent": "Absent",
+        "absentDescription": "Did not attend class"
+      },
+      "weekdays": {
+        "sunday": "S",
+        "monday": "M",
+        "tuesday": "T",
+        "wednesday": "W",
+        "thursday": "T",
+        "friday": "F",
+        "saturday": "S"
+      }
+    },
+    "agenda": {
+      "title": "Agenda",
+      "viewAll": "View All",
+      "empty": "No agenda items",
+      "types": {
+        "academic": "Academic",
+        "administration": "Administration",
+        "events": "Events",
+        "exam": "Exam",
+        "finance": "Finance",
+        "holiday": "Holiday",
+        "other": "Other",
+        "sports": "Sports"
+      }
+    },
+    "messages": {
+      "title": "Messages",
+      "empty": "No messages"
     }
   }
 }

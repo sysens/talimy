@@ -34,6 +34,7 @@ import { StudentAcademicPerformanceChartShowcase433 } from "@/components/shared/
 import { AttendanceSummaryCardsShowcase } from "@/components/shared/ui-showcase/attendance-summary-cards-showcase"
 import { ReimbursementsTableCardShowcase } from "@/components/shared/ui-showcase/reimbursements-table-card-showcase"
 import { StudentCreateFormShowcase } from "@/components/shared/ui-showcase/student-create-form-showcase"
+import { StudentDashboardPageShowcase } from "@/components/shared/ui-showcase/student-dashboard-page-showcase"
 import { StudentDetailPageShowcase } from "@/components/shared/ui-showcase/student-detail-page-showcase"
 import { CalendarWidgetShowcase } from "@/components/shared/ui-showcase/calendar-widget-showcase"
 import { ProfileDetailsCardShowcase } from "@/components/shared/ui-showcase/profile-details-card-showcase"
@@ -345,6 +346,15 @@ export default function UiShowcasePage() {
         </CardHeader>
         <CardContent>
           <AdminCalendarPageShowcase />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Task 10.2.1 - 10.2.10 Student Dashboard</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <StudentDashboardPageShowcase />
         </CardContent>
       </Card>
     </main>

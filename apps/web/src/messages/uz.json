@@ -730,6 +730,7 @@
     "account": "Akkaunt",
     "logout": "Chiqish",
     "breadcrumbSchoolAdmin": "Maktab admini",
+    "breadcrumbSchoolStudent": "O'quvchi paneli",
     "workspace": "{schoolName} workspace",
     "searchPlaceholder": "Istalgan narsani qidiring",
     "settings": "Sozlamalar",
@@ -2304,6 +2305,113 @@
       "sms": "SMS xabarlar",
       "push": "Push xabarlar",
       "save": "Saqlash"
+    }
+  },
+  "studentDashboard": {
+    "welcome": {
+      "title": "Xush kelibsiz, {name}",
+      "actionLabel": "Profilni ochish",
+      "classLabel": "Sinf",
+      "dateOfBirthLabel": "Tug'ilgan sana",
+      "emailLabel": "Email",
+      "phoneLabel": "Telefon"
+    },
+    "stats": {
+      "attendancePercentage": "Davomat",
+      "taskCompletedCount": "Bajarilgan",
+      "taskInProgressPercentage": "Vazifalar",
+      "rewardPoints": "Ballar"
+    },
+    "performance": {
+      "title": "Ko‘rsatkich",
+      "rangeLabel": "1-semestr - 6-semestr",
+      "centerLabel": "maks. GPA",
+      "remainingLabel": "Qolgan"
+    },
+    "scoreActivity": {
+      "title": "Ballar faolligi",
+      "weekly": "Haftalik",
+      "filterAriaLabel": "Ballar davri filtri",
+      "metricLabel": "Ball"
+    },
+    "lessons": {
+      "title": "Dars jadvali",
+      "today": "Bugun",
+      "tomorrow": "Ertaga",
+      "empty": "Dars yo‘q"
+    },
+    "subjects": {
+      "title": "Fanlar bo‘yicha ko‘rsatkich",
+      "metricLabel": "Ball"
+    },
+    "assignments": {
+      "title": "Vazifalar",
+      "searchPlaceholder": "Fan bo‘yicha qidirish",
+      "addLabel": "Vazifalar sahifasi",
+      "empty": "Vazifalar topilmadi",
+      "columns": {
+        "no": "No",
+        "task": "Vazifa",
+        "subject": "Fan",
+        "dueDate": "Topshirish sanasi",
+        "time": "Vaqt",
+        "status": "Holat",
+        "action": "Amal"
+      },
+      "statuses": {
+        "inProgress": "Jarayonda",
+        "notStarted": "Boshlanmagan",
+        "submitted": "Yuborilgan"
+      },
+      "summary": {
+        "show": "Ko‘rsatish",
+        "of": "dan",
+        "results": "natija"
+      },
+      "pagination": {
+        "previous": "Oldingi",
+        "next": "Keyingi"
+      }
+    },
+    "calendar": {
+      "meta": {
+        "present": "Kelgan",
+        "presentDescription": "Darsda qatnashgan",
+        "late": "Kechikkan",
+        "lateDescription": "Kechikib kelgan",
+        "sick": "Kasal",
+        "sickDescription": "Sog‘liq bo‘yicha ruxsatli yo‘q",
+        "absent": "Kelmagan",
+        "absentDescription": "Darsga qatnashmagan"
+      },
+      "weekdays": {
+        "sunday": "Y",
+        "monday": "D",
+        "tuesday": "S",
+        "wednesday": "Ch",
+        "thursday": "P",
+        "friday": "J",
+        "saturday": "Sh"
+      }
+    },
+    "agenda": {
+      "title": "Agenda",
+      "viewAll": "Barchasini ko‘rish",
+      "empty": "Agenda yo‘q",
+      "types": {
+        "academic": "Akademik",
+        "administration": "Ma'muriy",
+        "events": "Tadbirlar",
+        "exam": "Imtihon",
+        "finance": "Moliya",
+        "holiday": "Ta'til",
+        "other": "Boshqa",
+        "sports": "Sport"
+      }
+    },
+    "messages": {
+      "title": "Xabarlar",
+      "empty": "Habarlar yo‘q"
     }
   }
 }

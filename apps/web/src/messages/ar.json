@@ -109,6 +109,17 @@
     "ar": "العربية"
   },
   "nav": {
+    "student": {
+      "dashboard": "لوحة التحكم",
+      "schedule": "الجدول",
+      "assignments": "الواجبات",
+      "grades": "الدرجات",
+      "exams": "الامتحانات",
+      "attendance": "الحضور",
+      "notices": "الإعلانات",
+      "calendar": "التقويم",
+      "profile": "الملف الشخصي"
+    },
     "admin": {
       "dashboard": "لوحة التحكم",
       "teachers": "المعلمون",
@@ -131,6 +142,7 @@
     "account": "الحساب",
     "logout": "تسجيل الخروج",
     "breadcrumbSchoolAdmin": "إدارة المدرسة",
+    "breadcrumbSchoolStudent": "بوابة الطالب",
     "workspace": "مساحة عمل {schoolName}",
     "searchPlaceholder": "ابحث عن أي شيء",
     "settings": "الإعدادات",
@@ -1114,6 +1126,113 @@
       "sms": "SMS Notifications",
       "push": "Push Notifications",
       "save": "Save Preferences"
+    }
+  },
+  "studentDashboard": {
+    "welcome": {
+      "title": "مرحباً، {name}",
+      "actionLabel": "فتح الملف",
+      "classLabel": "الصف",
+      "dateOfBirthLabel": "تاريخ الميلاد",
+      "emailLabel": "البريد الإلكتروني",
+      "phoneLabel": "الهاتف"
+    },
+    "stats": {
+      "attendancePercentage": "الحضور",
+      "taskCompletedCount": "المهام المكتملة",
+      "taskInProgressPercentage": "المهام الجارية",
+      "rewardPoints": "نقاط المكافأة"
+    },
+    "performance": {
+      "title": "الأداء",
+      "rangeLabel": "الفصل الأول - الفصل السادس",
+      "centerLabel": "الحد الأقصى للمعدل",
+      "remainingLabel": "المتبقي"
+    },
+    "scoreActivity": {
+      "title": "نشاط الدرجات",
+      "weekly": "أسبوعي",
+      "filterAriaLabel": "مرشح فترة الدرجات",
+      "metricLabel": "الدرجة"
+    },
+    "lessons": {
+      "title": "جدول الدروس",
+      "today": "اليوم",
+      "tomorrow": "غداً",
+      "empty": "لا توجد دروس"
+    },
+    "subjects": {
+      "title": "الدرجات حسب المادة",
+      "metricLabel": "الدرجة"
+    },
+    "assignments": {
+      "title": "الواجبات",
+      "searchPlaceholder": "ابحث حسب المادة",
+      "addLabel": "فتح الواجبات",
+      "empty": "لا توجد واجبات",
+      "columns": {
+        "no": "No",
+        "task": "المهمة",
+        "subject": "المادة",
+        "dueDate": "تاريخ التسليم",
+        "time": "الوقت",
+        "status": "الحالة",
+        "action": "الإجراء"
+      },
+      "statuses": {
+        "inProgress": "قيد التنفيذ",
+        "notStarted": "لم تبدأ",
+        "submitted": "تم التسليم"
+      },
+      "summary": {
+        "show": "عرض",
+        "of": "من",
+        "results": "نتائج"
+      },
+      "pagination": {
+        "previous": "السابق",
+        "next": "التالي"
+      }
+    },
+    "calendar": {
+      "meta": {
+        "present": "حاضر",
+        "presentDescription": "حضر الحصة",
+        "late": "متأخر",
+        "lateDescription": "وصل متأخراً",
+        "sick": "مريض",
+        "sickDescription": "غياب بعذر صحي",
+        "absent": "غائب",
+        "absentDescription": "لم يحضر الحصة"
+      },
+      "weekdays": {
+        "sunday": "ح",
+        "monday": "ن",
+        "tuesday": "ث",
+        "wednesday": "ر",
+        "thursday": "خ",
+        "friday": "ج",
+        "saturday": "س"
+      }
+    },
+    "agenda": {
+      "title": "الأجندة",
+      "viewAll": "عرض الكل",
+      "empty": "لا توجد عناصر",
+      "types": {
+        "academic": "أكاديمي",
+        "administration": "إداري",
+        "events": "فعاليات",
+        "exam": "اختبار",
+        "finance": "مالي",
+        "holiday": "عطلة",
+        "other": "أخرى",
+        "sports": "رياضة"
+      }
+    },
+    "messages": {
+      "title": "الرسائل",
+      "empty": "لا توجد رسائل"
     }
   }
 }
